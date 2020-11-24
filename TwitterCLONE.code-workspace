@@ -1,0 +1,12 @@
+{
+  "folders": [
+	{
+		"path": "../../../../../twitter-graphql-server"
+	},
+	{
+		"path": "../../../.."
+	}
+],
+  "remoteAuthority": "wsl+Ubuntu-20.04",
+  "settings": {}
+}
