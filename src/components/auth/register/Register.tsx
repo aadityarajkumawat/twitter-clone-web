@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Form,
   FormHeader,
@@ -13,37 +13,8 @@ import {
 import TwitterIcon from "../../../assets/twitter-icon.svg";
 import { useForm } from "../../../hooks/useForm";
 import { Link } from "react-router-dom";
-import { gql, useMutation } from "@apollo/client";
-
-const REGISTER_MUTATION = gql`
-  mutation Register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $phone: String!
-  ) {
-    register(
-      options: {
-        username: $username
-        email: $email
-        password: $password
-        phone: $phone
-      }
-    ) {
-      user {
-        id
-        createdAt
-        username
-        email
-        phone
-      }
-      errors {
-        field
-        message
-      }
-    }
-  }
-`;
+import { useMutation } from "urql";
+import { REGISTER_MUTATION } from '../../../queries/queries'
 
 interface RegisterProps {}
 
@@ -55,7 +26,7 @@ interface RegisterUserI {
 }
 
 const Register: React.FC<RegisterProps> = ({}) => {
-  const [registerUser, obj] = useMutation(REGISTER_MUTATION);
+  const [, registerUser] = useMutation(REGISTER_MUTATION);
   const { user, handleChange, handleSubmit } = useForm<RegisterUserI>(
     {
       email: "",
@@ -66,10 +37,6 @@ const Register: React.FC<RegisterProps> = ({}) => {
     registerUser,
     "register"
   );
-
-  useEffect(() => {
-    console.log(obj);
-  }, [obj.data]);
 
   const { email, password, username, phone } = user;
 

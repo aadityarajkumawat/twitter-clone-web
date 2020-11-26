@@ -1,5 +1,5 @@
-import { MutationFunctionOptions, FetchResult } from "@apollo/client";
 import React, { useState } from "react";
+import { OperationContext, OperationResult } from "urql";
 
 interface useFormI<T> {
   user: T;
@@ -17,8 +17,9 @@ interface FormParams {
 export function useForm<T extends FormParams>(
   fieldObject: T,
   mutationFunction: (
-    options?: MutationFunctionOptions<any, Record<string, any>> | undefined
-  ) => Promise<FetchResult<any, Record<string, any>, Record<string, any>>>,
+    variables?: object | undefined,
+    context?: Partial<OperationContext> | undefined
+  ) => Promise<OperationResult<any, object>>,
   formType: "login" | "register"
 ): useFormI<T> {
   const [user, setUser] = useState<T>(fieldObject);
@@ -30,12 +31,12 @@ export function useForm<T extends FormParams>(
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formType === "register") {
-      mutationFunction({ variables: { username, email, password, phone } });
+      await mutationFunction({ username, email, password, phone });
     } else {
-      mutationFunction({ variables: { email, password } });
+      await mutationFunction({ email, password });
     }
   };
 
