@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { createClient, Provider } from "urql";
+import { createClient, Provider as UrqlProvider } from "urql";
 
 const cli = createClient({
   url: "http://localhost:4000/graphql",
@@ -13,9 +13,9 @@ const cli = createClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider value={cli}>
+    <UrqlProvider value={cli}>
       <App />
-    </Provider>
+    </UrqlProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
