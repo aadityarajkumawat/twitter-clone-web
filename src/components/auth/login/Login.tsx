@@ -13,8 +13,7 @@ import {
 import TwitterIcon from "../../../assets/twitter-icon.svg";
 import { useForm } from "../../../hooks/useForm";
 import { Link } from "react-router-dom";
-import { useMutation } from "urql";
-import { LOGIN_MUTATION } from "../../../queries/queries";
+import { useLoginMutation } from "../../../generated/graphql";
 
 interface LoginProps {}
 
@@ -24,14 +23,13 @@ interface LoginUserI {
 }
 
 const Login: React.FC<LoginProps> = ({}) => {
-  const [, loginUser] = useMutation(LOGIN_MUTATION);
+  const [, loginUser] = useLoginMutation();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(
     {
       email: "",
       password: "",
     },
-    loginUser,
-    "login"
+    loginUser
   );
 
   const { email, password } = user;
