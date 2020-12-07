@@ -1,4 +1,6 @@
-export default (state: any, action: any) => {
+import { AuthContext } from "../context1";
+
+const reducer: DispatchX.ReducerFunction<AuthContext> = (state, action) => {
   switch (action.type) {
     case "UNAUTH":
       return {
@@ -9,3 +11,5 @@ export default (state: any, action: any) => {
       return state;
   }
 };
+
+export default reducer;
