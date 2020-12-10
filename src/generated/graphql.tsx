@@ -18,6 +18,13 @@ export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   me?: Maybe<User>;
+  getTweetById: GetTweetResponse;
+  getTweetsByUser: GetUserTweets;
+};
+
+
+export type QueryGetTweetByIdArgs = {
+  options: GetTweetById;
 };
 
 export type User = {
@@ -29,6 +36,31 @@ export type User = {
   password: Scalars['String'];
   username: Scalars['String'];
   phone: Scalars['String'];
+};
+
+export type GetTweetResponse = {
+  __typename?: 'GetTweetResponse';
+  tweet?: Maybe<GetTweet>;
+  error?: Maybe<Scalars['String']>;
+};
+
+export type GetTweet = {
+  __typename?: 'GetTweet';
+  tweet_id: Scalars['Float'];
+  tweet_content: Scalars['String'];
+  created_At: Scalars['String'];
+  _type: Scalars['String'];
+  rel_acc: Scalars['Float'];
+};
+
+export type GetTweetById = {
+  tweet_id: Scalars['Float'];
+};
+
+export type GetUserTweets = {
+  __typename?: 'GetUserTweets';
+  tweets: Array<GetTweet>;
+  error: Scalars['String'];
 };
 
 export type Mutation = {
@@ -160,6 +192,49 @@ export type RegisterMutation = (
   ) }
 );
 
+export type GetTweetByIdQueryVariables = Exact<{
+  tweet_id: Scalars['Float'];
+}>;
+
+
+export type GetTweetByIdQuery = (
+  { __typename?: 'Query' }
+  & { getTweetById: (
+    { __typename?: 'GetTweetResponse' }
+    & Pick<GetTweetResponse, 'error'>
+    & { tweet?: Maybe<(
+      { __typename?: 'GetTweet' }
+      & Pick<GetTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc'>
+    )> }
+  ) }
+);
+
+export type GetTweetsByUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTweetsByUserQuery = (
+  { __typename?: 'Query' }
+  & { getTweetsByUser: (
+    { __typename?: 'GetUserTweets' }
+    & Pick<GetUserTweets, 'error'>
+    & { tweets: Array<(
+      { __typename?: 'GetTweet' }
+      & Pick<GetTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc'>
+    )> }
+  ) }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt' | 'username' | 'phone'>
+  )> }
+);
+
 
 export const CreateTweetDocument = gql`
     mutation CreateTweet($tweet_content: String!, $rel_acc: Float) {
@@ -216,4 +291,56 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const GetTweetByIdDocument = gql`
+    query GetTweetById($tweet_id: Float!) {
+  getTweetById(options: {tweet_id: $tweet_id}) {
+    tweet {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+    }
+    error
+  }
+}
+    `;
+
+export function useGetTweetByIdQuery(options: Omit<Urql.UseQueryArgs<GetTweetByIdQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetTweetByIdQuery>({ query: GetTweetByIdDocument, ...options });
+};
+export const GetTweetsByUserDocument = gql`
+    query GetTweetsByUser {
+  getTweetsByUser {
+    tweets {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+    }
+    error
+  }
+}
+    `;
+
+export function useGetTweetsByUserQuery(options: Omit<Urql.UseQueryArgs<GetTweetsByUserQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetTweetsByUserQuery>({ query: GetTweetsByUserDocument, ...options });
+};
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    email
+    createdAt
+    updatedAt
+    username
+    phone
+  }
+}
+    `;
+
+export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };

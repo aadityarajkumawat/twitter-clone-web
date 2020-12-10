@@ -1,0 +1,12 @@
+query GetTweetsByUser {
+  getTweetsByUser {
+    tweets {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+    }
+    error
+  }
+}

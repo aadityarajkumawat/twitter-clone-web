@@ -3,7 +3,7 @@ import { flexCenter } from "../constants/styles";
 
 export const BaseComponent = styled.div`
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #222;
   ${flexCenter}
   flex-direction: column;
@@ -11,7 +11,7 @@ export const BaseComponent = styled.div`
 
 export const HomeMain = styled.div`
   max-width: 1300px;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #222;
   width: 35%;
   border-right: 1px solid #eeeeee20;
@@ -23,7 +23,6 @@ export const HomeMain = styled.div`
 
 export const FeedHeader = styled.div`
   width: 100%;
-  height: 170px;
   ${flexCenter}
   justify-content: flex-start;
   flex-direction: column;
@@ -113,4 +112,4 @@ export const TweetButton = styled.button`
 export const Tweets = styled.div`
   width: 100%;
   color: white;
-`
+`;

@@ -16,7 +16,11 @@ import {
   TweetInputField,
   Tweets,
 } from "./home.styles";
-import { useCreateTweetMutation } from "../generated/graphql";
+import {
+  useCreateTweetMutation,
+  useGetTweetsByUserQuery,
+} from "../generated/graphql";
+import Tweet from "../components/tweet/Tweet";
 
 interface HomeProps {}
 
@@ -26,24 +30,19 @@ interface UploadedTweetI {
 }
 
 const Home: React.FC<HomeProps> = () => {
-  const [{ data, fetching }, createTweet] = useCreateTweetMutation();
-  const [uploadStatus, setUploadStatus] = useState<UploadedTweetI>({
-    error: "",
-    uploaded: "",
-  });
-
-  const makeTweet = () => {
-    createTweet({ tweet_content: "This is from react being nuts" });
+  const [, createTweet] = useCreateTweetMutation();
+  const [tweetInput, setTweetInput] = useState<string>("");
+  const [
+    { data: tweets, fetching: fetchingTweets },
+  ] = useGetTweetsByUserQuery();
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTweetInput((prev) => e.target.value);
   };
 
-  useEffect(() => {
-    if (data?.createPost.uploaded?.includes("uploaded")) {
-      setUploadStatus({
-        uploaded: data.createPost.uploaded,
-        error: data.createPost.error,
-      });
-    }
-  }, [fetching]);
+  const makeTweet = () => {
+    createTweet({ tweet_content: tweetInput });
+  };
 
   return (
     <BaseComponent>
@@ -56,20 +55,30 @@ const Home: React.FC<HomeProps> = () => {
             </ProfileImageInc>
             <MTweet>
               <TweetInput>
-                <TweetInputField placeholder="What's Happening?" />
+                <TweetInputField
+                  placeholder="What's Happening?"
+                  onChange={handleChange}
+                />
               </TweetInput>
               <EditTweetOptions>
                 <TweetAc></TweetAc>
-                <TweetButton>Tweet</TweetButton>
+                <TweetButton onClick={makeTweet}>Tweet</TweetButton>
               </EditTweetOptions>
             </MTweet>
           </CreateTweet>
         </FeedHeader>
+
+        <Tweets>
+          {tweets?.getTweetsByUser &&
+            tweets.getTweetsByUser.tweets.map((tweet) => (
+              <Tweet
+                key={tweet.tweet_id}
+                tweet_content={tweet.tweet_content}
+                username={"Aditya"}
+              />
+            ))}
+        </Tweets>
       </HomeMain>
-      <Tweets>
-        Upload Status: {uploadStatus.uploaded}
-        <button onClick={makeTweet}>Tweet</button>
-      </Tweets>
     </BaseComponent>
   );
 };
