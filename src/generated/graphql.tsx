@@ -104,6 +104,20 @@ export type TweetInfo = {
   tweet_id: Scalars['Float'];
 };
 
+export type CreateTweetMutationVariables = Exact<{
+  tweet_content: Scalars['String'];
+  rel_acc?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type CreateTweetMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost: (
+    { __typename?: 'PostCreatedResponse' }
+    & Pick<PostCreatedResponse, 'uploaded' | 'error'>
+  ) }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -147,6 +161,18 @@ export type RegisterMutation = (
 );
 
 
+export const CreateTweetDocument = gql`
+    mutation CreateTweet($tweet_content: String!, $rel_acc: Float) {
+  createPost(options: {tweet_content: $tweet_content, rel_acc: $rel_acc}) {
+    uploaded
+    error
+  }
+}
+    `;
+
+export function useCreateTweetMutation() {
+  return Urql.useMutation<CreateTweetMutation, CreateTweetMutationVariables>(CreateTweetDocument);
+};
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(options: {email: $email, password: $password}) {

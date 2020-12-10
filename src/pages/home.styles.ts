@@ -6,6 +6,7 @@ export const BaseComponent = styled.div`
   height: 100vh;
   background-color: #222;
   ${flexCenter}
+  flex-direction: column;
 `;
 
 export const HomeMain = styled.div`
@@ -108,3 +109,8 @@ export const TweetButton = styled.button`
     opacity: 0.8;
   }
 `;
+
+export const Tweets = styled.div`
+  width: 100%;
+  color: white;
+`

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   FormHeader,
@@ -24,7 +24,7 @@ interface LoginUserI {
 
 const Login: React.FC<LoginProps> = ({}) => {
   const history = useHistory();
-  const [, loginUser] = useLoginMutation();
+  const [loginData, loginUser] = useLoginMutation();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(
     {
       email: "",
@@ -32,6 +32,12 @@ const Login: React.FC<LoginProps> = ({}) => {
     },
     loginUser
   );
+
+  useEffect(() => {
+    if (loginData.data?.login.user) {
+      history.push("/");
+    }
+  }, [loginData.fetching]);
 
   const { email, password } = user;
 

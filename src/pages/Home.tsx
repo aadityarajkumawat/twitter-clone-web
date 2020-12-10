@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { myImage } from "../constants/urls";
 import {
   BaseComponent,
   CreateTweet,
@@ -13,11 +14,37 @@ import {
   TweetButton,
   TweetInput,
   TweetInputField,
+  Tweets,
 } from "./home.styles";
+import { useCreateTweetMutation } from "../generated/graphql";
 
 interface HomeProps {}
 
+interface UploadedTweetI {
+  uploaded: string;
+  error: string | null | undefined;
+}
+
 const Home: React.FC<HomeProps> = () => {
+  const [{ data, fetching }, createTweet] = useCreateTweetMutation();
+  const [uploadStatus, setUploadStatus] = useState<UploadedTweetI>({
+    error: "",
+    uploaded: "",
+  });
+
+  const makeTweet = () => {
+    createTweet({ tweet_content: "This is from react being nuts" });
+  };
+
+  useEffect(() => {
+    if (data?.createPost.uploaded?.includes("uploaded")) {
+      setUploadStatus({
+        uploaded: data.createPost.uploaded,
+        error: data.createPost.error,
+      });
+    }
+  }, [fetching]);
+
   return (
     <BaseComponent>
       <HomeMain>
@@ -25,7 +52,7 @@ const Home: React.FC<HomeProps> = () => {
           <PageName>Home</PageName>
           <CreateTweet>
             <ProfileImageInc>
-              <IncImage src="https://pbs.twimg.com/profile_images/1329408550347579393/A3OheCtd_bigger.jpg" />
+              <IncImage src={myImage} />
             </ProfileImageInc>
             <MTweet>
               <TweetInput>
@@ -39,6 +66,10 @@ const Home: React.FC<HomeProps> = () => {
           </CreateTweet>
         </FeedHeader>
       </HomeMain>
+      <Tweets>
+        Upload Status: {uploadStatus.uploaded}
+        <button onClick={makeTweet}>Tweet</button>
+      </Tweets>
     </BaseComponent>
   );
 };

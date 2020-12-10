@@ -11808,6 +11808,11 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
+stithi@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/stithi/-/stithi-1.0.0.tgz#0c16b72eff6d0768bcf212a681f7d7e2a919e971"
+  integrity sha512-q9VpLSfYRBO3CqKfr9BP/EDviEF+Ma9YSW1Fjsh7748nX3vzN9nGF2NfJEuqWDXeDMqtT5AqyQomxRlYtjZOYQ==
+
 stream-browserify@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.2.tgz#87521d38a44aa7ee91ce1cd2a47df0cb49dd660b"

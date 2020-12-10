@@ -1,0 +1,6 @@
+mutation CreateTweet($tweet_content: String!, $rel_acc: Float) {
+  createPost(options: { tweet_content: $tweet_content, rel_acc: $rel_acc }) {
+    uploaded
+    error
+  }
+}
