@@ -72,6 +72,7 @@ export type Mutation = {
   login: UserResponse;
   createPost: PostCreatedResponse;
   likeTweet: LikedTweet;
+  followAUser: FollowedAUser;
 };
 
 export type MutationRegisterArgs = {
@@ -88,6 +89,10 @@ export type MutationCreatePostArgs = {
 
 export type MutationLikeTweetArgs = {
   options: TweetInfo;
+};
+
+export type MutationFollowAUserArgs = {
+  options: UserToFollow;
 };
 
 export type UserResponse = {
@@ -135,9 +140,14 @@ export type TweetInfo = {
   tweet_id: Scalars["Float"];
 };
 
-export type Subscription = {
-  __typename?: "Subscription";
-  refetchPosts: GetTweet;
+export type FollowedAUser = {
+  __typename?: "FollowedAUser";
+  followed: Scalars["Boolean"];
+  error: Scalars["String"];
+};
+
+export type UserToFollow = {
+  thatUser: Scalars["Float"];
 };
 
 export type CreateTweetMutationVariables = Exact<{
@@ -149,6 +159,17 @@ export type CreateTweetMutation = { __typename?: "Mutation" } & {
   createPost: { __typename?: "PostCreatedResponse" } & Pick<
     PostCreatedResponse,
     "uploaded" | "error"
+  >;
+};
+
+export type FollowAUserMutationVariables = Exact<{
+  thatUser: Scalars["Float"];
+}>;
+
+export type FollowAUserMutation = { __typename?: "Mutation" } & {
+  followAUser: { __typename?: "FollowedAUser" } & Pick<
+    FollowedAUser,
+    "followed" | "error"
   >;
 };
 
@@ -264,6 +285,20 @@ export const CreateTweetDocument = gql`
 export function useCreateTweetMutation() {
   return Urql.useMutation<CreateTweetMutation, CreateTweetMutationVariables>(
     CreateTweetDocument
+  );
+}
+export const FollowAUserDocument = gql`
+  mutation FollowAUser($thatUser: Float!) {
+    followAUser(options: { thatUser: $thatUser }) {
+      followed
+      error
+    }
+  }
+`;
+
+export function useFollowAUserMutation() {
+  return Urql.useMutation<FollowAUserMutation, FollowAUserMutationVariables>(
+    FollowAUserDocument
   );
 }
 export const LikeTweetDocument = gql`

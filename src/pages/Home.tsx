@@ -2,30 +2,19 @@ import React, { useEffect, useState } from "react";
 import { myImage } from "../constants/urls";
 import * as S from "./home.styles";
 import {
-  CreateTweetMutation,
   useCreateTweetMutation,
   useGetTweetsByUserQuery,
 } from "../generated/graphql";
 import Tweet from "../components/tweet/Tweet";
+import { refresh } from "../helpers/refresh";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [
-    { data: createTweetData, fetching: creating },
-    createTweet,
-  ] = useCreateTweetMutation();
+  const [{ data: createTweetData }, createTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
   const [{ data: tweets }, refetchTweets] = useGetTweetsByUserQuery();
 
-  const refresh = (createTweetData: CreateTweetMutation | undefined) => {
-    if (createTweetData?.createPost.uploaded?.includes("uploaded")) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  console.log("I rendered");
   useEffect(() => {
     refetchTweets({ requestPolicy: "network-only" });
   }, [refresh(createTweetData)]);

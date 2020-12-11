@@ -1,0 +1,6 @@
+mutation FollowAUser($thatUser: Float!) {
+  followAUser(options: { thatUser: $thatUser }) {
+    followed
+    error
+  }
+}

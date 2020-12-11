@@ -19,13 +19,8 @@ interface TweetProps {
 }
 
 const Tweet: React.FC<TweetProps> = ({ username, tweet_content, tweet_id }) => {
-  const [d, d1] = useLikeTweetMutation();
-  const likeTweet = () => {
-    d1({ tweet_id });
-  };
-
-  // console.log(d);
-
+  const [data, likeTweet] = useLikeTweetMutation();
+  console.log(data);
   return (
     <TweetWrapper>
       <UserProfileImg>
@@ -38,9 +33,9 @@ const Tweet: React.FC<TweetProps> = ({ username, tweet_content, tweet_id }) => {
         </TweetUsername>
         <TweetContent>{tweet_content}</TweetContent>
         <TweetActionBar>
-          <span onClick={likeTweet}>{SVG.commentSVG}</span>
+          <span>{SVG.commentSVG}</span>
           <span>{SVG.retweetSVG}</span>
-          <span>{SVG.likeSVG}</span>
+          <span onClick={() => likeTweet({ tweet_id })}>{SVG.likeSVG}</span>
           <span>{SVG.shareSVG}</span>
         </TweetActionBar>
       </TweetContainer>
