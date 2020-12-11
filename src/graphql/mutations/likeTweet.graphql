@@ -1,0 +1,6 @@
+mutation LikeTweet($tweet_id: Float!) {
+  likeTweet(options: { tweet_id: $tweet_id }) {
+    liked
+    error
+  }
+}

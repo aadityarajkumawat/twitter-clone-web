@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { myImage } from "../constants/urls";
+import * as S from "./home.styles";
 import {
-  BaseComponent,
-  CreateTweet,
-  EditTweetOptions,
-  FeedHeader,
-  HomeMain,
-  IncImage,
-  MTweet,
-  PageName,
-  ProfileImageInc,
-  TweetAc,
-  TweetButton,
-  TweetInput,
-  TweetInputField,
-  Tweets,
-} from "./home.styles";
-import {
+  CreateTweetMutation,
   useCreateTweetMutation,
   useGetTweetsByUserQuery,
 } from "../generated/graphql";
@@ -24,20 +10,28 @@ import Tweet from "../components/tweet/Tweet";
 
 interface HomeProps {}
 
-interface UploadedTweetI {
-  uploaded: string;
-  error: string | null | undefined;
-}
-
 const Home: React.FC<HomeProps> = () => {
-  const [, createTweet] = useCreateTweetMutation();
-  const [tweetInput, setTweetInput] = useState<string>("");
   const [
-    { data: tweets, fetching: fetchingTweets },
-  ] = useGetTweetsByUserQuery();
-  
+    { data: createTweetData, fetching: creating },
+    createTweet,
+  ] = useCreateTweetMutation();
+  const [tweetInput, setTweetInput] = useState<string>("");
+  const [{ data: tweets }, refetchTweets] = useGetTweetsByUserQuery();
+
+  const refresh = (createTweetData: CreateTweetMutation | undefined) => {
+    if (createTweetData?.createPost.uploaded?.includes("uploaded")) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  console.log("I rendered");
+  useEffect(() => {
+    refetchTweets({ requestPolicy: "network-only" });
+  }, [refresh(createTweetData)]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTweetInput((prev) => e.target.value);
+    setTweetInput(() => e.target.value);
   };
 
   const makeTweet = () => {
@@ -45,41 +39,42 @@ const Home: React.FC<HomeProps> = () => {
   };
 
   return (
-    <BaseComponent>
-      <HomeMain>
-        <FeedHeader>
-          <PageName>Home</PageName>
-          <CreateTweet>
-            <ProfileImageInc>
-              <IncImage src={myImage} />
-            </ProfileImageInc>
-            <MTweet>
-              <TweetInput>
-                <TweetInputField
+    <S.BaseComponent>
+      <S.HomeMain>
+        <S.FeedHeader>
+          <S.PageName>Home</S.PageName>
+          <S.CreateTweet>
+            <S.ProfileImageInc>
+              <S.IncImage src={myImage} />
+            </S.ProfileImageInc>
+            <S.MTweet>
+              <S.TweetInput>
+                <S.TweetInputField
                   placeholder="What's Happening?"
-                  onChange={handleChange}
+                  onBlur={handleChange}
                 />
-              </TweetInput>
-              <EditTweetOptions>
-                <TweetAc></TweetAc>
-                <TweetButton onClick={makeTweet}>Tweet</TweetButton>
-              </EditTweetOptions>
-            </MTweet>
-          </CreateTweet>
-        </FeedHeader>
+              </S.TweetInput>
+              <S.EditTweetOptions>
+                <S.TweetAc></S.TweetAc>
+                <S.TweetButton onClick={makeTweet}>Tweet</S.TweetButton>
+              </S.EditTweetOptions>
+            </S.MTweet>
+          </S.CreateTweet>
+        </S.FeedHeader>
 
-        <Tweets>
+        <S.Tweets>
           {tweets?.getTweetsByUser &&
             tweets.getTweetsByUser.tweets.map((tweet) => (
               <Tweet
                 key={tweet.tweet_id}
                 tweet_content={tweet.tweet_content}
                 username={"Aditya"}
+                tweet_id={tweet.tweet_id}
               />
             ))}
-        </Tweets>
-      </HomeMain>
-    </BaseComponent>
+        </S.Tweets>
+      </S.HomeMain>
+    </S.BaseComponent>
   );
 };
 export default Home;
