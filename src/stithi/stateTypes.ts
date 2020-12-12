@@ -1,3 +1,3 @@
-export interface AuthStateI {
-  isAuthenticated: boolean;
+export interface LikeClick {
+  isClicked: boolean;
 }

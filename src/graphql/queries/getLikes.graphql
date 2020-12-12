@@ -1,0 +1,11 @@
+query GetLikes {
+  getLikes {
+    likes {
+      like_id
+      created_At
+      user_id
+      tweet_id
+    }
+    error
+  }
+}

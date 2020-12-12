@@ -6,6 +6,8 @@ query GetTweetsByUser {
       created_At
       _type
       rel_acc
+      username
+      name
     }
     error
   }

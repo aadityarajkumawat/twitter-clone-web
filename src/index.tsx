@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import { createClient, Provider as UrqlProvider } from "urql";
+import { callContext } from "./stithi/callContext";
 
 const cli = createClient({
   url: "http://localhost:4000/graphql",
@@ -10,6 +11,8 @@ const cli = createClient({
     credentials: "include",
   },
 });
+
+callContext();
 
 ReactDOM.render(
   <React.StrictMode>

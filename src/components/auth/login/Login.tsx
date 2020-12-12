@@ -15,14 +15,14 @@ import { useForm } from "../../../hooks/useForm";
 import { Link, useHistory } from "react-router-dom";
 import { useLoginMutation } from "../../../generated/graphql";
 
-interface LoginProps {}
+// interface LoginProps {}
 
 interface LoginUserI {
   email: string;
   password: string;
 }
 
-const Login: React.FC<LoginProps> = ({}) => {
+const Login: React.FC<{}> = () => {
   const history = useHistory();
   const [loginData, loginUser] = useLoginMutation();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(

@@ -15,7 +15,7 @@ import { useForm } from "../../../hooks/useForm";
 import { Link } from "react-router-dom";
 import { useRegisterMutation } from "../../../generated/graphql";
 
-interface RegisterProps {}
+// interface RegisterProps {}
 
 interface RegisterUserI {
   email: string;
@@ -24,7 +24,7 @@ interface RegisterUserI {
   phone: string;
 }
 
-const Register: React.FC<RegisterProps> = ({}) => {
+const Register: React.FC<{}> = () => {
   const [, registerUser] = useRegisterMutation();
   const { user, handleChange, handleSubmit } = useForm<RegisterUserI>(
     {
