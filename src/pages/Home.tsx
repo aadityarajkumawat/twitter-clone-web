@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { me } from "../constants/urls";
-import { useMeQuery } from "../generated/graphql";
+import { useCreateTweetMutation, useMeQuery } from "../generated/graphql";
 import * as S from "./home.styles";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [{ data, fetching }, gg] = useMeQuery();
-  console.log(data);
+  const [{ error, data }, postTweet] = useCreateTweetMutation();
+  console.log(error, data);
+  const [tweetInput, setTweetInput] = useState<string>("");
   return (
     <S.BaseComponent>
       <S.HomeMain>
@@ -19,11 +20,18 @@ const Home: React.FC<HomeProps> = () => {
             </S.ProfileImageInc>
             <S.MTweet>
               <S.TweetInput>
-                <S.TweetInputField placeholder="What's Happening?" />
+                <S.TweetInputField
+                  placeholder="What's Happening?"
+                  onChange={(e) => setTweetInput(e.target.value)}
+                />
               </S.TweetInput>
               <S.EditTweetOptions>
                 <S.TweetAc></S.TweetAc>
-                <S.TweetButton>Tweet</S.TweetButton>
+                <S.TweetButton
+                  onClick={() => postTweet({ tweet_content: tweetInput })}
+                >
+                  Tweet
+                </S.TweetButton>
               </S.EditTweetOptions>
             </S.MTweet>
           </S.CreateTweet>
@@ -34,4 +42,5 @@ const Home: React.FC<HomeProps> = () => {
     </S.BaseComponent>
   );
 };
+
 export default Home;
