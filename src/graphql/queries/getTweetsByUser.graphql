@@ -8,6 +8,9 @@ query GetTweetsByUser {
       rel_acc
       username
       name
+      likes
+      comments
+      liked
     }
     error
   }

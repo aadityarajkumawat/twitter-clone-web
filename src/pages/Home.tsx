@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
+import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
-import { useCreateTweetMutation, useMeQuery } from "../generated/graphql";
+import {
+  useCreateTweetMutation,
+  useGetTweetsByUserQuery,
+} from "../generated/graphql";
 import * as S from "./home.styles";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [{ error, data }, postTweet] = useCreateTweetMutation();
-  console.log(error, data);
+  const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
+  const [
+    { data: tweets, fetching: fetchingTweets },
+  ] = useGetTweetsByUserQuery();
+
   return (
     <S.BaseComponent>
       <S.HomeMain>
@@ -37,7 +44,35 @@ const Home: React.FC<HomeProps> = () => {
           </S.CreateTweet>
         </S.FeedHeader>
 
-        <S.Tweets></S.Tweets>
+        <S.Tweets>
+          {!fetchingTweets ? (
+            <Fragment>
+              {tweets!.getTweetsByUser.tweets.map(
+                ({
+                  name,
+                  username,
+                  tweet_content,
+                  likes,
+                  comments,
+                  liked,
+                  tweet_id,
+                }) => (
+                  <Tweet
+                    name={name}
+                    liked={liked}
+                    tweet_content={tweet_content}
+                    key={tweet_id}
+                    username={username}
+                    likes={likes}
+                    comments={comments}
+                  />
+                )
+              )}
+            </Fragment>
+          ) : (
+            <Fragment>Loading...</Fragment>
+          )}
+        </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
   );

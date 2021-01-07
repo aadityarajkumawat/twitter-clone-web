@@ -18,9 +18,10 @@ import {
 interface TweetProps {
   username: string;
   tweet_content: string;
-  tweet_id: number;
   name: string;
-  liked?: boolean;
+  liked: boolean;
+  likes: number;
+  comments: number;
 }
 
 interface LikeContext {
@@ -32,13 +33,11 @@ interface LikeContext {
 const Tweet: React.FC<TweetProps> = ({
   username,
   tweet_content,
-  tweet_id,
   name,
   liked,
+  likes,
+  comments,
 }) => {
-  const [, likeTweet] = useLikeTweetMutation();
-  const like = useHighContext<LikeContext>(contextNames.likeClick);
-  const { click } = like;
   return (
     <TweetWrapper>
       <UserProfileImg>
@@ -53,13 +52,8 @@ const Tweet: React.FC<TweetProps> = ({
         <TweetActionBar>
           <span>{SVG.commentSVG}</span>
           <span>{SVG.retweetSVG}</span>
-          <span
-            onClick={() => {
-              likeTweet({ tweet_id });
-              click();
-            }}
-          >
-            {/* <LikeSVG liked={liked} /> */}
+          <span>
+            <LikeSVG liked={liked} />
           </span>
           <span>{SVG.shareSVG}</span>
         </TweetActionBar>
