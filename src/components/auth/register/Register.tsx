@@ -22,21 +22,25 @@ interface RegisterUserI {
   password: string;
   username: string;
   phone: string;
+  name: string;
 }
 
 const Register: React.FC<{}> = () => {
-  const [, registerUser] = useRegisterMutation();
+  const [ee, registerUser] = useRegisterMutation();
   const { user, handleChange, handleSubmit } = useForm<RegisterUserI>(
     {
       email: "",
       password: "",
       username: "",
       phone: "",
+      name: "",
     },
     registerUser
   );
 
-  const { email, password, username, phone } = user;
+  console.log(ee);
+
+  const { email, password, username, phone, name } = user;
 
   return (
     <LoginContainer>
@@ -46,6 +50,14 @@ const Register: React.FC<{}> = () => {
           <Name>Register</Name>
         </FormHeader>
         <Form onSubmit={handleSubmit}>
+          <InputField
+            placeholder="Name"
+            name="name"
+            value={name}
+            type="text"
+            onChange={handleChange}
+            autoComplete="off"
+          />
           <InputField
             placeholder="Username"
             name="username"
