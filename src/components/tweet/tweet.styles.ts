@@ -3,7 +3,6 @@ import { flexCenter, StyledDiv } from "../../constants/styles";
 
 export const TweetContainer = styled(StyledDiv)`
   width: 80%;
-  /* background-color: red; */
   padding: 14px 25px 14px 0;
 `;
 
@@ -42,4 +41,24 @@ export const TweetWrapper = styled(StyledDiv)`
   width: 100%;
   ${flexCenter}
   border-bottom: 1px solid #eeeeee20;
+`;
+
+export const CommentSpan = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    margin-left: 5px;
+  }
+`;
+
+export const LikeSpan = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    margin-left: 5px;
+  }
 `;

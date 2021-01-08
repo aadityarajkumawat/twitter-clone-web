@@ -1,12 +1,12 @@
 import React from "react";
-import { useHighContext } from "stithi";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { me } from "../../constants/urls";
 import { useLikeTweetMutation } from "../../generated/graphql";
-import { contextNames } from "../../stithi/callContext";
 import LikeSVG from "../svgs/LikeSVG";
 import {
+  CommentSpan,
   FadedUsername,
+  LikeSpan,
   TweetActionBar,
   TweetContainer,
   TweetContent,
@@ -22,6 +22,7 @@ interface TweetProps {
   liked: boolean;
   likes: number;
   comments: number;
+  tweet_id: number;
 }
 
 interface LikeContext {
@@ -37,6 +38,7 @@ const Tweet: React.FC<TweetProps> = ({
   liked,
   likes,
   comments,
+  tweet_id,
 }) => {
   return (
     <TweetWrapper>
@@ -50,11 +52,15 @@ const Tweet: React.FC<TweetProps> = ({
         </TweetUsername>
         <TweetContent>{tweet_content}</TweetContent>
         <TweetActionBar>
-          <span>{SVG.commentSVG}</span>
+          <CommentSpan>
+            {SVG.commentSVG}
+            <div>{comments}</div>
+          </CommentSpan>
           <span>{SVG.retweetSVG}</span>
-          <span>
-            <LikeSVG liked={liked} />
-          </span>
+          <LikeSpan>
+            <LikeSVG liked={liked} tweet_id={tweet_id} />
+            <div>{likes}</div>
+          </LikeSpan>
           <span>{SVG.shareSVG}</span>
         </TweetActionBar>
       </TweetContainer>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
@@ -14,7 +14,16 @@ const Home: React.FC<HomeProps> = () => {
   const [tweetInput, setTweetInput] = useState<string>("");
   const [
     { data: tweets, fetching: fetchingTweets },
+    refetchTweets,
   ] = useGetTweetsByUserQuery();
+
+  console.log({ tweets, fetchingTweets });
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     refetchTweets({ requestPolicy: "network-only" });
+  //   }, 2000);
+  // }, []);
 
   return (
     <S.BaseComponent>
@@ -29,7 +38,7 @@ const Home: React.FC<HomeProps> = () => {
               <S.TweetInput>
                 <S.TweetInputField
                   placeholder="What's Happening?"
-                  onChange={(e) => setTweetInput(e.target.value)}
+                  onBlur={(e) => setTweetInput(e.target.value)}
                 />
               </S.TweetInput>
               <S.EditTweetOptions>
@@ -65,6 +74,7 @@ const Home: React.FC<HomeProps> = () => {
                     username={username}
                     likes={likes}
                     comments={comments}
+                    tweet_id={tweet_id}
                   />
                 )
               )}

@@ -1,12 +1,15 @@
 import React from "react";
+import { useLikeTweetMutation } from "../../generated/graphql";
 
 interface LikeSVGProps {
   liked: boolean;
+  tweet_id: number;
 }
 
-const LikeSVG: React.FC<LikeSVGProps> = ({ liked }) => {
+const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id }) => {
+  const [, likeTweet] = useLikeTweetMutation();
   return (
-    <div>
+    <div onClick={() => likeTweet({ tweet_id })}>
       <svg
         fill={liked ? "red" : "white"}
         width="20px"
