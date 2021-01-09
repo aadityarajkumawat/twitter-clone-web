@@ -156,6 +156,11 @@ export type UserToFollow = {
   thatUser: Scalars["Float"];
 };
 
+export type Subscription = {
+  __typename?: "Subscription";
+  listenTweets: GetTweetResponse;
+};
+
 export type CreateTweetMutationVariables = Exact<{
   tweet_content: Scalars["String"];
   rel_acc?: Maybe<Scalars["Float"]>;
@@ -269,6 +274,31 @@ export type MeQuery = { __typename?: "Query" } & {
       "id" | "email" | "createdAt" | "updatedAt" | "username" | "phone"
     >
   >;
+};
+
+export type ListenTweetsSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type ListenTweetsSubscription = { __typename?: "Subscription" } & {
+  listenTweets: { __typename?: "GetTweetResponse" } & Pick<
+    GetTweetResponse,
+    "error"
+  > & {
+      tweet?: Maybe<
+        { __typename?: "GetTweet" } & Pick<
+          GetTweet,
+          | "tweet_id"
+          | "tweet_content"
+          | "created_At"
+          | "_type"
+          | "rel_acc"
+          | "username"
+          | "name"
+          | "comments"
+          | "likes"
+          | "liked"
+        >
+      >;
+    };
 };
 
 export const CreateTweetDocument = gql`
@@ -417,4 +447,37 @@ export function useMeQuery(
   options: Omit<Urql.UseQueryArgs<MeQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+}
+export const ListenTweetsDocument = gql`
+  subscription ListenTweets {
+    listenTweets {
+      tweet {
+        tweet_id
+        tweet_content
+        created_At
+        _type
+        rel_acc
+        username
+        name
+        comments
+        likes
+        liked
+      }
+      error
+    }
+  }
+`;
+
+export function useListenTweetsSubscription<TData = ListenTweetsSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<ListenTweetsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<ListenTweetsSubscription, TData>
+) {
+  return Urql.useSubscription<
+    ListenTweetsSubscription,
+    TData,
+    ListenTweetsSubscriptionVariables
+  >({ query: ListenTweetsDocument, ...options }, handler);
 }

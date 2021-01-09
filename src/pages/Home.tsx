@@ -1,29 +1,48 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { useSubscription } from "urql";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
+  GetTweetsByUserQuery,
   useCreateTweetMutation,
   useGetTweetsByUserQuery,
+  useListenTweetsSubscription,
 } from "../generated/graphql";
 import * as S from "./home.styles";
 
 interface HomeProps {}
 
+interface Tweet {
+  comments: number;
+  // created_At: string;
+  // liked: boolean;
+  // likes: number;
+  // name: string;
+  // rel_acc: number;
+  // tweet_content: string;
+  // tweet_id: number;
+  // username: string;
+  // _type: string;
+}
+
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
+  const [user, setUser] = useState<Array<Tweet>>([]);
   const [
     { data: tweets, fetching: fetchingTweets },
-    refetchTweets,
   ] = useGetTweetsByUserQuery();
 
-  console.log({ tweets, fetchingTweets });
+  const [{ data }] = useListenTweetsSubscription();
 
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     refetchTweets({ requestPolicy: "network-only" });
-  //   }, 2000);
-  // }, []);
+  const addName = () => {
+    setUser([{ comments: 9 }]);
+  };
+
+  if (!fetchingTweets) {
+    addName();
+    // console.log()
+  }
 
   return (
     <S.BaseComponent>
@@ -48,6 +67,7 @@ const Home: React.FC<HomeProps> = () => {
                 >
                   Tweet
                 </S.TweetButton>
+                {/* <button onClick={addName}>cool</button> */}
               </S.EditTweetOptions>
             </S.MTweet>
           </S.CreateTweet>

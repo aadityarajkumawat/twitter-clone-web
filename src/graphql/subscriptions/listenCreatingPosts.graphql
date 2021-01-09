@@ -1,0 +1,17 @@
+subscription ListenTweets {
+  listenTweets {
+    tweet {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+      username
+      name
+      comments
+      likes
+      liked
+    }
+    error
+  }
+}
