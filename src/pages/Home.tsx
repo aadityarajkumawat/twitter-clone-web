@@ -14,35 +14,33 @@ interface HomeProps {}
 
 interface Tweet {
   comments: number;
-  // created_At: string;
-  // liked: boolean;
-  // likes: number;
-  // name: string;
-  // rel_acc: number;
-  // tweet_content: string;
-  // tweet_id: number;
-  // username: string;
-  // _type: string;
+  created_At: string;
+  liked: boolean;
+  likes: number;
+  name: string;
+  rel_acc: number;
+  tweet_content: string;
+  tweet_id: number;
+  username: string;
+  _type: string;
 }
 
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
-  const [user, setUser] = useState<Array<Tweet>>([]);
   const [
     { data: tweets, fetching: fetchingTweets },
   ] = useGetTweetsByUserQuery();
+  const [realTimeAdded, setRealTimeAdded] = useState<Array<Tweet>>([]);
 
-  const [{ data }] = useListenTweetsSubscription();
+  const [{ data, fetching }] = useListenTweetsSubscription();
 
-  const addName = () => {
-    setUser([{ comments: 9 }]);
-  };
-
-  if (!fetchingTweets) {
-    addName();
-    // console.log()
-  }
+  useEffect(() => {
+    if (data?.listenTweets.tweet?.tweet_id) {
+      const newTweet = data.listenTweets.tweet;
+      setRealTimeAdded((prev) => [...prev, newTweet]);
+    }
+  }, [data?.listenTweets.tweet?.tweet_id]);
 
   return (
     <S.BaseComponent>
@@ -67,7 +65,6 @@ const Home: React.FC<HomeProps> = () => {
                 >
                   Tweet
                 </S.TweetButton>
-                {/* <button onClick={addName}>cool</button> */}
               </S.EditTweetOptions>
             </S.MTweet>
           </S.CreateTweet>
@@ -101,6 +98,22 @@ const Home: React.FC<HomeProps> = () => {
             </Fragment>
           ) : (
             <Fragment>Loading...</Fragment>
+          )}
+          {realTimeAdded.length > 0 && (
+            <Fragment>
+              {realTimeAdded.map((tweet) => (
+                <Tweet
+                  name={tweet.name}
+                  liked={tweet.liked}
+                  tweet_content={tweet.tweet_content}
+                  key={tweet.tweet_id}
+                  username={tweet.username}
+                  likes={tweet.likes}
+                  comments={tweet.comments}
+                  tweet_id={tweet.tweet_id}
+                />
+              ))}
+            </Fragment>
           )}
         </S.Tweets>
       </S.HomeMain>
