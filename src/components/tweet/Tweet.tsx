@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { me } from "../../constants/urls";
-import {
-  useGetTweetByIdQuery,
-  useLikeTweetMutation,
-} from "../../generated/graphql";
+import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
 import {
   CommentSpan,
@@ -22,19 +19,14 @@ interface TweetProps {
   username: string;
   tweet_content: string;
   name: string;
-  liked: boolean;
-  likes: number;
   comments: number;
   tweet_id: number;
-  // refresh: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
   username,
   tweet_content,
   name,
-  liked,
-  likes,
   comments,
   tweet_id,
 }) => {
@@ -46,9 +38,8 @@ const Tweet: React.FC<TweetProps> = ({
 
   useEffect(() => {
     reloadQuery({ requestPolicy: "network-only" });
-    console.log("trying...");
+    //eslint-disable-next-line
   }, [refresh]);
-
 
   return (
     <TweetWrapper>

@@ -126,3 +126,9 @@ export const LoadMoreBtn = styled.button`
   border: none;
   padding: 5px 15px;
 `;
+
+export const Plac = styled.div`
+  background-color: #11119c;
+  height: 50px;
+  width: 100px;
+`;

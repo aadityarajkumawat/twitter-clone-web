@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
@@ -8,12 +14,11 @@ import {
   useGetPaginatedPostsQuery,
 } from "../generated/graphql";
 import * as S from "./home.styles";
-import { v4 as uuidv4 } from "uuid";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 
 interface HomeProps {}
 
-interface Tweet {
+interface TweetItem {
   comments: number;
   created_At: string;
   liked: boolean;
@@ -39,9 +44,9 @@ const Home: React.FC<HomeProps> = () => {
     { data: tweets, fetching: fetchingTweets },
   ] = useGetTweetsByUserQuery();
   // Realtime added tweets state
-  const [realTimeAdded, setRealTimeAdded] = useState<Array<Tweet>>([]);
+  const [realTimeAdded, setRealTimeAdded] = useState<Array<TweetItem>>([]);
   // More loaded tweets state
-  const [morePosts, setMorePosts] = useState<Array<Tweet>>([]);
+  const [morePosts, setMorePosts] = useState<Array<TweetItem>>([]);
   const [paginationParams, setPaginationParams] = useState<PaginationParams>({
     limit: -1,
     offset: 0,
@@ -52,6 +57,60 @@ const Home: React.FC<HomeProps> = () => {
   const [
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
+
+  const loader = useRef<HTMLDivElement | null>(null);
+
+  const loadMorePosts = () => {
+    console.log("Being called")
+    let currentNumberOfPosts =
+      realTimeAdded.length +
+      (tweets ? tweets!.getTweetsByUser.tweets.length : 0) +
+      morePosts.length;
+      console.log(currentNumberOfPosts)
+
+    setPaginationParams((prev) => ({
+      ...prev,
+      limit: 2,
+      offset: currentNumberOfPosts,
+    }));
+  };
+
+  const oo = useCallback((node) => {
+    console.log(node);
+    // @ts-ignore
+    loader.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMorePosts();
+      }
+    });
+    if (node) {
+      // @ts-ignore
+      loader.current.observe(node);
+    }
+  }, []);
+
+  // const handleObserver = (entities: any) => {
+  //   const target = entities[0];
+  //   console.log({target})
+  //   if (target.isIntersecting) {
+  //     loadMorePosts();
+  //     console.log("k");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   var options = {
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 0.5,
+  //   };
+
+  //   const observer = new IntersectionObserver(handleObserver, options);
+  //   console.log(loader)
+  //   if (loader.current) {
+  //     observer.observe(loader.current);
+  //   }
+  // }, [loader.current]);
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
@@ -68,13 +127,16 @@ const Home: React.FC<HomeProps> = () => {
         setRealTimeAdded((prev) => [newTweet, ...prev]);
       }
     }
+    //eslint-disable-next-line
   }, [realtimePosts?.listenTweets.tweet?.tweet_id]);
 
   useEffect(() => {
     if (loadedPosts) {
-      const moreP = loadedPosts.getPaginatedPosts.tweets;
+      let moreP = loadedPosts.getPaginatedPosts.tweets;
+      moreP = moreP.slice(moreP.length - 2, moreP.length);
       setMorePosts((prev) => [...prev, ...moreP]);
     }
+    //eslint-disable-next-line
   }, [JSON.stringify(loadedPosts?.getPaginatedPosts.tweets)]);
 
   return (
@@ -111,11 +173,9 @@ const Home: React.FC<HomeProps> = () => {
               {realTimeAdded.map((tweet) => (
                 <Tweet
                   name={tweet.name}
-                  liked={tweet.liked}
                   tweet_content={tweet.tweet_content}
                   key={tweet.tweet_id}
                   username={tweet.username}
-                  likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
                 />
@@ -127,11 +187,9 @@ const Home: React.FC<HomeProps> = () => {
               {tweets!.getTweetsByUser.tweets.map((tweet) => (
                 <Tweet
                   name={tweet.name}
-                  liked={tweet.liked}
                   tweet_content={tweet.tweet_content}
                   key={tweet.tweet_id}
                   username={tweet.username}
-                  likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
                 />
@@ -145,11 +203,9 @@ const Home: React.FC<HomeProps> = () => {
               {morePosts.map((tweet) => (
                 <Tweet
                   name={tweet.name}
-                  liked={tweet.liked}
                   tweet_content={tweet.tweet_content}
                   key={tweet.tweet_id}
                   username={tweet.username}
-                  likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
                 />
@@ -158,24 +214,7 @@ const Home: React.FC<HomeProps> = () => {
           ) : (
             <Fragment>Fetching more posts...</Fragment>
           )}
-          <S.LoadMoreContainer>
-            <S.LoadMoreBtn
-              onClick={() => {
-                let currentNumberOfPosts =
-                  realTimeAdded.length +
-                  tweets!.getTweetsByUser.tweets.length +
-                  morePosts.length;
-
-                setPaginationParams((prev) => ({
-                  ...prev,
-                  limit: 2,
-                  offset: currentNumberOfPosts,
-                }));
-              }}
-            >
-              load more tweets
-            </S.LoadMoreBtn>
-          </S.LoadMoreContainer>
+          {!fetchingTweets && <S.Plac ref={oo}></S.Plac>}
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
