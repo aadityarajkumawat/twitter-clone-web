@@ -1,0 +1,17 @@
+query GetPaginatedPosts($offset: Float!, $limit: Float!) {
+  getPaginatedPosts(options: { offset: $offset, limit: $limit }) {
+    tweets {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+      username
+      name
+      likes
+      comments
+      liked
+    }
+    error
+  }
+}

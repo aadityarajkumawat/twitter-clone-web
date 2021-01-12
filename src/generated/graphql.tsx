@@ -24,10 +24,15 @@ export type Query = {
   me?: Maybe<User>;
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetUserTweets;
+  getPaginatedPosts: GetUserTweets;
 };
 
 export type QueryGetTweetByIdArgs = {
   options: GetTweetById;
+};
+
+export type QueryGetPaginatedPostsArgs = {
+  options: PaginatingParams;
 };
 
 export type User = {
@@ -69,6 +74,11 @@ export type GetUserTweets = {
   __typename?: "GetUserTweets";
   tweets: Array<GetTweet>;
   error: Scalars["String"];
+};
+
+export type PaginatingParams = {
+  offset: Scalars["Float"];
+  limit: Scalars["Float"];
 };
 
 export type Mutation = {
@@ -240,6 +250,34 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
   };
 };
 
+export type GetPaginatedPostsQueryVariables = Exact<{
+  offset: Scalars["Float"];
+  limit: Scalars["Float"];
+}>;
+
+export type GetPaginatedPostsQuery = { __typename?: "Query" } & {
+  getPaginatedPosts: { __typename?: "GetUserTweets" } & Pick<
+    GetUserTweets,
+    "error"
+  > & {
+      tweets: Array<
+        { __typename?: "GetTweet" } & Pick<
+          GetTweet,
+          | "tweet_id"
+          | "tweet_content"
+          | "created_At"
+          | "_type"
+          | "rel_acc"
+          | "username"
+          | "name"
+          | "likes"
+          | "comments"
+          | "liked"
+        >
+      >;
+    };
+};
+
 export type GetTweetsByUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTweetsByUserQuery = { __typename?: "Query" } & {
@@ -401,6 +439,37 @@ export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(
     RegisterDocument
   );
+}
+export const GetPaginatedPostsDocument = gql`
+  query GetPaginatedPosts($offset: Float!, $limit: Float!) {
+    getPaginatedPosts(options: { offset: $offset, limit: $limit }) {
+      tweets {
+        tweet_id
+        tweet_content
+        created_At
+        _type
+        rel_acc
+        username
+        name
+        likes
+        comments
+        liked
+      }
+      error
+    }
+  }
+`;
+
+export function useGetPaginatedPostsQuery(
+  options: Omit<
+    Urql.UseQueryArgs<GetPaginatedPostsQueryVariables>,
+    "query"
+  > = {}
+) {
+  return Urql.useQuery<GetPaginatedPostsQuery>({
+    query: GetPaginatedPostsDocument,
+    ...options,
+  });
 }
 export const GetTweetsByUserDocument = gql`
   query GetTweetsByUser {
