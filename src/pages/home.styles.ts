@@ -113,3 +113,16 @@ export const Tweets = styled.div`
   width: 100%;
   color: white;
 `;
+
+export const LoadMoreContainer = styled.div`
+  width: 100%;
+  height: 50px;
+  ${flexCenter}
+`;
+
+export const LoadMoreBtn = styled.button`
+  background-color: #11119c;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+`;

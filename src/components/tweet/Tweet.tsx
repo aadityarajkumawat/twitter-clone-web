@@ -1,7 +1,10 @@
 import React from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { me } from "../../constants/urls";
-import { useLikeTweetMutation } from "../../generated/graphql";
+import {
+  useGetTweetByIdQuery,
+  useLikeTweetMutation,
+} from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
 import {
   CommentSpan,
@@ -23,12 +26,7 @@ interface TweetProps {
   likes: number;
   comments: number;
   tweet_id: number;
-}
-
-interface LikeContext {
-  isClicked: boolean;
-  click: () => void;
-  unclick: () => void;
+  refresh: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -39,7 +37,11 @@ const Tweet: React.FC<TweetProps> = ({
   likes,
   comments,
   tweet_id,
+  refresh,
 }) => {
+  const [{ data }, reloadQuery] = useGetTweetByIdQuery({
+    variables: { tweet_id },
+  });
   return (
     <TweetWrapper>
       <UserProfileImg>
@@ -58,8 +60,13 @@ const Tweet: React.FC<TweetProps> = ({
           </CommentSpan>
           <span>{SVG.retweetSVG}</span>
           <LikeSpan>
-            <LikeSVG liked={liked} tweet_id={tweet_id} />
-            <div>{likes}</div>
+            <LikeSVG
+              liked={data ? data!.getTweetById.tweet?.liked : false}
+              tweet_id={tweet_id}
+              refresh={refresh}
+              reloadQuery={reloadQuery}
+            />
+            <div>{data ? data!.getTweetById.tweet?.likes : 0}</div>
           </LikeSpan>
           <span>{SVG.shareSVG}</span>
         </TweetActionBar>

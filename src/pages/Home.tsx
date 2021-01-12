@@ -8,6 +8,7 @@ import {
   useGetPaginatedPostsQuery,
 } from "../generated/graphql";
 import * as S from "./home.styles";
+import { v4 as uuidv4 } from "uuid";
 
 interface HomeProps {}
 
@@ -32,24 +33,44 @@ interface PaginationParams {
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
+  // First fetched tweets
   const [
     { data: tweets, fetching: fetchingTweets },
   ] = useGetTweetsByUserQuery();
+  // Realtime added tweets state
   const [realTimeAdded, setRealTimeAdded] = useState<Array<Tweet>>([]);
+  // More loaded tweets state
   const [morePosts, setMorePosts] = useState<Array<Tweet>>([]);
   const [paginationParams, setPaginationParams] = useState<PaginationParams>({
     limit: -1,
     offset: 0,
   });
+  // Fetching realtime tweets
   const [{ data: realtimePosts }] = useListenTweetsSubscription();
+  // Fetching more tweets
   const [
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
+  // refresh tweet token
+  const [refreshToken, setRefreshToken] = useState<string>("");
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
       const newTweet = realtimePosts.listenTweets.tweet;
-      setRealTimeAdded((prev) => [newTweet, ...prev]);
+      const idOfThisTweet = newTweet.tweet_id;
+      let found = false;
+      for (let i = 0; i < tweets!.getTweetsByUser.tweets.length; i++) {
+        const arr = tweets!.getTweetsByUser.tweets;
+        if (arr[i].tweet_id === idOfThisTweet) {
+          console.log(realtimePosts);
+          console.log("ok hey, hhhooow u doin");
+          setRefreshToken(uuidv4());
+          found = true;
+        }
+      }
+      if (!found) {
+        setRealTimeAdded((prev) => [newTweet, ...prev]);
+      }
     }
   }, [realtimePosts?.listenTweets.tweet?.tweet_id]);
 
@@ -101,6 +122,7 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
+                  refresh={refreshToken}
                 />
               ))}
             </Fragment>
@@ -117,6 +139,7 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
+                  refresh={refreshToken}
                 />
               ))}
             </Fragment>
@@ -135,14 +158,15 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
+                  refresh={refreshToken}
                 />
               ))}
             </Fragment>
           ) : (
             <Fragment>Fetching more posts...</Fragment>
           )}
-          <div>
-            <button
+          <S.LoadMoreContainer>
+            <S.LoadMoreBtn
               onClick={() => {
                 let currentNumberOfPosts =
                   realTimeAdded.length +
@@ -151,14 +175,14 @@ const Home: React.FC<HomeProps> = () => {
 
                 setPaginationParams((prev) => ({
                   ...prev,
-                  limit: 6,
+                  limit: 2,
                   offset: currentNumberOfPosts,
                 }));
               }}
             >
               load more tweets
-            </button>
-          </div>
+            </S.LoadMoreBtn>
+          </S.LoadMoreContainer>
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>

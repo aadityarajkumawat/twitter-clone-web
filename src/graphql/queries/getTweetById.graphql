@@ -1,0 +1,17 @@
+query GetTweetById($tweet_id: Float!) {
+  getTweetById(options: { tweet_id: $tweet_id }) {
+    tweet {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+      username
+      name
+      likes
+      comments
+      liked
+    }
+    error
+  }
+}
