@@ -9,6 +9,7 @@ import {
 } from "../generated/graphql";
 import * as S from "./home.styles";
 import { v4 as uuidv4 } from "uuid";
+import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 
 interface HomeProps {}
 
@@ -51,23 +52,18 @@ const Home: React.FC<HomeProps> = () => {
   const [
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
-  // refresh tweet token
-  const [refreshToken, setRefreshToken] = useState<string>("");
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
       const newTweet = realtimePosts.listenTweets.tweet;
       const idOfThisTweet = newTweet.tweet_id;
-      let found = false;
-      for (let i = 0; i < tweets!.getTweetsByUser.tweets.length; i++) {
-        const arr = tweets!.getTweetsByUser.tweets;
-        if (arr[i].tweet_id === idOfThisTweet) {
-          console.log(realtimePosts);
-          console.log("ok hey, hhhooow u doin");
-          setRefreshToken(uuidv4());
-          found = true;
-        }
-      }
+      let found = tweetAlreadyExist(
+        tweets!.getTweetsByUser.tweets,
+        realTimeAdded,
+        morePosts,
+        idOfThisTweet
+      );
+
       if (!found) {
         setRealTimeAdded((prev) => [newTweet, ...prev]);
       }
@@ -122,7 +118,6 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
-                  refresh={refreshToken}
                 />
               ))}
             </Fragment>
@@ -139,7 +134,6 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
-                  refresh={refreshToken}
                 />
               ))}
             </Fragment>
@@ -158,7 +152,6 @@ const Home: React.FC<HomeProps> = () => {
                   likes={tweet.likes}
                   comments={tweet.comments}
                   tweet_id={tweet.tweet_id}
-                  refresh={refreshToken}
                 />
               ))}
             </Fragment>

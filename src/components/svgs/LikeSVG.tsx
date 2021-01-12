@@ -1,35 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useGetTweetByIdQuery,
   useLikeTweetMutation,
 } from "../../generated/graphql";
+import { v4 as uuidv4 } from "uuid";
 
 interface LikeSVGProps {
   liked: boolean | undefined;
   tweet_id: number;
-  refresh: string;
-  reloadQuery: (option: QueryType) => void;
-}
-
-interface QueryType {
-  requestPolicy: "network-only";
+  setR: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const LikeSVG: React.FC<LikeSVGProps> = ({
   liked,
   tweet_id,
-  refresh,
-  reloadQuery,
+  setR,
 }) => {
   const [, likeTweet] = useLikeTweetMutation();
 
-  useEffect(() => {
-    reloadQuery({ requestPolicy: "network-only" });
-    console.log("trying...");
-  }, [refresh]);
-
   return (
-    <div onClick={() => likeTweet({ tweet_id })}>
+    <div
+      onClick={async () => {
+        await likeTweet({ tweet_id });
+        setR(uuidv4());
+      }}
+    >
       <svg
         fill={liked ? "red" : "white"}
         width="20px"

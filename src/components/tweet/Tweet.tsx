@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { me } from "../../constants/urls";
 import {
@@ -26,7 +26,7 @@ interface TweetProps {
   likes: number;
   comments: number;
   tweet_id: number;
-  refresh: string;
+  // refresh: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -37,11 +37,19 @@ const Tweet: React.FC<TweetProps> = ({
   likes,
   comments,
   tweet_id,
-  refresh,
 }) => {
   const [{ data }, reloadQuery] = useGetTweetByIdQuery({
     variables: { tweet_id },
   });
+
+  const [refresh, setRefresh] = useState<string>("");
+
+  useEffect(() => {
+    reloadQuery({ requestPolicy: "network-only" });
+    console.log("trying...");
+  }, [refresh]);
+
+
   return (
     <TweetWrapper>
       <UserProfileImg>
@@ -63,8 +71,7 @@ const Tweet: React.FC<TweetProps> = ({
             <LikeSVG
               liked={data ? data!.getTweetById.tweet?.liked : false}
               tweet_id={tweet_id}
-              refresh={refresh}
-              reloadQuery={reloadQuery}
+              setR={setRefresh}
             />
             <div>{data ? data!.getTweetById.tweet?.likes : 0}</div>
           </LikeSpan>
