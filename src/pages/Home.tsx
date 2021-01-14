@@ -51,6 +51,7 @@ const Home: React.FC<HomeProps> = () => {
     limit: -1,
     offset: 0,
   });
+  const [k, setK] = useState<number>(0);
   // Fetching realtime tweets
   const [{ data: realtimePosts }] = useListenTweetsSubscription();
   // Fetching more tweets
@@ -58,16 +59,16 @@ const Home: React.FC<HomeProps> = () => {
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
 
-  const loader = useRef<HTMLDivElement | null>(null);
+  const bot = useRef<HTMLDivElement | null>(null);
+  console.log(bot.current);
 
-  const loadMorePosts = () => {
-    console.log("Being called")
+  const loadMorePosts = (l: number) => {
     let currentNumberOfPosts =
       realTimeAdded.length +
       (tweets ? tweets!.getTweetsByUser.tweets.length : 0) +
-      morePosts.length;
-      console.log(currentNumberOfPosts)
+      l;
 
+    console.log(currentNumberOfPosts);
     setPaginationParams((prev) => ({
       ...prev,
       limit: 2,
@@ -75,42 +76,23 @@ const Home: React.FC<HomeProps> = () => {
     }));
   };
 
-  const oo = useCallback((node) => {
-    console.log(node);
-    // @ts-ignore
-    loader.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        loadMorePosts();
+  useEffect(() => {
+    let options = {
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    let oo = new IntersectionObserver((enteries) => {
+      if (enteries[0].isIntersecting) {
+        loadMorePosts(morePosts.length);
       }
-    });
-    if (node) {
+    }, options);
+
+    if (bot.current) {
       // @ts-ignore
-      loader.current.observe(node);
+      oo.observe(bot.current);
     }
-  }, []);
-
-  // const handleObserver = (entities: any) => {
-  //   const target = entities[0];
-  //   console.log({target})
-  //   if (target.isIntersecting) {
-  //     loadMorePosts();
-  //     console.log("k");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   var options = {
-  //     root: null,
-  //     rootMargin: "0px",
-  //     threshold: 0.5,
-  //   };
-
-  //   const observer = new IntersectionObserver(handleObserver, options);
-  //   console.log(loader)
-  //   if (loader.current) {
-  //     observer.observe(loader.current);
-  //   }
-  // }, [loader.current]);
+  }, [bot.current, morePosts.length]);
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
@@ -122,7 +104,6 @@ const Home: React.FC<HomeProps> = () => {
         morePosts,
         idOfThisTweet
       );
-
       if (!found) {
         setRealTimeAdded((prev) => [newTweet, ...prev]);
       }
@@ -134,6 +115,7 @@ const Home: React.FC<HomeProps> = () => {
     if (loadedPosts) {
       let moreP = loadedPosts.getPaginatedPosts.tweets;
       moreP = moreP.slice(moreP.length - 2, moreP.length);
+      setK((prev) => prev + 2);
       setMorePosts((prev) => [...prev, ...moreP]);
     }
     //eslint-disable-next-line
@@ -214,7 +196,7 @@ const Home: React.FC<HomeProps> = () => {
           ) : (
             <Fragment>Fetching more posts...</Fragment>
           )}
-          {!fetchingTweets && <S.Plac ref={oo}></S.Plac>}
+          {!fetchingTweets && <S.Plac ref={bot}></S.Plac>}
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
