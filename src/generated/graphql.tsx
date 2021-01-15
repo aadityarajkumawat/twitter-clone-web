@@ -19,7 +19,7 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   getTweetById: GetTweetResponse;
-  getTweetsByUser: GetUserTweets;
+  getTweetsByUser: GetAllTweets;
   getPaginatedPosts: GetUserTweets;
 };
 
@@ -66,6 +66,13 @@ export type GetTweet = {
 
 export type GetTweetById = {
   tweet_id: Scalars['Float'];
+};
+
+export type GetAllTweets = {
+  __typename?: 'GetAllTweets';
+  tweets: Array<GetTweet>;
+  error: Scalars['String'];
+  num: Scalars['Float'];
 };
 
 export type GetUserTweets = {
@@ -298,8 +305,8 @@ export type GetTweetsByUserQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetTweetsByUserQuery = (
   { __typename?: 'Query' }
   & { getTweetsByUser: (
-    { __typename?: 'GetUserTweets' }
-    & Pick<GetUserTweets, 'error'>
+    { __typename?: 'GetAllTweets' }
+    & Pick<GetAllTweets, 'error' | 'num'>
     & { tweets: Array<(
       { __typename?: 'GetTweet' }
       & Pick<GetTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked'>
@@ -477,6 +484,7 @@ export const GetTweetsByUserDocument = gql`
       liked
     }
     error
+    num
   }
 }
     `;

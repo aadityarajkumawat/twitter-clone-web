@@ -9,6 +9,7 @@ import {
 } from "../generated/graphql";
 import * as S from "./home.styles";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface HomeProps {}
 
@@ -28,6 +29,11 @@ interface TweetItem {
 interface PaginationParams {
   offset: number;
   limit: number;
+}
+
+interface Scroller {
+  dataLength: number;
+  hasMore: boolean;
 }
 
 const Home: React.FC<HomeProps> = () => {
@@ -52,19 +58,21 @@ const Home: React.FC<HomeProps> = () => {
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
 
-  const scroller = useRef<HTMLDivElement | null>(null);
-  const p = useRef<HTMLDivElement | null>(null);
+  const [scroller, setScroller] = useState<Scroller>({
+    dataLength: 2,
+    hasMore: true,
+  });
 
   const loadMorePosts = (a: number, b: number, c: number) => {
     let currentNumberOfPosts = a + b + c;
-
-    // console.log(currentNumberOfPosts);
     setPaginationParams((prev) => ({
       ...prev,
       limit: 2,
       offset: currentNumberOfPosts,
     }));
   };
+
+  // console.log(loadedPosts);
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
@@ -92,32 +100,22 @@ const Home: React.FC<HomeProps> = () => {
     //eslint-disable-next-line
   }, [JSON.stringify(loadedPosts?.getPaginatedPosts.tweets)]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (scroller.current?.getBoundingClientRect) {
-        if (
-          scroller.current?.getBoundingClientRect().bottom -
-            window.innerHeight <=
-          0
-        ) {
-          // g();
-          console.log("ok");
-        }
-      }
-    });
-  }, [realTimeAdded.length, morePosts]);
-
   const g = () => {
     let a = realTimeAdded.length;
     let b = 7;
     let c = morePosts.length;
 
-    console.log(a + b + c);
+    if (paginationParams.offset === tweets?.getTweetsByUser.num) {
+      setScroller((prev) => ({ ...prev, hasMore: false }));
+    }
+
+    setScroller((prev) => ({ ...prev, dataLength: prev.dataLength + 2 }));
+
     loadMorePosts(a, b, c);
   };
 
   return (
-    <S.BaseComponent ref={p}>
+    <S.BaseComponent>
       <S.HomeMain>
         <S.FeedHeader>
           <S.PageName>Home</S.PageName>
@@ -175,23 +173,30 @@ const Home: React.FC<HomeProps> = () => {
           ) : (
             <Fragment>Loading...</Fragment>
           )}
-          {!fetchingMorePosts ? (
-            <Fragment>
-              {morePosts.map((tweet) => (
-                <Tweet
-                  name={tweet.name}
-                  tweet_content={tweet.tweet_content}
-                  key={tweet.tweet_id}
-                  username={tweet.username}
-                  comments={tweet.comments}
-                  tweet_id={tweet.tweet_id}
-                />
-              ))}
-            </Fragment>
-          ) : (
-            <Fragment>Fetching more posts...</Fragment>
-          )}
-          {!fetchingTweets && <S.Plac ref={scroller} onClick={g}></S.Plac>}
+
+          <InfiniteScroll
+            dataLength={scroller.dataLength}
+            next={g}
+            hasMore={scroller.hasMore}
+            loader={<h4>Loading...</h4>}
+          >
+            {!fetchingMorePosts ? (
+              <Fragment>
+                {morePosts.map((tweet) => (
+                  <Tweet
+                    name={tweet.name}
+                    tweet_content={tweet.tweet_content}
+                    key={tweet.tweet_id}
+                    username={tweet.username}
+                    comments={tweet.comments}
+                    tweet_id={tweet.tweet_id}
+                  />
+                ))}
+              </Fragment>
+            ) : (
+              <Fragment>Fetching more posts...</Fragment>
+            )}
+          </InfiniteScroll>
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
