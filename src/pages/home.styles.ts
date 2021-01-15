@@ -3,7 +3,7 @@ import { flexCenter } from "../constants/styles";
 
 export const BaseComponent = styled.div`
   width: 100vw;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: #222;
   ${flexCenter}
   flex-direction: column;

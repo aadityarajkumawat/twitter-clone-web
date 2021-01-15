@@ -1,10 +1,4 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
@@ -51,7 +45,6 @@ const Home: React.FC<HomeProps> = () => {
     limit: -1,
     offset: 0,
   });
-  const [k, setK] = useState<number>(0);
   // Fetching realtime tweets
   const [{ data: realtimePosts }] = useListenTweetsSubscription();
   // Fetching more tweets
@@ -59,40 +52,19 @@ const Home: React.FC<HomeProps> = () => {
     { data: loadedPosts, fetching: fetchingMorePosts },
   ] = useGetPaginatedPostsQuery({ variables: paginationParams });
 
-  const bot = useRef<HTMLDivElement | null>(null);
-  console.log(bot.current);
+  const scroller = useRef<HTMLDivElement | null>(null);
+  const p = useRef<HTMLDivElement | null>(null);
 
-  const loadMorePosts = (l: number) => {
-    let currentNumberOfPosts =
-      realTimeAdded.length +
-      (tweets ? tweets!.getTweetsByUser.tweets.length : 0) +
-      l;
+  const loadMorePosts = (a: number, b: number, c: number) => {
+    let currentNumberOfPosts = a + b + c;
 
-    console.log(currentNumberOfPosts);
+    // console.log(currentNumberOfPosts);
     setPaginationParams((prev) => ({
       ...prev,
       limit: 2,
       offset: currentNumberOfPosts,
     }));
   };
-
-  useEffect(() => {
-    let options = {
-      rootMargin: "0px",
-      threshold: 0.5,
-    };
-
-    let oo = new IntersectionObserver((enteries) => {
-      if (enteries[0].isIntersecting) {
-        loadMorePosts(morePosts.length);
-      }
-    }, options);
-
-    if (bot.current) {
-      // @ts-ignore
-      oo.observe(bot.current);
-    }
-  }, [bot.current, morePosts.length]);
 
   useEffect(() => {
     if (realtimePosts?.listenTweets.tweet?.tweet_id) {
@@ -115,14 +87,37 @@ const Home: React.FC<HomeProps> = () => {
     if (loadedPosts) {
       let moreP = loadedPosts.getPaginatedPosts.tweets;
       moreP = moreP.slice(moreP.length - 2, moreP.length);
-      setK((prev) => prev + 2);
       setMorePosts((prev) => [...prev, ...moreP]);
     }
     //eslint-disable-next-line
   }, [JSON.stringify(loadedPosts?.getPaginatedPosts.tweets)]);
 
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (scroller.current?.getBoundingClientRect) {
+        if (
+          scroller.current?.getBoundingClientRect().bottom -
+            window.innerHeight <=
+          0
+        ) {
+          // g();
+          console.log("ok");
+        }
+      }
+    });
+  }, [realTimeAdded.length, morePosts]);
+
+  const g = () => {
+    let a = realTimeAdded.length;
+    let b = 7;
+    let c = morePosts.length;
+
+    console.log(a + b + c);
+    loadMorePosts(a, b, c);
+  };
+
   return (
-    <S.BaseComponent>
+    <S.BaseComponent ref={p}>
       <S.HomeMain>
         <S.FeedHeader>
           <S.PageName>Home</S.PageName>
@@ -196,7 +191,7 @@ const Home: React.FC<HomeProps> = () => {
           ) : (
             <Fragment>Fetching more posts...</Fragment>
           )}
-          {!fetchingTweets && <S.Plac ref={bot}></S.Plac>}
+          {!fetchingTweets && <S.Plac ref={scroller} onClick={g}></S.Plac>}
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
