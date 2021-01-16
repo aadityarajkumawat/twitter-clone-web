@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: "Raleway";
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 *:focus,
