@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
@@ -13,6 +14,11 @@ import * as S from "./home.styles";
 
 interface HomeProps {}
 
+interface Pag {
+  limit: number;
+  offset: number;
+}
+
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
@@ -23,40 +29,54 @@ const Home: React.FC<HomeProps> = () => {
     { data: realTimePost, fetching: fetchingRealTimePost },
   ] = useListenTweetsSubscription();
 
+  const [pag, setPag] = useState<Pag>({ offset: 0, limit: -1 });
+  const [sm, setSm] = useState<number>(2);
+  const [h, setH] = useState<boolean>(true);
+
+  const [more, setMore] = useState<Array<any>>([]);
+
   const [{ data }] = useGetPaginatedPostsQuery({
-    variables: { limit: -1, offset: 0 },
+    variables: pag,
   });
-
-  const [count, setCount] = useState<number>(0);
-
-  const p = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (realTimePost && feed) {
       if (
         !tweetAlreadyExist(
-          [],
+          more,
           feed?.getTweetsByUser.tweets,
           realTime,
           realTimePost.listenTweets.tweet!.tweet_id
         )
       )
-        setRealTime((prev) => [...prev, realTimePost.listenTweets.tweet]);
+        setRealTime((prev) => [realTimePost.listenTweets.tweet, ...prev]);
     }
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", () => {
-  //     if (p.current?.getBoundingClientRect) {
-  //       if (
-  //         p.current?.getBoundingClientRect().bottom - window.innerHeight ===
-  //         0
-  //       ) {
-  //         console.log("haha");
-  //       }
-  //     }
-  //   });
-  // }, []);
+  const getMore = () => {
+    if (feed?.getTweetsByUser.num) {
+      if (pag.offset === feed.getTweetsByUser.num) {
+        setH(false);
+        return;
+      }
+      console.log("kay");
+      setPag({ limit: 2, offset: 7 + sm + realTime.length });
+      console.log(data);
+      if (data) {
+        if (
+          data!.getPaginatedPosts.tweets[0] &&
+          data.getPaginatedPosts.tweets[1]
+        ) {
+          setMore((prev) => [
+            ...prev,
+            data!.getPaginatedPosts.tweets[0],
+            data!.getPaginatedPosts.tweets[1],
+          ]);
+        }
+      }
+      setSm((prev) => prev + 2);
+    }
+  };
 
   return (
     <S.BaseComponent onScroll={() => console.log("df")}>
@@ -101,7 +121,27 @@ const Home: React.FC<HomeProps> = () => {
               ))}
             </Fragment>
           )}
-          <S.Plac ref={p} onClick={() => setCount((prev) => prev + 1)}></S.Plac>
+          <InfiniteScroll
+            dataLength={sm}
+            hasMore={h}
+            next={getMore}
+            loader={<h4>loading...</h4>}
+          >
+            <Fragment>
+              {more
+                .filter((t) => t !== undefined)
+                .map((tweet) => (
+                  <Tweet
+                    tweet_id={tweet.tweet_id}
+                    tweet_content={tweet.tweet_content}
+                    name={tweet.name}
+                    comments={tweet.comments}
+                    username={tweet.username}
+                    key={tweet.tweet_id}
+                  />
+                ))}
+            </Fragment>
+          </InfiniteScroll>
         </S.Tweets>
       </S.HomeMain>
     </S.BaseComponent>
