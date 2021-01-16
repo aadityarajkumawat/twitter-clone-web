@@ -5,13 +5,13 @@ import Routes from "./routes/Routes";
 
 function App() {
   return (
-      <Router>
-        <div>
-          <Switch>
-            <Routes />
-          </Switch>
-        </div>
-      </Router>
+    <Router>
+      <div>
+        <Switch>
+          <Routes />
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
