@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
@@ -49,7 +49,7 @@ const Home: React.FC<HomeProps> = () => {
 
   // local state for infinite scrolling props
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
-    dataLength: 2,
+    dataLength: 1,
     hasMore: true,
   });
 
@@ -64,20 +64,23 @@ const Home: React.FC<HomeProps> = () => {
         )
       )
         setRealTime((prev) => [realTimePost.listenTweets.tweet, ...prev]);
+      // setPag((prev) => ({ ...prev, offset: prev.offset + 1 }));
     }
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
 
   const getMore = () => {
     if (feed?.getTweetsByUser.num) {
-      if (pag.offset === feed.getTweetsByUser.num) {
+      // console.log(pag.offset, feed.getTweetsByUser.num);
+      if (pag.offset === feed.getTweetsByUser.num + realTime.length) {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
         return;
       }
-      console.log(7, scrollProps.dataLength, realTime.length);
+      // console.log(7, scrollProps.dataLength, realTime.length);
       setPag({
         limit: 1,
         offset: 7 + scrollProps.dataLength + realTime.length,
       });
+      // console.log(data);
       if (data) {
         if (data.getPaginatedPosts.tweets.length === 1) {
           setMore((prev) => [...prev, data.getPaginatedPosts.tweets[0]]);
@@ -137,7 +140,13 @@ const Home: React.FC<HomeProps> = () => {
             dataLength={scrollProps.dataLength}
             hasMore={scrollProps.hasMore}
             next={getMore}
-            loader={<h4>loading...</h4>}
+            loader={
+              feed ? (
+                feed.getTweetsByUser.num >= 7 && <h4>loading...</h4>
+              ) : (
+                <div></div>
+              )
+            }
           >
             <Fragment>
               {more
