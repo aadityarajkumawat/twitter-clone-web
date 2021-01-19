@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import Routes from "./routes/Routes";
+import { ImageUpload } from "./testing/ImageUpload";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <div>
         <Switch>
           <Routes />
+          {/* <ImageUpload /> */}
         </Switch>
       </div>
     </Router>

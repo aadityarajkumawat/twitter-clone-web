@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { LeftMenu } from "../components/left-menu/LeftMenu";
 import Tweet from "../components/tweet/Tweet";
 import { me } from "../constants/urls";
 import {
@@ -94,7 +95,10 @@ const Home: React.FC<HomeProps> = () => {
   };
 
   return (
-    <S.BaseComponent>
+    <S.BaseComponent className="main">
+      <S.LeftMenu>
+        <LeftMenu />
+      </S.LeftMenu>
       <S.HomeMain>
         <S.FeedHeader>
           <S.PageName>Home</S.PageName>
@@ -165,6 +169,7 @@ const Home: React.FC<HomeProps> = () => {
           </InfiniteScroll>
         </S.Tweets>
       </S.HomeMain>
+      <S.RightMenu></S.RightMenu>
     </S.BaseComponent>
   );
 };

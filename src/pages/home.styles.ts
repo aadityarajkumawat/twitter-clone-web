@@ -3,10 +3,59 @@ import { flexCenter } from "../constants/styles";
 
 export const BaseComponent = styled.div`
   width: 100vw;
-  /* min-height: 100vh; */
   background-color: #222;
-  ${flexCenter}
+  display: flex;
+  justify-content: center;
+`;
+
+export const Head = styled.div`
+  color: white;
+  display: inline-block;
+  width: 300px;
+  padding: 10px;
+  text-align: left;
+`;
+
+export const LeftMenu = styled.div`
+  width: 32.5%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  text-align: end;
+`;
+
+export const MenuOptions = styled.ul`
+  display: flex;
   flex-direction: column;
+  list-style: none;
+  width: 300px;
+  margin-left: auto;
+  text-align: left;
+  margin-top: 30px;
+`;
+
+export const ListItem = styled.li`
+  color: white;
+  margin-bottom: 20px;
+  font-size: 18px;
+  padding: 10px 15px;
+  border-radius: 15px;
+  font-weight: 700;
+
+  &:hover {
+    background-color: #000;
+    cursor: pointer;
+  }
+`;
+
+export const RightMenu = styled.div`
+  width: 32.5%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
 `;
 
 export const HomeMain = styled.div`
