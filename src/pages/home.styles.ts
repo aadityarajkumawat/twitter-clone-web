@@ -48,6 +48,11 @@ export const ListItem = styled.li`
     background-color: #000;
     cursor: pointer;
   }
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
 `;
 
 export const RightMenu = styled.div`
