@@ -50,7 +50,6 @@ export const ProfileInfo = styled.div`
 export const CoverImageContainer = styled.div`
   width: 100%;
   height: 300px;
-  /* background-color: #eee; */
   position: relative;
 `;
 
@@ -120,6 +119,11 @@ export const MoreInfo = styled.div`
   .link {
     font-size: 15px;
     margin: 0px 0 8px 0;
+
+    a {
+      color: #0066ff;
+      text-decoration: none;
+    }
   }
 `;
 

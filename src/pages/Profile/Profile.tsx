@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   Back,
   CoverImageContainer,
@@ -14,9 +14,21 @@ import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import { me } from "../../constants/urls";
+import { useGetProfileQuery, useMeQuery } from "../../generated/graphql";
 
 interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = () => {
+  const [{ data: user, fetching: fetchingUser }, refetchUser] = useMeQuery();
+  const [
+    { data: profile, fetching: fetchingProfile },
+    refetchProfile,
+  ] = useGetProfileQuery();
+
+  useEffect(() => {
+    refetchUser({ requestPolicy: "network-only" });
+    refetchProfile({ requestPolicy: "network-only" });
+  }, []);
+
   return (
     <Fragment>
       <ProfileContainer>
@@ -29,8 +41,13 @@ export const Profile: React.FC<ProfileProps> = () => {
               <BackSVG />
             </Back>
             <ProfileInfo>
-              <b>Aditya</b>
-              <span>34 Tweets</span>
+              <b>{user && !fetchingUser ? user!.me!.name : ""}</b>
+              <span>
+                {profile && !fetchingProfile
+                  ? profile.getUserProfile.profile.num
+                  : 0}{" "}
+                Tweets
+              </span>
             </ProfileInfo>
           </ProfileNav>
           <CoverImageContainer>
@@ -42,19 +59,40 @@ export const Profile: React.FC<ProfileProps> = () => {
             </ProfileImgContainer>
           </CoverImageContainer>
           <MoreInfo>
-            <b>Aditya</b>
-            <p className="username">@Aditya89764346</p>
-            <p className="bio">I have no idea what to write here</p>
+            <b>{user && !fetchingUser ? user!.me!.name : ""}</b>
+            <p className="username">
+              @{user && !fetchingUser ? user!.me!.username : ""}
+            </p>
+            <p className="bio">
+              {profile && !fetchingProfile
+                ? profile.getUserProfile.profile.bio
+                : ""}
+            </p>
             <p className="link">
-              <a href="https://www.youtube.com">www.youtube.com</a>
+              <a
+                href={
+                  profile && !fetchingProfile
+                    ? profile.getUserProfile.profile.link
+                    : "#"
+                }
+              >
+                {profile && !fetchingProfile
+                  ? profile.getUserProfile.profile.link
+                  : ""}
+              </a>
             </p>
             <Follows>
               <span>
-                29
+                {profile && !fetchingProfile
+                  ? profile!.getUserProfile.profile.following
+                  : ""}
                 <span className="faded"> Following</span>
               </span>
               <span>
-                5<span className="faded"> Followers</span>
+                {profile && !fetchingProfile
+                  ? profile.getUserProfile.profile.followers
+                  : ""}
+                <span className="faded"> Followers</span>
               </span>
             </Follows>
           </MoreInfo>

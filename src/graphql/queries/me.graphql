@@ -6,5 +6,6 @@ query Me {
     updatedAt
     username
     phone
+    name
   }
 }

@@ -16,8 +16,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
 
 export type Query = {
@@ -27,6 +25,8 @@ export type Query = {
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetAllTweets;
   getPaginatedPosts: GetUserTweets;
+  getTweetsByUserF: GetUserTweets;
+  getUserProfile: GetProfile;
 };
 
 export type QueryGetTweetByIdArgs = {
@@ -90,6 +90,21 @@ export type PaginatingParams = {
   limit: Scalars["Float"];
 };
 
+export type GetProfile = {
+  __typename?: "GetProfile";
+  profile: Profile;
+  error: Scalars["String"];
+};
+
+export type Profile = {
+  __typename?: "Profile";
+  followers: Scalars["Float"];
+  following: Scalars["Float"];
+  bio: Scalars["String"];
+  link: Scalars["String"];
+  num: Scalars["Float"];
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   register: UserResponse;
@@ -97,7 +112,6 @@ export type Mutation = {
   createPost: PostCreatedResponse;
   likeTweet: LikedTweet;
   followAUser: FollowedAUser;
-  uploadProfileImage: Scalars["Boolean"];
 };
 
 export type MutationRegisterArgs = {
@@ -118,10 +132,6 @@ export type MutationLikeTweetArgs = {
 
 export type MutationFollowAUserArgs = {
   options: UserToFollow;
-};
-
-export type MutationUploadProfileImageArgs = {
-  picture: Scalars["Upload"];
 };
 
 export type UserResponse = {
@@ -264,15 +274,6 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
   };
 };
 
-export type UploadImageMutationVariables = Exact<{
-  picture: Scalars["Upload"];
-}>;
-
-export type UploadImageMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "uploadProfileImage"
->;
-
 export type GetPaginatedPostsQueryVariables = Exact<{
   offset: Scalars["Float"];
   limit: Scalars["Float"];
@@ -297,6 +298,17 @@ export type GetPaginatedPostsQuery = { __typename?: "Query" } & {
           | "comments"
           | "liked"
         >
+      >;
+    };
+};
+
+export type GetProfileQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetProfileQuery = { __typename?: "Query" } & {
+  getUserProfile: { __typename?: "GetProfile" } & Pick<GetProfile, "error"> & {
+      profile: { __typename?: "Profile" } & Pick<
+        Profile,
+        "followers" | "following" | "bio" | "link" | "num"
       >;
     };
 };
@@ -359,7 +371,7 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<
     { __typename?: "User" } & Pick<
       User,
-      "id" | "email" | "createdAt" | "updatedAt" | "username" | "phone"
+      "id" | "email" | "createdAt" | "updatedAt" | "username" | "phone" | "name"
     >
   >;
 };
@@ -490,17 +502,6 @@ export function useRegisterMutation() {
     RegisterDocument
   );
 }
-export const UploadImageDocument = gql`
-  mutation UploadImage($picture: Upload!) {
-    uploadProfileImage(picture: $picture)
-  }
-`;
-
-export function useUploadImageMutation() {
-  return Urql.useMutation<UploadImageMutation, UploadImageMutationVariables>(
-    UploadImageDocument
-  );
-}
 export const GetPaginatedPostsDocument = gql`
   query GetPaginatedPosts($offset: Float!, $limit: Float!) {
     getPaginatedPosts(options: { offset: $offset, limit: $limit }) {
@@ -529,6 +530,29 @@ export function useGetPaginatedPostsQuery(
 ) {
   return Urql.useQuery<GetPaginatedPostsQuery>({
     query: GetPaginatedPostsDocument,
+    ...options,
+  });
+}
+export const GetProfileDocument = gql`
+  query GetProfile {
+    getUserProfile {
+      profile {
+        followers
+        following
+        bio
+        link
+        num
+      }
+      error
+    }
+  }
+`;
+
+export function useGetProfileQuery(
+  options: Omit<Urql.UseQueryArgs<GetProfileQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<GetProfileQuery>({
+    query: GetProfileDocument,
     ...options,
   });
 }
@@ -598,6 +622,7 @@ export const MeDocument = gql`
       updatedAt
       username
       phone
+      name
     }
   }
 `;
