@@ -11,10 +11,12 @@ export const TweetUsername = styled(StyledDiv)`
   font-size: 14px;
   ${flexCenter}
   justify-content: flex-start;
+  color: white;
 `;
 
 export const TweetContent = styled(StyledDiv)`
   margin-bottom: 15px;
+  color: white;
 `;
 
 export const TweetActionBar = styled(StyledDiv)`
@@ -50,6 +52,7 @@ export const CommentSpan = styled.span`
 
   div {
     margin-left: 5px;
+    color: white;
   }
 `;
 
@@ -60,5 +63,6 @@ export const LikeSpan = styled.span`
 
   div {
     margin-left: 5px;
+    color: white;
   }
 `;

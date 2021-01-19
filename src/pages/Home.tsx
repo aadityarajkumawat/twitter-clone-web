@@ -10,6 +10,7 @@ import {
   useListenTweetsSubscription,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
+import { useGetPaginatedPosts } from "../hooks/useGetPaginatedPosts";
 import * as S from "./home.styles";
 
 interface HomeProps {}
@@ -24,6 +25,19 @@ interface InfiniteScrolling {
   dataLength: number;
 }
 
+interface TweetType {
+  comments: number;
+  created_At: string;
+  liked: boolean;
+  likes: number;
+  name: string;
+  rel_acc: number;
+  tweet_content: string;
+  tweet_id: number;
+  username: string;
+  _type: string;
+}
+
 const Home: React.FC<HomeProps> = () => {
   // Posting a tweet mutation
   const [, postTweet] = useCreateTweetMutation();
@@ -31,8 +45,7 @@ const Home: React.FC<HomeProps> = () => {
   const [tweetInput, setTweetInput] = useState<string>("");
 
   // localstate of realtime-tweets and more-fetched tweets
-  const [realTime, setRealTime] = useState<Array<any>>([]);
-  const [more, setMore] = useState<Array<any>>([]);
+  const [realTime, setRealTime] = useState<Array<TweetType>>([]);
 
   // Fetching user-feed
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
@@ -40,19 +53,10 @@ const Home: React.FC<HomeProps> = () => {
   // Listening to realtime tweets
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
-  // local state of pagination params
-  const [pag, setPag] = useState<Pag>({ offset: 0, limit: -1 });
-
-  // fetching paginated posts
-  const [{ data }] = useGetPaginatedPostsQuery({
-    variables: pag,
-  });
-
-  // local state for infinite scrolling props
-  const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
-    dataLength: 1,
-    hasMore: true,
-  });
+  const { more, hasMore, dataLength, getMore } = useGetPaginatedPosts(
+    feed,
+    realTime
+  );
 
   useEffect(() => {
     if (realTimePost && feed) {
@@ -62,37 +66,14 @@ const Home: React.FC<HomeProps> = () => {
           feed?.getTweetsByUser.tweets,
           realTime,
           realTimePost.listenTweets.tweet!.tweet_id
-        )
-      )
-        setRealTime((prev) => [realTimePost.listenTweets.tweet, ...prev]);
-      // setPag((prev) => ({ ...prev, offset: prev.offset + 1 }));
+        ) &&
+        realTimePost.listenTweets.tweet
+      ) {
+        const post = realTimePost.listenTweets.tweet;
+        setRealTime((prev) => [post, ...prev]);
+      }
     }
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
-
-  const getMore = () => {
-    if (feed?.getTweetsByUser.num) {
-      // console.log(pag.offset, feed.getTweetsByUser.num);
-      if (pag.offset === feed.getTweetsByUser.num + realTime.length) {
-        setScrollProps((prev) => ({ ...prev, hasMore: false }));
-        return;
-      }
-      // console.log(7, scrollProps.dataLength, realTime.length);
-      setPag({
-        limit: 1,
-        offset: 7 + scrollProps.dataLength + realTime.length,
-      });
-      // console.log(data);
-      if (data) {
-        if (data.getPaginatedPosts.tweets.length === 1) {
-          setMore((prev) => [...prev, data.getPaginatedPosts.tweets[0]]);
-        }
-      }
-      setScrollProps((prev) => ({
-        ...prev,
-        dataLength: prev.dataLength + 1,
-      }));
-    }
-  };
 
   return (
     <S.BaseComponent className="main">
@@ -141,8 +122,8 @@ const Home: React.FC<HomeProps> = () => {
             </Fragment>
           )}
           <InfiniteScroll
-            dataLength={scrollProps.dataLength}
-            hasMore={scrollProps.hasMore}
+            dataLength={dataLength}
+            hasMore={hasMore}
             next={getMore}
             loader={
               feed ? (

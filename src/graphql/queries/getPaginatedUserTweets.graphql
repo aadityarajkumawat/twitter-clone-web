@@ -1,0 +1,10 @@
+query GetPaginatedUserTweets($offset: Float!, $limit: Float!) {
+  getPaginatedUserTweets(options: { offset: $offset, limit: $limit }) {
+    tweets {
+      tweet_id
+      tweet_content
+      name
+    }
+    error
+  }
+}

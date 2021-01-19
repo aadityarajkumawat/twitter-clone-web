@@ -7,6 +7,7 @@
   box-sizing: border-box;
   font-family: "Raleway";
   overflow-x: hidden;
+  /* overflow-y: hidden; */
 }
 
 *:focus,
@@ -16,4 +17,8 @@
 
 button {
   cursor: pointer;
+}
+
+.infinite-scroll-component__outerdiv {
+  width: 100%;
 }

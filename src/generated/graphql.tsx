@@ -25,7 +25,8 @@ export type Query = {
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetAllTweets;
   getPaginatedPosts: GetUserTweets;
-  getTweetsByUserF: GetUserTweets;
+  getTweetsByUserF: GetAllTweets;
+  getPaginatedUserTweets: GetUserTweets;
   getUserProfile: GetProfile;
 };
 
@@ -34,6 +35,10 @@ export type QueryGetTweetByIdArgs = {
 };
 
 export type QueryGetPaginatedPostsArgs = {
+  options: PaginatingParams;
+};
+
+export type QueryGetPaginatedUserTweetsArgs = {
   options: PaginatingParams;
 };
 
@@ -302,6 +307,25 @@ export type GetPaginatedPostsQuery = { __typename?: "Query" } & {
     };
 };
 
+export type GetPaginatedUserTweetsQueryVariables = Exact<{
+  offset: Scalars["Float"];
+  limit: Scalars["Float"];
+}>;
+
+export type GetPaginatedUserTweetsQuery = { __typename?: "Query" } & {
+  getPaginatedUserTweets: { __typename?: "GetUserTweets" } & Pick<
+    GetUserTweets,
+    "error"
+  > & {
+      tweets: Array<
+        { __typename?: "GetTweet" } & Pick<
+          GetTweet,
+          "tweet_id" | "tweet_content" | "name"
+        >
+      >;
+    };
+};
+
 export type GetProfileQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetProfileQuery = { __typename?: "Query" } & {
@@ -353,6 +377,30 @@ export type GetTweetsByUserQuery = { __typename?: "Query" } & {
           | "tweet_id"
           | "tweet_content"
           | "created_At"
+          | "_type"
+          | "rel_acc"
+          | "username"
+          | "name"
+          | "likes"
+          | "comments"
+          | "liked"
+        >
+      >;
+    };
+};
+
+export type GetTweetsByUserFQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetTweetsByUserFQuery = { __typename?: "Query" } & {
+  getTweetsByUserF: { __typename?: "GetAllTweets" } & Pick<
+    GetAllTweets,
+    "error" | "num"
+  > & {
+      tweets: Array<
+        { __typename?: "GetTweet" } & Pick<
+          GetTweet,
+          | "tweet_id"
+          | "tweet_content"
           | "_type"
           | "rel_acc"
           | "username"
@@ -533,6 +581,30 @@ export function useGetPaginatedPostsQuery(
     ...options,
   });
 }
+export const GetPaginatedUserTweetsDocument = gql`
+  query GetPaginatedUserTweets($offset: Float!, $limit: Float!) {
+    getPaginatedUserTweets(options: { offset: $offset, limit: $limit }) {
+      tweets {
+        tweet_id
+        tweet_content
+        name
+      }
+      error
+    }
+  }
+`;
+
+export function useGetPaginatedUserTweetsQuery(
+  options: Omit<
+    Urql.UseQueryArgs<GetPaginatedUserTweetsQueryVariables>,
+    "query"
+  > = {}
+) {
+  return Urql.useQuery<GetPaginatedUserTweetsQuery>({
+    query: GetPaginatedUserTweetsDocument,
+    ...options,
+  });
+}
 export const GetProfileDocument = gql`
   query GetProfile {
     getUserProfile {
@@ -610,6 +682,34 @@ export function useGetTweetsByUserQuery(
 ) {
   return Urql.useQuery<GetTweetsByUserQuery>({
     query: GetTweetsByUserDocument,
+    ...options,
+  });
+}
+export const GetTweetsByUserFDocument = gql`
+  query GetTweetsByUserF {
+    getTweetsByUserF {
+      tweets {
+        tweet_id
+        tweet_content
+        _type
+        rel_acc
+        username
+        name
+        likes
+        comments
+        liked
+      }
+      error
+      num
+    }
+  }
+`;
+
+export function useGetTweetsByUserFQuery(
+  options: Omit<Urql.UseQueryArgs<GetTweetsByUserFQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<GetTweetsByUserFQuery>({
+    query: GetTweetsByUserFDocument,
     ...options,
   });
 }

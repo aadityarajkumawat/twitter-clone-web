@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ProfileContainer = styled.div`
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   background-color: #222;
   display: flex;
   justify-content: center;
