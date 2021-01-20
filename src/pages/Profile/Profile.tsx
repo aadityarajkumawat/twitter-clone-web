@@ -31,6 +31,11 @@ import {
 import { useStore } from "../../zustand/store";
 import Axios from "axios";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { RightMenu } from "../../components/right-menu/RightMenu";
+import {
+  BackDrop,
+  TransparentBackdrop,
+} from "../../components/edit-profile/editprofile.styles";
 
 interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = () => {
@@ -45,7 +50,11 @@ export const Profile: React.FC<ProfileProps> = () => {
   ] = useGetTweetsByUserFQuery();
 
   const editProfile = useStore((state) => state.editProfile);
+  const showSearchResults = useStore((state) => state.showSearchResults);
   const toggleEditProfile = useStore((state) => state.toggleEditProfile);
+  const toggleShowSearchResults = useStore(
+    (state) => state.toggleShowSearchResults
+  );
 
   useEffect(() => {
     refetchUser({ requestPolicy: "network-only" });
@@ -113,6 +122,11 @@ export const Profile: React.FC<ProfileProps> = () => {
             }
           />
         )}
+        {/* {showSearchResults && (
+          <TransparentBackdrop
+            onClick={() => toggleShowSearchResults(false)}
+          ></TransparentBackdrop>
+        )} */}
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>
@@ -232,7 +246,9 @@ export const Profile: React.FC<ProfileProps> = () => {
             </Fragment>
           </InfiniteScroll>
         </S.HomeMain>
-        <S.RightMenu></S.RightMenu>
+        <S.RightMenu>
+          <RightMenu />
+        </S.RightMenu>
       </ProfileContainer>
     </Fragment>
   );

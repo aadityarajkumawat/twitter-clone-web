@@ -30,6 +30,7 @@ export type Query = {
   getTweetsByUserF: GetAllTweets;
   getPaginatedUserTweets: GetUserTweets;
   getUserProfile: GetProfile;
+  getSearchResults: DisplayProfiles;
 };
 
 export type QueryGetTweetByIdArgs = {
@@ -42,6 +43,10 @@ export type QueryGetPaginatedPostsArgs = {
 
 export type QueryGetPaginatedUserTweetsArgs = {
   options: PaginatingParams;
+};
+
+export type QueryGetSearchResultsArgs = {
+  options: Searched;
 };
 
 export type User = {
@@ -110,6 +115,23 @@ export type Profile = {
   bio: Scalars["String"];
   link: Scalars["String"];
   num: Scalars["Float"];
+};
+
+export type DisplayProfiles = {
+  __typename?: "DisplayProfiles";
+  profiles: Array<DisplayProfile>;
+  error?: Maybe<Scalars["String"]>;
+};
+
+export type DisplayProfile = {
+  __typename?: "DisplayProfile";
+  url: Scalars["String"];
+  name: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type Searched = {
+  search: Scalars["String"];
 };
 
 export type Mutation = {
@@ -360,6 +382,24 @@ export type GetProfileQuery = { __typename?: "Query" } & {
       profile: { __typename?: "Profile" } & Pick<
         Profile,
         "followers" | "following" | "bio" | "link" | "num"
+      >;
+    };
+};
+
+export type GetSearchResultsQueryVariables = Exact<{
+  search: Scalars["String"];
+}>;
+
+export type GetSearchResultsQuery = { __typename?: "Query" } & {
+  getSearchResults: { __typename?: "DisplayProfiles" } & Pick<
+    DisplayProfiles,
+    "error"
+  > & {
+      profiles: Array<
+        { __typename?: "DisplayProfile" } & Pick<
+          DisplayProfile,
+          "name" | "username"
+        >
       >;
     };
 };
@@ -664,6 +704,26 @@ export function useGetProfileQuery(
 ) {
   return Urql.useQuery<GetProfileQuery>({
     query: GetProfileDocument,
+    ...options,
+  });
+}
+export const GetSearchResultsDocument = gql`
+  query GetSearchResults($search: String!) {
+    getSearchResults(options: { search: $search }) {
+      profiles {
+        name
+        username
+      }
+      error
+    }
+  }
+`;
+
+export function useGetSearchResultsQuery(
+  options: Omit<Urql.UseQueryArgs<GetSearchResultsQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<GetSearchResultsQuery>({
+    query: GetSearchResultsDocument,
     ...options,
   });
 }

@@ -24,6 +24,10 @@ export const BackDrop = styled.div`
   z-index: 3;
 `;
 
+export const TransparentBackdrop = styled(BackDrop)`
+  opacity: 0;
+`;
+
 export const EditProfileHeading = styled.div`
   width: 100%;
   padding: 15px;
@@ -91,4 +95,4 @@ export const SubmitBtn = styled.button`
   background-color: #0066ff;
   align-self: flex-end;
   font-weight: 700;
-`
+`;

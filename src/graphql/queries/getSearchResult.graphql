@@ -1,0 +1,9 @@
+query GetSearchResults($search: String!) {
+  getSearchResults(options: { search: $search }) {
+    profiles {
+      name
+      username
+    }
+    error
+  }
+}

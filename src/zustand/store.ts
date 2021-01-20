@@ -5,6 +5,8 @@ type StateI = {
   setProfileImg: (url: string) => void;
   editProfile: boolean;
   toggleEditProfile: (bool: boolean) => void;
+  showSearchResults: boolean;
+  toggleShowSearchResults: (bool: boolean) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -12,4 +14,6 @@ export const useStore = create<StateI>((set) => ({
   setProfileImg: (url) => set(() => ({ profileImg: url })),
   editProfile: false,
   toggleEditProfile: (bool) => set(() => ({ editProfile: bool })),
+  showSearchResults: false,
+  toggleShowSearchResults: (bool) => set(() => ({ showSearchResults: bool })),
 }));
