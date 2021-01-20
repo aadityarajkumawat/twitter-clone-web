@@ -320,7 +320,7 @@ export type GetPaginatedUserTweetsQuery = { __typename?: "Query" } & {
       tweets: Array<
         { __typename?: "GetTweet" } & Pick<
           GetTweet,
-          "tweet_id" | "tweet_content" | "name"
+          "tweet_id" | "tweet_content" | "name" | "username"
         >
       >;
     };
@@ -588,6 +588,7 @@ export const GetPaginatedUserTweetsDocument = gql`
         tweet_id
         tweet_content
         name
+        username
       }
       error
     }

@@ -54,9 +54,16 @@ export const useGetPaginatedPosts = (
   const { dataLength, hasMore } = scrollProps;
 
   const getMore = () => {
-    console.log(feed)
+    console.log(feed);
     if (feed?.getTweetsByUser || feed?.getTweetsByUserF) {
-      const n = feed.getTweetsByUserF.num || feed.getTweetsByUser.num;
+      let n = 0;
+
+      if (feed.getTweetsByUser) {
+        n = feed.getTweetsByUser.num;
+      } else if (feed.getTweetsByUserF) {
+        n = feed.getTweetsByUserF.num;
+      }
+
       if (pag.offset === n + (realTime ? realTime.length : 0)) {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
         return;

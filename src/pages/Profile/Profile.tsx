@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
   CoverImageContainer,
@@ -15,13 +16,17 @@ import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import { me } from "../../constants/urls";
 import {
+  useGetPaginatedUserTweetsQuery,
   useGetProfileQuery,
   useGetTweetsByUserFQuery,
   useMeQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useGetPaginatedPosts } from "../../hooks/useGetPaginatedPosts";
+import {
+  InfiniteScrolling,
+  PaginationParams,
+  TweetType,
+} from "../../constants/interfaces";
 
 interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = () => {
@@ -39,9 +44,42 @@ export const Profile: React.FC<ProfileProps> = () => {
     refetchProfile({ requestPolicy: "network-only" });
   }, []);
 
-  const { more, dataLength, hasMore, getMore } = useGetPaginatedPosts(
-    userTweets
-  );
+  const [more, setMore] = useState<Array<TweetType>>([]);
+  const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
+
+  const [{ data }] = useGetPaginatedUserTweetsQuery({
+    variables: pag,
+  });
+
+  const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
+    dataLength: 1,
+    hasMore: true,
+  });
+
+  const { dataLength, hasMore } = scrollProps;
+
+  const getMore = () => {
+    if (userTweets?.getTweetsByUserF) {
+      if (pag.offset === userTweets.getTweetsByUserF.num) {
+        setScrollProps((prev) => ({ ...prev, hasMore: false }));
+        return;
+      }
+      setPag({
+        limit: 1,
+        offset: 7 + scrollProps.dataLength,
+      });
+      if (data && data.getPaginatedUserTweets) {
+        if (data.getPaginatedUserTweets.tweets.length === 1) {
+          // @ts-ignore
+          setMore((prev) => [...prev, data.getPaginatedUserTweets.tweets[0]]);
+        }
+      }
+      setScrollProps((prev) => ({
+        ...prev,
+        dataLength: prev.dataLength + 1,
+      }));
+    }
+  };
 
   return (
     <Fragment>
