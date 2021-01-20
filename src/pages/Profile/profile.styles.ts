@@ -51,6 +51,9 @@ export const CoverImageContainer = styled.div`
   width: 100%;
   height: 300px;
   position: relative;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
 `;
 
 export const ImgContainer = styled.div`
@@ -138,5 +141,29 @@ export const Follows = styled.div`
       color: #ccc;
       font-size: 14px;
     }
+  }
+`;
+
+export const EditProfileBtn = styled.button`
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background-color: #eeeeee20;
+  border: none;
+  margin: 10px 10px 0 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    width: 19px;
+    height: 2px;
+    background-color: #ffffff70;
+  }
+
+  .mm {
+    margin: 3px 0 3px 0;
   }
 `;

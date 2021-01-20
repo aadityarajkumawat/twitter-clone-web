@@ -16,6 +16,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type Query = {
@@ -116,7 +118,9 @@ export type Mutation = {
   login: UserResponse;
   createPost: PostCreatedResponse;
   likeTweet: LikedTweet;
+  editProfile: Scalars["Boolean"];
   followAUser: FollowedAUser;
+  addProfilePicture: Scalars["Boolean"];
 };
 
 export type MutationRegisterArgs = {
@@ -135,8 +139,16 @@ export type MutationLikeTweetArgs = {
   options: TweetInfo;
 };
 
+export type MutationEditProfileArgs = {
+  options: EditProfile;
+};
+
 export type MutationFollowAUserArgs = {
   options: UserToFollow;
+};
+
+export type MutationAddProfilePictureArgs = {
+  picture: Scalars["Upload"];
 };
 
 export type UserResponse = {
@@ -185,6 +197,11 @@ export type TweetInfo = {
   tweet_id: Scalars["Float"];
 };
 
+export type EditProfile = {
+  bio: Scalars["String"];
+  link: Scalars["String"];
+};
+
 export type FollowedAUser = {
   __typename?: "FollowedAUser";
   followed: Scalars["Boolean"];
@@ -211,6 +228,16 @@ export type CreateTweetMutation = { __typename?: "Mutation" } & {
     "uploaded" | "error"
   >;
 };
+
+export type EditProfileMutationVariables = Exact<{
+  bio: Scalars["String"];
+  link: Scalars["String"];
+}>;
+
+export type EditProfileMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "editProfile"
+>;
 
 export type FollowAUserMutationVariables = Exact<{
   thatUser: Scalars["Float"];
@@ -461,6 +488,17 @@ export const CreateTweetDocument = gql`
 export function useCreateTweetMutation() {
   return Urql.useMutation<CreateTweetMutation, CreateTweetMutationVariables>(
     CreateTweetDocument
+  );
+}
+export const EditProfileDocument = gql`
+  mutation EditProfile($bio: String!, $link: String!) {
+    editProfile(options: { bio: $bio, link: $link })
+  }
+`;
+
+export function useEditProfileMutation() {
+  return Urql.useMutation<EditProfileMutation, EditProfileMutationVariables>(
+    EditProfileDocument
   );
 }
 export const FollowAUserDocument = gql`

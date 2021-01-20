@@ -10,6 +10,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "axios": "^0.21.1",
     "firebase": "^8.1.2",
     "formik": "^2.2.5",
     "graphql": "^15.4.0",
@@ -24,7 +25,8 @@
     "typescript": "^4.0.3",
     "urql": "^1.11.3",
     "uuid": "^8.3.2",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "zustand": "^3.3.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,6 +60,7 @@
     "@graphql-codegen/typescript-operations": "1.17.12",
     "@graphql-codegen/typescript-react-apollo": "2.2.1",
     "@graphql-codegen/typescript-urql": "^2.0.3",
+    "@types/axios": "^0.14.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/styled-components": "^5.1.4",
     "@types/uuid": "^8.3.0"

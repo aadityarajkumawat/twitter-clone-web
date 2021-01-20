@@ -3,6 +3,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
   CoverImageContainer,
+  EditProfileBtn,
   Follows,
   ImgContainer,
   MoreInfo,
@@ -27,6 +28,9 @@ import {
   PaginationParams,
   TweetType,
 } from "../../constants/interfaces";
+import { useStore } from "../../zustand/store";
+import Axios from "axios";
+import { EditProfile } from "../../components/edit-profile/EditProfile";
 
 interface ProfileProps {}
 export const Profile: React.FC<ProfileProps> = () => {
@@ -37,12 +41,23 @@ export const Profile: React.FC<ProfileProps> = () => {
   ] = useGetProfileQuery();
   const [
     { data: userTweets, fetching: fetchingUserTweets },
+    refetchTweets,
   ] = useGetTweetsByUserFQuery();
+
+  const editProfile = useStore((state) => state.editProfile);
+  const toggleEditProfile = useStore((state) => state.toggleEditProfile);
 
   useEffect(() => {
     refetchUser({ requestPolicy: "network-only" });
     refetchProfile({ requestPolicy: "network-only" });
+    refetchTweets({ requestPolicy: "network-only" });
   }, []);
+
+  useEffect(() => {
+    refetchUser({ requestPolicy: "network-only" });
+    refetchProfile({ requestPolicy: "network-only" });
+    refetchTweets({ requestPolicy: "network-only" });
+  }, [editProfile]);
 
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
@@ -84,6 +99,20 @@ export const Profile: React.FC<ProfileProps> = () => {
   return (
     <Fragment>
       <ProfileContainer>
+        {editProfile && (
+          <EditProfile
+            bio={
+              profile && !fetchingProfile
+                ? profile.getUserProfile.profile.bio
+                : ""
+            }
+            link={
+              profile && !fetchingProfile
+                ? profile.getUserProfile.profile.link
+                : "#"
+            }
+          />
+        )}
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>
@@ -109,6 +138,16 @@ export const Profile: React.FC<ProfileProps> = () => {
             <ProfileImgContainer>
               <img src={me} />
             </ProfileImgContainer>
+            <EditProfileBtn
+              title="Edit Profile"
+              onClick={() =>
+                editProfile ? toggleEditProfile(false) : toggleEditProfile(true)
+              }
+            >
+              <span title="Edit Profile"></span>
+              <span className="mm" title="Edit Profile"></span>
+              <span title="Edit Profile"></span>
+            </EditProfileBtn>
           </CoverImageContainer>
           <MoreInfo>
             <b>{user && !fetchingUser ? user!.me!.name : ""}</b>

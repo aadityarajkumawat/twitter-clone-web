@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  GetTweetsByUserFQuery,
-  GetTweetsByUserQuery,
-  useGetPaginatedPostsQuery,
-} from "../generated/graphql";
+import { useGetPaginatedPostsQuery } from "../generated/graphql";
 
 interface PaginationParams {
   limit: number;
