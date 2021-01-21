@@ -7,6 +7,9 @@ type StateI = {
   toggleEditProfile: (bool: boolean) => void;
   showSearchResults: boolean;
   toggleShowSearchResults: (bool: boolean) => void;
+
+  authenticated: boolean;
+  setAuthenticated: (bool: boolean) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -16,4 +19,7 @@ export const useStore = create<StateI>((set) => ({
   toggleEditProfile: (bool) => set(() => ({ editProfile: bool })),
   showSearchResults: false,
   toggleShowSearchResults: (bool) => set(() => ({ showSearchResults: bool })),
+
+  authenticated: false,
+  setAuthenticated: (bool) => set(() => ({ authenticated: bool })),
 }));

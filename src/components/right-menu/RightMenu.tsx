@@ -4,6 +4,7 @@ import { useStore } from "../../zustand/store";
 import { TransparentBackdrop } from "../edit-profile/editprofile.styles";
 import { SearchItem } from "../search-item/SearchItem";
 import { RightMenuContainer, Search, SearchList } from "./rightmenu.styles";
+import { v4 as uuidv4 } from "uuid";
 
 interface RightMenuProps {}
 export const RightMenu: React.FC<RightMenuProps> = () => {
@@ -40,7 +41,11 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
             ) : (
               <Fragment>
                 {results?.getSearchResults.profiles.map((profile) => (
-                  <SearchItem name={profile.name} username={profile.username} />
+                  <SearchItem
+                    name={profile.name}
+                    username={profile.username}
+                    key={uuidv4()}
+                  />
                 ))}
               </Fragment>
             )}

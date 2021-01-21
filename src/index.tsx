@@ -17,16 +17,17 @@ const cli = createClient({
   fetchOptions: {
     credentials: "include",
   },
-  exchanges: [...defaultExchanges, subscriptionExchange({
-    forwardSubscription: operation => sub.request(operation)
-  })]
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: (operation) => sub.request(operation),
+    }),
+  ],
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <UrqlProvider value={cli}>
-      <App />
-    </UrqlProvider>
-  </React.StrictMode>,
+  <UrqlProvider value={cli}>
+    <App />
+  </UrqlProvider>,
   document.getElementById("root")
 );

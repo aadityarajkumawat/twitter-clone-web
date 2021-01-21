@@ -15,8 +15,6 @@ import { useForm } from "../../../hooks/useForm";
 import { Link, useHistory } from "react-router-dom";
 import { useLoginMutation } from "../../../generated/graphql";
 
-// interface LoginProps {}
-
 interface LoginUserI {
   email: string;
   password: string;

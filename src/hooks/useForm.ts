@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useMeQuery } from "../generated/graphql";
+import { useStore } from "../zustand/store";
 
 interface useFormI<T> {
   user: T;
@@ -6,8 +8,18 @@ interface useFormI<T> {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export function useForm<T>(fieldObject: T, mutationFunction: any): useFormI<T> {
+export function useForm<T>(
+  fieldObject: T,
+  mutationFunction: any,
+  type?: string
+): useFormI<T> {
   const [user, setUser] = useState<T>(fieldObject);
+  const [{ data, fetching }] = useMeQuery({
+    requestPolicy: "network-only",
+    pollInterval: 1000,
+  });
+
+  const setAuthenticated = useStore((state) => state.setAuthenticated);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,6 +30,12 @@ export function useForm<T>(fieldObject: T, mutationFunction: any): useFormI<T> {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await mutationFunction({ ...user });
+
+    if (type === "LOGIN") {
+      if (data?.me && !fetching) {
+        setAuthenticated(true);
+      }
+    }
   };
 
   return { user, handleChange, handleSubmit };
