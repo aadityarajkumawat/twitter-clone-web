@@ -83,6 +83,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const { dataLength, hasMore } = scrollProps;
 
   const getMore = () => {
+    console.log("hi")
     if (userTweets?.getTweetsByUserF) {
       if (pag.offset === userTweets.getTweetsByUserF.num) {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
@@ -90,7 +91,7 @@ export const Profile: React.FC<ProfileProps> = () => {
       }
       setPag({
         limit: 1,
-        offset: 7 + scrollProps.dataLength,
+        offset: 5 + scrollProps.dataLength,
       });
       if (data && data.getPaginatedUserTweets) {
         if (data.getPaginatedUserTweets.tweets.length === 1) {
@@ -122,11 +123,6 @@ export const Profile: React.FC<ProfileProps> = () => {
             }
           />
         )}
-        {/* {showSearchResults && (
-          <TransparentBackdrop
-            onClick={() => toggleShowSearchResults(false)}
-          ></TransparentBackdrop>
-        )} */}
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>

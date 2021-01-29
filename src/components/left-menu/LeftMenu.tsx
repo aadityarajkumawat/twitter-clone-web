@@ -20,7 +20,7 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
         <S.ListItem>Bookmarks</S.ListItem>
         <S.ListItem>Lists</S.ListItem>
         <S.ListItem>
-          <Link to="/profile">Profile</Link>
+          <a href="/profile">Profile</a>
         </S.ListItem>
         <S.ListItem>Settings</S.ListItem>
       </S.MenuOptions>

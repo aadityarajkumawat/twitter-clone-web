@@ -38,6 +38,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     save({ bio: formBio, link: linkBio });
   };
 
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files);
+  };
+
   return (
     <Fragment>
       <EditProfileContainer>
@@ -46,6 +50,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
           <CloseEditProfile onClick={() => toggle(false)}></CloseEditProfile>
         </EditProfileHeading>
         <EditProfileForm>
+          <input type="file" onChange={handleFile} />
           <Input>
             <LabelI>Bio</LabelI>
             <InputI

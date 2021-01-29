@@ -11,7 +11,7 @@ interface RoutesProps {}
 const Routes: React.FC<RoutesProps> = () => {
   return (
     <Fragment>
-      <PrivateRoute path="/" component={Home} />
+      <Route path="/" exact component={Home} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/login" exact component={Login} />
       <Route path="/register" exact component={Register} />
