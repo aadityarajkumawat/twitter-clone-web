@@ -1,0 +1,3 @@
+query GetProfileImage($id: Float!) {
+  getProfileImage(id: $id)
+}

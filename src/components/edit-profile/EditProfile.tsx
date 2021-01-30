@@ -1,5 +1,8 @@
 import React, { Fragment, useState } from "react";
-import { useEditProfileMutation } from "../../generated/graphql";
+import {
+  useEditProfileMutation,
+  useSaveImageMutation,
+} from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 import {
   BackDrop,
@@ -13,6 +16,7 @@ import {
   SubmitBtn,
   SubmitContainer,
 } from "./editprofile.styles";
+import Axios from "axios";
 
 interface EditProfileI {
   bio: string;
@@ -38,8 +42,31 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     save({ bio: formBio, link: linkBio });
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [{ data: saveImgData }, saveImg] = useSaveImageMutation();
+
+  console.log(saveImgData);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.files);
+    const formData = new FormData();
+    if (e.target.files) formData.append("image", e.target.files[0]);
+    try {
+      const r = await Axios.post(
+        "https://api.imgbb.com/1/upload?key=2db0d9c5d05935a5409a79e77d415b70",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      await saveImg({
+        url: r.data.data.display_url,
+        type: "profile",
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
   };
 
   return (

@@ -1,0 +1,3 @@
+mutation SaveImage($url: String!, $type: String!) {
+  saveImage(options: { url: $url, type: $type })
+}

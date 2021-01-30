@@ -16,8 +16,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
 
 export type Query = {
@@ -31,6 +29,8 @@ export type Query = {
   getPaginatedUserTweets: GetUserTweets;
   getUserProfile: GetProfile;
   getSearchResults: DisplayProfiles;
+  getProfileImage?: Maybe<Scalars["String"]>;
+  hi: Scalars["String"];
 };
 
 export type QueryGetTweetByIdArgs = {
@@ -47,6 +47,10 @@ export type QueryGetPaginatedUserTweetsArgs = {
 
 export type QueryGetSearchResultsArgs = {
   options: Searched;
+};
+
+export type QueryGetProfileImageArgs = {
+  id: Scalars["Float"];
 };
 
 export type User = {
@@ -142,7 +146,7 @@ export type Mutation = {
   likeTweet: LikedTweet;
   editProfile: Scalars["Boolean"];
   followAUser: FollowedAUser;
-  addProfilePicture: Scalars["Boolean"];
+  saveImage: Scalars["Boolean"];
 };
 
 export type MutationRegisterArgs = {
@@ -169,8 +173,8 @@ export type MutationFollowAUserArgs = {
   options: UserToFollow;
 };
 
-export type MutationAddProfilePictureArgs = {
-  picture: Scalars["Upload"];
+export type MutationSaveImageArgs = {
+  options: ImageParams;
 };
 
 export type UserResponse = {
@@ -232,6 +236,11 @@ export type FollowedAUser = {
 
 export type UserToFollow = {
   thatUser: Scalars["Float"];
+};
+
+export type ImageParams = {
+  url: Scalars["String"];
+  type: Scalars["String"];
 };
 
 export type Subscription = {
@@ -328,6 +337,16 @@ export type RegisterMutation = { __typename?: "Mutation" } & {
   };
 };
 
+export type SaveImageMutationVariables = Exact<{
+  url: Scalars["String"];
+  type: Scalars["String"];
+}>;
+
+export type SaveImageMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "saveImage"
+>;
+
 export type GetPaginatedPostsQueryVariables = Exact<{
   offset: Scalars["Float"];
   limit: Scalars["Float"];
@@ -385,6 +404,15 @@ export type GetProfileQuery = { __typename?: "Query" } & {
       >;
     };
 };
+
+export type GetProfileImageQueryVariables = Exact<{
+  id: Scalars["Float"];
+}>;
+
+export type GetProfileImageQuery = { __typename?: "Query" } & Pick<
+  Query,
+  "getProfileImage"
+>;
 
 export type GetSearchResultsQueryVariables = Exact<{
   search: Scalars["String"];
@@ -628,6 +656,17 @@ export function useRegisterMutation() {
     RegisterDocument
   );
 }
+export const SaveImageDocument = gql`
+  mutation SaveImage($url: String!, $type: String!) {
+    saveImage(options: { url: $url, type: $type })
+  }
+`;
+
+export function useSaveImageMutation() {
+  return Urql.useMutation<SaveImageMutation, SaveImageMutationVariables>(
+    SaveImageDocument
+  );
+}
 export const GetPaginatedPostsDocument = gql`
   query GetPaginatedPosts($offset: Float!, $limit: Float!) {
     getPaginatedPosts(options: { offset: $offset, limit: $limit }) {
@@ -704,6 +743,20 @@ export function useGetProfileQuery(
 ) {
   return Urql.useQuery<GetProfileQuery>({
     query: GetProfileDocument,
+    ...options,
+  });
+}
+export const GetProfileImageDocument = gql`
+  query GetProfileImage($id: Float!) {
+    getProfileImage(id: $id)
+  }
+`;
+
+export function useGetProfileImageQuery(
+  options: Omit<Urql.UseQueryArgs<GetProfileImageQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<GetProfileImageQuery>({
+    query: GetProfileImageDocument,
     ...options,
   });
 }
