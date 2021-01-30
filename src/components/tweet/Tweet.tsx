@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { me } from "../../constants/urls";
-import { useGetTweetByIdQuery } from "../../generated/graphql";
+import {
+  useGetTweetByIdQuery,
+  useMeQuery,
+  useGetProfileImageQuery,
+} from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
 import {
   CommentSpan,
@@ -34,6 +38,13 @@ const Tweet: React.FC<TweetProps> = ({
     variables: { tweet_id },
   });
 
+  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+
+  const [
+    { data: profileImage, fetching: fetchingProfileImage },
+    // @ts-ignore
+  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
+
   const [refresh, setRefresh] = useState<string>("");
 
   useEffect(() => {
@@ -44,7 +55,14 @@ const Tweet: React.FC<TweetProps> = ({
   return (
     <TweetWrapper>
       <UserProfileImg>
-        <img src={me} alt="user" />
+        <img
+          src={
+            !fetchingProfileImage && profileImage?.getProfileImage
+              ? profileImage!.getProfileImage
+              : ""
+          }
+          alt="user"
+        />
       </UserProfileImg>
       <TweetContainer>
         <TweetUsername>

@@ -7,12 +7,13 @@ import {
   PaginationParams,
   TweetType,
 } from "../constants/interfaces";
-import { me } from "../constants/urls";
 import {
   useCreateTweetMutation,
   useGetPaginatedPostsQuery,
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
+  useMeQuery,
+  useGetProfileImageQuery,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
@@ -34,10 +35,12 @@ const Home: React.FC<HomeProps> = () => {
   // Listening to realtime tweets
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
-  // const { more, hasMore, dataLength, getMore } = useGetPaginatedPosts(
-  //   feed,
-  //   realTime
-  // );
+  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+
+  const [
+    { data: profileImage, fetching: fetchingProfileImage },
+    // @ts-ignore
+  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
 
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
@@ -107,7 +110,13 @@ const Home: React.FC<HomeProps> = () => {
           <S.PageName>Home</S.PageName>
           <S.CreateTweet>
             <S.ProfileImageInc>
-              <S.IncImage src={me} />
+              <S.IncImage
+                src={
+                  !fetchingProfileImage && profileImage?.getProfileImage
+                    ? profileImage!.getProfileImage
+                    : ""
+                }
+              />
             </S.ProfileImageInc>
             <S.MTweet>
               <S.TweetInput>

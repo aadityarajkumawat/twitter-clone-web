@@ -15,9 +15,9 @@ import {
 import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
-import { me } from "../../constants/urls";
 import {
   useGetPaginatedUserTweetsQuery,
+  useGetProfileImageQuery,
   useGetProfileQuery,
   useGetTweetsByUserFQuery,
   useMeQuery,
@@ -48,6 +48,11 @@ export const Profile: React.FC<ProfileProps> = () => {
     { data: userTweets, fetching: fetchingUserTweets },
     refetchTweets,
   ] = useGetTweetsByUserFQuery();
+
+  const [
+    { data: profileImage, fetching: fetchingProfileImage },
+    // @ts-ignore
+  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
 
   const editProfile = useStore((state) => state.editProfile);
   const showSearchResults = useStore((state) => state.showSearchResults);
@@ -83,7 +88,6 @@ export const Profile: React.FC<ProfileProps> = () => {
   const { dataLength, hasMore } = scrollProps;
 
   const getMore = () => {
-    console.log("hi")
     if (userTweets?.getTweetsByUserF) {
       if (pag.offset === userTweets.getTweetsByUserF.num) {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
@@ -146,7 +150,13 @@ export const Profile: React.FC<ProfileProps> = () => {
               <img src="https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8ZGF3bnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" />
             </ImgContainer>
             <ProfileImgContainer>
-              <img src={me} />
+              <img
+                src={
+                  !fetchingProfileImage && profileImage?.getProfileImage
+                    ? profileImage!.getProfileImage
+                    : ""
+                }
+              />
             </ProfileImgContainer>
             <EditProfileBtn
               title="Edit Profile"

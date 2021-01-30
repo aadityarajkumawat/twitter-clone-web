@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import {
   useEditProfileMutation,
+  useGetProfileImageQuery,
   useSaveImageMutation,
 } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
@@ -42,12 +43,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     save({ bio: formBio, link: linkBio });
   };
 
-  const [{ data: saveImgData }, saveImg] = useSaveImageMutation();
-
-  console.log(saveImgData);
+  const [, saveImg] = useSaveImageMutation();
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
     const formData = new FormData();
     if (e.target.files) formData.append("image", e.target.files[0]);
     try {
