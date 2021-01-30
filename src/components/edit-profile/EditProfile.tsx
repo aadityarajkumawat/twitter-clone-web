@@ -11,9 +11,13 @@ import {
   EditProfileContainer,
   EditProfileForm,
   EditProfileHeading,
+  Icon,
+  ImageInput,
+  ImageInputWrapper,
   Input,
   InputI,
   LabelI,
+  PseudoLabel,
   SubmitBtn,
   SubmitContainer,
 } from "./editprofile.styles";
@@ -37,6 +41,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+  const [progress, setProgress] = useState<number>(0);
 
   const [, save] = useEditProfileMutation();
   const submit = () => {
@@ -55,6 +60,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (p) => {
+            console.log((p.loaded * 100) / p.total);
           },
         }
       );
@@ -75,7 +83,16 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
           <CloseEditProfile onClick={() => toggle(false)}></CloseEditProfile>
         </EditProfileHeading>
         <EditProfileForm>
-          <input type="file" onChange={handleFile} />
+          <ImageInputWrapper>
+            <PseudoLabel>Change Profile Image</PseudoLabel>
+            <Icon></Icon>
+            <ImageInput type="file" onChange={handleFile} />
+          </ImageInputWrapper>
+          <ImageInputWrapper>
+            <PseudoLabel>Change Cover Image</PseudoLabel>
+            <Icon></Icon>
+            <ImageInput type="file" onChange={handleFile} />
+          </ImageInputWrapper>
           <Input>
             <LabelI>Bio</LabelI>
             <InputI
