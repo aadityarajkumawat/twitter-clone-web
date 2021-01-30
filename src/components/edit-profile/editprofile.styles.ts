@@ -105,7 +105,8 @@ export const ImageInputWrapper = styled.div`
   justify-content: flex-start;
   position: relative;
   border-radius: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
+  margin-top: 8px;
 `;
 
 export const PseudoLabel = styled.div`
@@ -133,4 +134,17 @@ export const Icon = styled.div`
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
+`;
+
+export const ProgressBar = styled.div`
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
+  background-color: #ccc;
+`;
+
+export const Progress = styled.div`
+  width: 5px;
+  height: 4px;
+  background-color: #0066ff;
 `;

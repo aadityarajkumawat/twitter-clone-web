@@ -132,6 +132,10 @@ export const MoreInfo = styled.div`
 
 export const Follows = styled.div`
   display: flex;
+  align-items: center;
+  position: relative;
+  height: 35px;
+  width: 100%;
   span {
     font-family: "Oxygen";
     margin-right: 10px;
@@ -142,6 +146,18 @@ export const Follows = styled.div`
       font-size: 14px;
     }
   }
+`;
+
+export const FollowBtn = styled.button`
+  width: 120px;
+  height: 30px;
+  background-color: #0066ff;
+  border: none;
+  border-radius: 10px;
+  position: absolute;
+  right: 5px;
+  color: white;
+  font-weight: 700;
 `;
 
 export const EditProfileBtn = styled.button`

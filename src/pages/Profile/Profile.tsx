@@ -4,6 +4,7 @@ import {
   Back,
   CoverImageContainer,
   EditProfileBtn,
+  FollowBtn,
   Follows,
   ImgContainer,
   MoreInfo,
@@ -17,8 +18,7 @@ import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import {
   useGetPaginatedUserTweetsQuery,
-  useGetProfileImageQuery,
-  useGetProfileQuery,
+  useGetProfileStuffQuery,
   useGetTweetsByUserFQuery,
   useMeQuery,
 } from "../../generated/graphql";
@@ -29,47 +29,34 @@ import {
   TweetType,
 } from "../../constants/interfaces";
 import { useStore } from "../../zustand/store";
-import Axios from "axios";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { RightMenu } from "../../components/right-menu/RightMenu";
-import {
-  BackDrop,
-  TransparentBackdrop,
-} from "../../components/edit-profile/editprofile.styles";
 
 interface ProfileProps {}
+
 export const Profile: React.FC<ProfileProps> = () => {
-  const [{ data: user, fetching: fetchingUser }, refetchUser] = useMeQuery();
+  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+  const e_id = useStore((s) => s.curr);
+
+  useEffect(() => {
+    console.log("rerender");
+  }, [e_id]);
+
   const [
     { data: profile, fetching: fetchingProfile },
-    refetchProfile,
-  ] = useGetProfileQuery();
+  ] = useGetProfileStuffQuery({
+    variables: { id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20 },
+  });
+
   const [
     { data: userTweets, fetching: fetchingUserTweets },
     refetchTweets,
   ] = useGetTweetsByUserFQuery();
 
-  const [
-    { data: profileImage, fetching: fetchingProfileImage },
-    // @ts-ignore
-  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
-
   const editProfile = useStore((state) => state.editProfile);
-  const showSearchResults = useStore((state) => state.showSearchResults);
   const toggleEditProfile = useStore((state) => state.toggleEditProfile);
-  const toggleShowSearchResults = useStore(
-    (state) => state.toggleShowSearchResults
-  );
 
   useEffect(() => {
-    refetchUser({ requestPolicy: "network-only" });
-    refetchProfile({ requestPolicy: "network-only" });
-    refetchTweets({ requestPolicy: "network-only" });
-  }, []);
-
-  useEffect(() => {
-    refetchUser({ requestPolicy: "network-only" });
-    refetchProfile({ requestPolicy: "network-only" });
     refetchTweets({ requestPolicy: "network-only" });
   }, [editProfile]);
 
@@ -117,12 +104,12 @@ export const Profile: React.FC<ProfileProps> = () => {
           <EditProfile
             bio={
               profile && !fetchingProfile
-                ? profile.getUserProfile.profile.bio
+                ? profile.getProfileStuff.profile.bio
                 : ""
             }
             link={
               profile && !fetchingProfile
-                ? profile.getUserProfile.profile.link
+                ? profile.getProfileStuff.profile.link
                 : "#"
             }
           />
@@ -136,10 +123,14 @@ export const Profile: React.FC<ProfileProps> = () => {
               <BackSVG />
             </Back>
             <ProfileInfo>
-              <b>{user && !fetchingUser ? user!.me!.name : ""}</b>
+              <b>
+                {profile && !fetchingProfile
+                  ? profile.getProfileStuff.profile.name
+                  : ""}
+              </b>
               <span>
                 {profile && !fetchingProfile
-                  ? profile.getUserProfile.profile.num
+                  ? profile.getProfileStuff.profile.num
                   : 0}{" "}
                 Tweets
               </span>
@@ -147,64 +138,84 @@ export const Profile: React.FC<ProfileProps> = () => {
           </ProfileNav>
           <CoverImageContainer>
             <ImgContainer>
-              <img src="https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8ZGF3bnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80" />
+              <img
+                src={
+                  profile && !fetchingProfile
+                    ? profile.getProfileStuff.profile.cover_img
+                    : ""
+                }
+              />
             </ImgContainer>
             <ProfileImgContainer>
               <img
                 src={
-                  !fetchingProfileImage && profileImage?.getProfileImage
-                    ? profileImage!.getProfileImage
+                  !fetchingProfile && profile
+                    ? profile.getProfileStuff.profile.profile_img
                     : ""
                 }
               />
             </ProfileImgContainer>
-            <EditProfileBtn
-              title="Edit Profile"
-              onClick={() =>
-                editProfile ? toggleEditProfile(false) : toggleEditProfile(true)
-              }
-            >
-              <span title="Edit Profile"></span>
-              <span className="mm" title="Edit Profile"></span>
-              <span title="Edit Profile"></span>
-            </EditProfileBtn>
+            {(e_id === user?.me?.id || e_id === undefined) && (
+              <EditProfileBtn
+                title="Edit Profile"
+                onClick={() =>
+                  editProfile
+                    ? toggleEditProfile(false)
+                    : toggleEditProfile(true)
+                }
+              >
+                <span title="Edit Profile"></span>
+                <span className="mm" title="Edit Profile"></span>
+                <span title="Edit Profile"></span>
+              </EditProfileBtn>
+            )}
           </CoverImageContainer>
           <MoreInfo>
-            <b>{user && !fetchingUser ? user!.me!.name : ""}</b>
+            <b>
+              {profile && !fetchingProfile
+                ? profile.getProfileStuff.profile.name
+                : ""}
+            </b>
             <p className="username">
-              @{user && !fetchingUser ? user!.me!.username : ""}
+              @
+              {profile && !fetchingProfile
+                ? profile.getProfileStuff.profile.username
+                : ""}
             </p>
             <p className="bio">
               {profile && !fetchingProfile
-                ? profile.getUserProfile.profile.bio
+                ? profile.getProfileStuff.profile.bio
                 : ""}
             </p>
             <p className="link">
               <a
                 href={
                   profile && !fetchingProfile
-                    ? profile.getUserProfile.profile.link
+                    ? profile.getProfileStuff.profile.link
                     : "#"
                 }
               >
                 {profile && !fetchingProfile
-                  ? profile.getUserProfile.profile.link
+                  ? profile.getProfileStuff.profile.link
                   : ""}
               </a>
             </p>
             <Follows>
               <span>
                 {profile && !fetchingProfile
-                  ? profile!.getUserProfile.profile.following
+                  ? profile!.getProfileStuff.profile.following
                   : ""}
                 <span className="faded"> Following</span>
               </span>
               <span>
                 {profile && !fetchingProfile
-                  ? profile.getUserProfile.profile.followers
+                  ? profile.getProfileStuff.profile.followers
                   : ""}
                 <span className="faded"> Followers</span>
               </span>
+              {e_id !== user?.me?.id && e_id !== undefined && (
+                <FollowBtn>Follow</FollowBtn>
+              )}
             </Follows>
           </MoreInfo>
 

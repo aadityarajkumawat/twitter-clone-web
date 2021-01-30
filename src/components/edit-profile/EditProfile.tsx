@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Dispatch, Fragment, useState } from "react";
 import {
   useEditProfileMutation,
   useGetProfileImageQuery,
@@ -17,11 +17,14 @@ import {
   Input,
   InputI,
   LabelI,
+  Progress,
+  ProgressBar,
   PseudoLabel,
   SubmitBtn,
   SubmitContainer,
 } from "./editprofile.styles";
 import Axios from "axios";
+import { removeEmitHelper } from "typescript";
 
 interface EditProfileI {
   bio: string;
@@ -41,7 +44,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  const [progress, setProgress] = useState<number>(0);
+  const [profileProgress, setProfileProgress] = useState<number>(1);
+  const [coverProgress, setCoverProgress] = useState<number>(1);
 
   const [, save] = useEditProfileMutation();
   const submit = () => {
@@ -50,7 +54,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
 
   const [, saveImg] = useSaveImageMutation();
 
-  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fn: (value: React.SetStateAction<number>) => void,
+    type: string
+  ) => {
     const formData = new FormData();
     if (e.target.files) formData.append("image", e.target.files[0]);
     try {
@@ -62,14 +70,15 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (p) => {
-            console.log((p.loaded * 100) / p.total);
+            fn((p.loaded * 100) / p.total);
           },
         }
       );
-      await saveImg({
+      const k = await saveImg({
         url: r.data.data.display_url,
-        type: "profile",
+        type,
       });
+      console.log(k);
     } catch (e) {
       console.log(e.message);
     }
@@ -86,13 +95,25 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
           <ImageInputWrapper>
             <PseudoLabel>Change Profile Image</PseudoLabel>
             <Icon></Icon>
-            <ImageInput type="file" onChange={handleFile} />
+            <ImageInput
+              type="file"
+              onChange={(e) => handleFile(e, setProfileProgress, "profile")}
+            />
           </ImageInputWrapper>
+          <ProgressBar>
+            <Progress style={{ width: `${profileProgress}%` }} />
+          </ProgressBar>
           <ImageInputWrapper>
             <PseudoLabel>Change Cover Image</PseudoLabel>
             <Icon></Icon>
-            <ImageInput type="file" onChange={handleFile} />
+            <ImageInput
+              type="file"
+              onChange={(e) => handleFile(e, setCoverProgress, "cover")}
+            />
           </ImageInputWrapper>
+          <ProgressBar>
+            <Progress style={{ width: `${coverProgress}%` }} />
+          </ProgressBar>
           <Input>
             <LabelI>Bio</LabelI>
             <InputI

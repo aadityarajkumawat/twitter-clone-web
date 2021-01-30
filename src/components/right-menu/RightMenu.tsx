@@ -45,6 +45,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
                     name={profile.name}
                     username={profile.username}
                     key={uuidv4()}
+                    id={profile.id}
                   />
                 ))}
               </Fragment>

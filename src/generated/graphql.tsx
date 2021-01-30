@@ -22,6 +22,7 @@ export type Query = {
   __typename?: "Query";
   hello: Scalars["String"];
   me?: Maybe<User>;
+  getProfileStuff: ProfileStuff;
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetAllTweets;
   getPaginatedPosts: GetUserTweets;
@@ -30,7 +31,12 @@ export type Query = {
   getUserProfile: GetProfile;
   getSearchResults: DisplayProfiles;
   getProfileImage?: Maybe<Scalars["String"]>;
+  getCoverImage?: Maybe<Scalars["String"]>;
   hi: Scalars["String"];
+};
+
+export type QueryGetProfileStuffArgs = {
+  id: Scalars["Float"];
 };
 
 export type QueryGetTweetByIdArgs = {
@@ -53,6 +59,10 @@ export type QueryGetProfileImageArgs = {
   id: Scalars["Float"];
 };
 
+export type QueryGetCoverImageArgs = {
+  id: Scalars["Float"];
+};
+
 export type User = {
   __typename?: "User";
   id: Scalars["Float"];
@@ -62,6 +72,25 @@ export type User = {
   username: Scalars["String"];
   name: Scalars["String"];
   phone: Scalars["String"];
+};
+
+export type ProfileStuff = {
+  __typename?: "ProfileStuff";
+  profile: ProfileItems;
+  error: Scalars["String"];
+};
+
+export type ProfileItems = {
+  __typename?: "ProfileItems";
+  profile_img: Scalars["String"];
+  cover_img: Scalars["String"];
+  name: Scalars["String"];
+  username: Scalars["String"];
+  bio: Scalars["String"];
+  link: Scalars["String"];
+  followers: Scalars["Float"];
+  following: Scalars["Float"];
+  num: Scalars["Float"];
 };
 
 export type GetTweetResponse = {
@@ -132,6 +161,7 @@ export type DisplayProfile = {
   url: Scalars["String"];
   name: Scalars["String"];
   username: Scalars["String"];
+  id: Scalars["Float"];
 };
 
 export type Searched = {
@@ -414,6 +444,30 @@ export type GetProfileImageQuery = { __typename?: "Query" } & Pick<
   "getProfileImage"
 >;
 
+export type GetProfileStuffQueryVariables = Exact<{
+  id: Scalars["Float"];
+}>;
+
+export type GetProfileStuffQuery = { __typename?: "Query" } & {
+  getProfileStuff: { __typename?: "ProfileStuff" } & Pick<
+    ProfileStuff,
+    "error"
+  > & {
+      profile: { __typename?: "ProfileItems" } & Pick<
+        ProfileItems,
+        | "profile_img"
+        | "cover_img"
+        | "name"
+        | "username"
+        | "bio"
+        | "link"
+        | "followers"
+        | "following"
+        | "num"
+      >;
+    };
+};
+
 export type GetSearchResultsQueryVariables = Exact<{
   search: Scalars["String"];
 }>;
@@ -426,7 +480,7 @@ export type GetSearchResultsQuery = { __typename?: "Query" } & {
       profiles: Array<
         { __typename?: "DisplayProfile" } & Pick<
           DisplayProfile,
-          "name" | "username"
+          "id" | "name" | "username"
         >
       >;
     };
@@ -760,10 +814,38 @@ export function useGetProfileImageQuery(
     ...options,
   });
 }
+export const GetProfileStuffDocument = gql`
+  query GetProfileStuff($id: Float!) {
+    getProfileStuff(id: $id) {
+      profile {
+        profile_img
+        cover_img
+        name
+        username
+        bio
+        link
+        followers
+        following
+        num
+      }
+      error
+    }
+  }
+`;
+
+export function useGetProfileStuffQuery(
+  options: Omit<Urql.UseQueryArgs<GetProfileStuffQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<GetProfileStuffQuery>({
+    query: GetProfileStuffDocument,
+    ...options,
+  });
+}
 export const GetSearchResultsDocument = gql`
   query GetSearchResults($search: String!) {
     getSearchResults(options: { search: $search }) {
       profiles {
+        id
         name
         username
       }

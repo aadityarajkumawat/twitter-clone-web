@@ -10,6 +10,9 @@ type StateI = {
 
   authenticated: boolean;
   setAuthenticated: (bool: boolean) => void;
+
+  curr: number | undefined;
+  setCurr: (curr: number) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -22,4 +25,7 @@ export const useStore = create<StateI>((set) => ({
 
   authenticated: false,
   setAuthenticated: (bool) => set(() => ({ authenticated: bool })),
+
+  curr: undefined,
+  setCurr: (curr) => set(() => ({ curr })),
 }));

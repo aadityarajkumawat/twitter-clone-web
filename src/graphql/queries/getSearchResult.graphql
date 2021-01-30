@@ -1,6 +1,7 @@
 query GetSearchResults($search: String!) {
   getSearchResults(options: { search: $search }) {
     profiles {
+      id
       name
       username
     }

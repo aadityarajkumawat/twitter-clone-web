@@ -1,0 +1,16 @@
+query GetProfileStuff($id: Float!) {
+  getProfileStuff(id: $id) {
+    profile {
+      profile_img
+      cover_img
+      name
+      username
+      bio
+      link
+      followers
+      following
+      num
+    }
+    error
+  }
+}
