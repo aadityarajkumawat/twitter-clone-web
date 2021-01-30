@@ -25,6 +25,7 @@ interface TweetProps {
   name: string;
   comments: number;
   tweet_id: number;
+  img: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -33,6 +34,7 @@ const Tweet: React.FC<TweetProps> = ({
   name,
   comments,
   tweet_id,
+  img,
 }) => {
   const [{ data }, reloadQuery] = useGetTweetByIdQuery({
     variables: { tweet_id },
@@ -55,14 +57,7 @@ const Tweet: React.FC<TweetProps> = ({
   return (
     <TweetWrapper>
       <UserProfileImg>
-        <img
-          src={
-            !fetchingProfileImage && profileImage?.getProfileImage
-              ? profileImage!.getProfileImage
-              : ""
-          }
-          alt="user"
-        />
+        <img src={img} alt="user" />
       </UserProfileImg>
       <TweetContainer>
         <TweetUsername>

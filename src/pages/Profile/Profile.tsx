@@ -229,6 +229,11 @@ export const Profile: React.FC<ProfileProps> = () => {
                   comments={tweet.comments}
                   username={tweet.username}
                   key={tweet.tweet_id}
+                  img={
+                    !fetchingProfile && profile
+                      ? profile.getProfileStuff.profile.profile_img
+                      : ""
+                  }
                 />
               ))
             ) : (
@@ -258,6 +263,11 @@ export const Profile: React.FC<ProfileProps> = () => {
                     comments={tweet.comments}
                     username={tweet.username}
                     key={tweet.tweet_id}
+                    img={
+                      !fetchingProfile && profile
+                        ? profile.getProfileStuff.profile.profile_img
+                        : ""
+                    }
                   />
                 ))}
             </Fragment>

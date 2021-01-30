@@ -31,7 +31,7 @@ const Home: React.FC<HomeProps> = () => {
 
   // Fetching user-feed
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
-
+  console.log(feed);
   // Listening to realtime tweets
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
@@ -148,6 +148,7 @@ const Home: React.FC<HomeProps> = () => {
                   comments={tweet.comments}
                   username={tweet.username}
                   key={tweet.tweet_id}
+                  img={tweet.profile_img}
                 />
               ))}
             </Fragment>
@@ -175,6 +176,7 @@ const Home: React.FC<HomeProps> = () => {
                     comments={tweet.comments}
                     username={tweet.username}
                     key={tweet.tweet_id}
+                    img={tweet.profile_img}
                   />
                 ))}
             </Fragment>

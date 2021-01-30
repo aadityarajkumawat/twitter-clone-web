@@ -19,4 +19,5 @@ export interface TweetType {
   tweet_id: number;
   username: string;
   _type: string;
+  profile_img: string;
 }

@@ -24,7 +24,7 @@ export type Query = {
   me?: Maybe<User>;
   getProfileStuff: ProfileStuff;
   getTweetById: GetTweetResponse;
-  getTweetsByUser: GetAllTweets;
+  getTweetsByUser: GetUserTweets;
   getPaginatedPosts: GetUserTweets;
   getTweetsByUserF: GetAllTweets;
   getPaginatedUserTweets: GetUserTweets;
@@ -32,7 +32,6 @@ export type Query = {
   getSearchResults: DisplayProfiles;
   getProfileImage?: Maybe<Scalars["String"]>;
   getCoverImage?: Maybe<Scalars["String"]>;
-  hi: Scalars["String"];
 };
 
 export type QueryGetProfileStuffArgs = {
@@ -111,28 +110,44 @@ export type GetTweet = {
   likes: Scalars["Float"];
   comments: Scalars["Float"];
   liked: Scalars["Boolean"];
+  profile_img: Scalars["String"];
 };
 
 export type GetTweetById = {
   tweet_id: Scalars["Float"];
 };
 
-export type GetAllTweets = {
-  __typename?: "GetAllTweets";
+export type GetUserTweets = {
+  __typename?: "GetUserTweets";
   tweets: Array<GetTweet>;
   error: Scalars["String"];
   num: Scalars["Float"];
 };
 
-export type GetUserTweets = {
-  __typename?: "GetUserTweets";
-  tweets: Array<GetTweet>;
-  error: Scalars["String"];
-};
-
 export type PaginatingParams = {
   offset: Scalars["Float"];
   limit: Scalars["Float"];
+};
+
+export type GetAllTweets = {
+  __typename?: "GetAllTweets";
+  tweets: Array<GetTweet1>;
+  error: Scalars["String"];
+  num: Scalars["Float"];
+};
+
+export type GetTweet1 = {
+  __typename?: "GetTweet1";
+  tweet_id: Scalars["Float"];
+  tweet_content: Scalars["String"];
+  created_At: Scalars["String"];
+  _type: Scalars["String"];
+  rel_acc: Scalars["Float"];
+  username: Scalars["String"];
+  name: Scalars["String"];
+  likes: Scalars["Float"];
+  comments: Scalars["Float"];
+  liked: Scalars["Boolean"];
 };
 
 export type GetProfile = {
@@ -241,6 +256,7 @@ export type PostCreatedResponse = {
 export type PostTweetInput = {
   tweet_content: Scalars["String"];
   rel_acc?: Maybe<Scalars["Float"]>;
+  img?: Maybe<Scalars["String"]>;
 };
 
 export type LikedTweet = {
@@ -400,6 +416,7 @@ export type GetPaginatedPostsQuery = { __typename?: "Query" } & {
           | "likes"
           | "comments"
           | "liked"
+          | "profile_img"
         >
       >;
     };
@@ -516,8 +533,8 @@ export type GetTweetByIdQuery = { __typename?: "Query" } & {
 export type GetTweetsByUserQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetTweetsByUserQuery = { __typename?: "Query" } & {
-  getTweetsByUser: { __typename?: "GetAllTweets" } & Pick<
-    GetAllTweets,
+  getTweetsByUser: { __typename?: "GetUserTweets" } & Pick<
+    GetUserTweets,
     "error" | "num"
   > & {
       tweets: Array<
@@ -533,6 +550,7 @@ export type GetTweetsByUserQuery = { __typename?: "Query" } & {
           | "likes"
           | "comments"
           | "liked"
+          | "profile_img"
         >
       >;
     };
@@ -546,8 +564,8 @@ export type GetTweetsByUserFQuery = { __typename?: "Query" } & {
     "error" | "num"
   > & {
       tweets: Array<
-        { __typename?: "GetTweet" } & Pick<
-          GetTweet,
+        { __typename?: "GetTweet1" } & Pick<
+          GetTweet1,
           | "tweet_id"
           | "tweet_content"
           | "_type"
@@ -593,6 +611,7 @@ export type ListenTweetsSubscription = { __typename?: "Subscription" } & {
           | "comments"
           | "likes"
           | "liked"
+          | "profile_img"
         >
       >;
     };
@@ -735,6 +754,7 @@ export const GetPaginatedPostsDocument = gql`
         likes
         comments
         liked
+        profile_img
       }
       error
     }
@@ -904,6 +924,7 @@ export const GetTweetsByUserDocument = gql`
         likes
         comments
         liked
+        profile_img
       }
       error
       num
@@ -980,6 +1001,7 @@ export const ListenTweetsDocument = gql`
         comments
         likes
         liked
+        profile_img
       }
       error
     }

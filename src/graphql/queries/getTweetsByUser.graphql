@@ -11,6 +11,7 @@ query GetTweetsByUser {
       likes
       comments
       liked
+      profile_img
     }
     error
     num
