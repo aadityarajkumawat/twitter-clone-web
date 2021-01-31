@@ -38,6 +38,8 @@ export const UserProfileImg = styled(StyledDiv)`
     width: 60px;
     height: 60px;
     border-radius: 100%;
+    position: absolute;
+    top: 15px;
   }
 `;
 
@@ -45,6 +47,7 @@ export const TweetWrapper = styled(StyledDiv)`
   width: 100%;
   ${flexCenter}
   border-bottom: 1px solid #eeeeee20;
+  position: relative;
 `;
 
 export const CommentSpan = styled.span`
@@ -71,7 +74,7 @@ export const LikeSpan = styled.span`
 
 export const TweetImageContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin: 15px 0;
 

@@ -11,18 +11,22 @@ interface SearchItemProps {
   name: string;
   username: string;
   id: number;
+  user_img: string;
 }
 export const SearchItem: React.FC<SearchItemProps> = ({
   name,
   username,
   id,
+  user_img,
 }) => {
   const setCurr = useStore((s) => s.setCurr);
   const history = useHistory();
   return (
     <Fragment>
       <SearchItemContainer>
-        <ImageContainer></ImageContainer>
+        <ImageContainer>
+          <img src={user_img} />
+        </ImageContainer>
         <UserD
           onClick={() => {
             setCurr(id);

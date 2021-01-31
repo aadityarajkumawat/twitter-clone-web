@@ -172,10 +172,10 @@ export type DisplayProfiles = {
 
 export type DisplayProfile = {
   __typename?: "DisplayProfile";
-  url: Scalars["String"];
   name: Scalars["String"];
   username: Scalars["String"];
   id: Scalars["Float"];
+  img: Scalars["String"];
 };
 
 export type Searched = {
@@ -503,7 +503,7 @@ export type GetSearchResultsQuery = { __typename?: "Query" } & {
       profiles: Array<
         { __typename?: "DisplayProfile" } & Pick<
           DisplayProfile,
-          "id" | "name" | "username"
+          "id" | "name" | "username" | "img"
         >
       >;
     };
@@ -883,6 +883,7 @@ export const GetSearchResultsDocument = gql`
         id
         name
         username
+        img
       }
       error
     }

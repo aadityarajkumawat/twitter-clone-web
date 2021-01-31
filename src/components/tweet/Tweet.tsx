@@ -62,7 +62,7 @@ const Tweet: React.FC<TweetProps> = ({
         </TweetUsername>
         <TweetContent>{tweet_content}</TweetContent>
         <TweetImageContainer>
-          <img src={captain} alt="" />
+          {captain !== "" && <img src={captain} alt="" />}
         </TweetImageContainer>
         <TweetActionBar>
           <CommentSpan>

@@ -4,6 +4,7 @@ query GetSearchResults($search: String!) {
       id
       name
       username
+      img
     }
     error
   }

@@ -3,15 +3,25 @@ import styled from "styled-components";
 export const SearchItemContainer = styled.div`
   width: 100%;
   padding: 0px 0;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #ffffff80;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 export const ImageContainer = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+
+  img {
+    height: 45px;
+    width: 45px;
+    border-radius: 100%;
+  }
 `;
 
 export const UserD = styled.div`
