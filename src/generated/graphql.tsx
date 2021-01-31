@@ -46,8 +46,12 @@ export type QueryGetPaginatedPostsArgs = {
   options: PaginatingParams;
 };
 
+export type QueryGetTweetsByUserFArgs = {
+  id: Scalars["Float"];
+};
+
 export type QueryGetPaginatedUserTweetsArgs = {
-  options: PaginatingParams;
+  options: PaginatingUserParams;
 };
 
 export type QueryGetSearchResultsArgs = {
@@ -147,6 +151,12 @@ export type GetPaginatedUserTweets = {
   __typename?: "GetPaginatedUserTweets";
   tweets: Array<GetOneTweet>;
   error: Scalars["String"];
+};
+
+export type PaginatingUserParams = {
+  offset: Scalars["Float"];
+  limit: Scalars["Float"];
+  id: Scalars["Float"];
 };
 
 export type GetProfile = {
@@ -426,6 +436,7 @@ export type GetPaginatedPostsQuery = { __typename?: "Query" } & {
 export type GetPaginatedUserTweetsQueryVariables = Exact<{
   offset: Scalars["Float"];
   limit: Scalars["Float"];
+  id: Scalars["Float"];
 }>;
 
 export type GetPaginatedUserTweetsQuery = { __typename?: "Query" } & {
@@ -563,7 +574,9 @@ export type GetTweetsByUserQuery = { __typename?: "Query" } & {
     };
 };
 
-export type GetTweetsByUserFQueryVariables = Exact<{ [key: string]: never }>;
+export type GetTweetsByUserFQueryVariables = Exact<{
+  id: Scalars["Float"];
+}>;
 
 export type GetTweetsByUserFQuery = { __typename?: "Query" } & {
   getTweetsByUserF: { __typename?: "GetUserTweets" } & Pick<
@@ -786,8 +799,10 @@ export function useGetPaginatedPostsQuery(
   });
 }
 export const GetPaginatedUserTweetsDocument = gql`
-  query GetPaginatedUserTweets($offset: Float!, $limit: Float!) {
-    getPaginatedUserTweets(options: { offset: $offset, limit: $limit }) {
+  query GetPaginatedUserTweets($offset: Float!, $limit: Float!, $id: Float!) {
+    getPaginatedUserTweets(
+      options: { offset: $offset, limit: $limit, id: $id }
+    ) {
       tweets {
         tweet_id
         tweet_content
@@ -958,8 +973,8 @@ export function useGetTweetsByUserQuery(
   });
 }
 export const GetTweetsByUserFDocument = gql`
-  query GetTweetsByUserF {
-    getTweetsByUserF {
+  query GetTweetsByUserF($id: Float!) {
+    getTweetsByUserF(id: $id) {
       tweets {
         tweet_id
         tweet_content

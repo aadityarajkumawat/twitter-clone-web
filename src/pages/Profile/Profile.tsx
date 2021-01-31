@@ -51,7 +51,9 @@ export const Profile: React.FC<ProfileProps> = () => {
   const [
     { data: userTweets, fetching: fetchingUserTweets },
     refetchTweets,
-  ] = useGetTweetsByUserFQuery();
+  ] = useGetTweetsByUserFQuery({
+    variables: { id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20 },
+  });
 
   const editProfile = useStore((state) => state.editProfile);
   const toggleEditProfile = useStore((state) => state.toggleEditProfile);
@@ -64,7 +66,10 @@ export const Profile: React.FC<ProfileProps> = () => {
   const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
 
   const [{ data }] = useGetPaginatedUserTweetsQuery({
-    variables: pag,
+    variables: {
+      ...pag,
+      id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20,
+    },
   });
 
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({

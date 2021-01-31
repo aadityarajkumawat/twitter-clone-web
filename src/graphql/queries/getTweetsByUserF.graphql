@@ -1,5 +1,5 @@
-query GetTweetsByUserF {
-  getTweetsByUserF {
+query GetTweetsByUserF($id: Float!) {
+  getTweetsByUserF(id: $id) {
     tweets {
       tweet_id
       tweet_content
