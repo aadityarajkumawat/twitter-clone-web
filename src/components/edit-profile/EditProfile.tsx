@@ -24,7 +24,6 @@ import {
   SubmitContainer,
 } from "./editprofile.styles";
 import Axios from "axios";
-import { removeEmitHelper } from "typescript";
 
 interface EditProfileI {
   bio: string;

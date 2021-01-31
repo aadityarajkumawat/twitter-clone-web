@@ -1,5 +1,7 @@
-mutation CreateTweet($tweet_content: String!, $rel_acc: Float) {
-  createPost(options: { tweet_content: $tweet_content, rel_acc: $rel_acc }) {
+mutation CreateTweet($tweet_content: String!, $rel_acc: Float, $img: String) {
+  createPost(
+    options: { tweet_content: $tweet_content, rel_acc: $rel_acc, img: $img }
+  ) {
     uploaded
     error
   }

@@ -68,3 +68,14 @@ export const LikeSpan = styled.span`
     color: white;
   }
 `;
+
+export const TweetImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+
+  img {
+    border-radius: 10px;
+  }
+`;

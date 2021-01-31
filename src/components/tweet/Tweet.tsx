@@ -14,6 +14,7 @@ import {
   TweetActionBar,
   TweetContainer,
   TweetContent,
+  TweetImageContainer,
   TweetUsername,
   TweetWrapper,
   UserProfileImg,
@@ -26,6 +27,7 @@ interface TweetProps {
   comments: number;
   tweet_id: number;
   img: string;
+  captain: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -35,17 +37,11 @@ const Tweet: React.FC<TweetProps> = ({
   comments,
   tweet_id,
   img,
+  captain,
 }) => {
   const [{ data }, reloadQuery] = useGetTweetByIdQuery({
     variables: { tweet_id },
   });
-
-  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
-
-  const [
-    { data: profileImage, fetching: fetchingProfileImage },
-    // @ts-ignore
-  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
 
   const [refresh, setRefresh] = useState<string>("");
 
@@ -65,6 +61,9 @@ const Tweet: React.FC<TweetProps> = ({
           <FadedUsername>@{username}</FadedUsername>
         </TweetUsername>
         <TweetContent>{tweet_content}</TweetContent>
+        <TweetImageContainer>
+          <img src={captain} alt="" />
+        </TweetImageContainer>
         <TweetActionBar>
           <CommentSpan>
             {SVG.commentSVG}

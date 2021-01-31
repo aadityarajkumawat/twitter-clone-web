@@ -114,7 +114,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GetUserTweets",
+                "name": "GetFeedTweets",
                 "ofType": null
               }
             },
@@ -145,7 +145,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GetUserTweets",
+                "name": "GetPaginatedFeedTweets",
                 "ofType": null
               }
             },
@@ -161,7 +161,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GetAllTweets",
+                "name": "GetUserTweets",
                 "ofType": null
               }
             },
@@ -192,7 +192,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "GetUserTweets",
+                "name": "GetPaginatedUserTweets",
                 "ofType": null
               }
             },
@@ -658,7 +658,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "GetTweet",
+              "name": "GetOneTweet",
               "ofType": null
             },
             "isDeprecated": false,
@@ -684,7 +684,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GetTweet",
+        "name": "GetOneTweet",
         "description": null,
         "fields": [
           {
@@ -862,6 +862,22 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "img",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -906,7 +922,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GetUserTweets",
+        "name": "GetFeedTweets",
         "description": null,
         "fields": [
           {
@@ -924,7 +940,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "GetTweet",
+                    "name": "GetOneTweet",
                     "ofType": null
                   }
                 }
@@ -959,6 +975,57 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GetPaginatedFeedTweets",
+        "description": null,
+        "fields": [
+          {
+            "name": "tweets",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "GetOneTweet",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "error",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -1012,7 +1079,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GetAllTweets",
+        "name": "GetUserTweets",
         "description": null,
         "fields": [
           {
@@ -1030,7 +1097,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "GetTweet1",
+                    "name": "GetOneTweet",
                     "ofType": null
                   }
                 }
@@ -1079,27 +1146,35 @@
       },
       {
         "kind": "OBJECT",
-        "name": "GetTweet1",
+        "name": "GetPaginatedUserTweets",
         "description": null,
         "fields": [
           {
-            "name": "tweet_id",
+            "name": "tweets",
             "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "GetOneTweet",
+                    "ofType": null
+                  }
+                }
               }
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "tweet_content",
+            "name": "error",
             "description": null,
             "args": [],
             "type": {
@@ -1108,134 +1183,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "created_At",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "_type",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "rel_acc",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "username",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "likes",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "comments",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "liked",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },

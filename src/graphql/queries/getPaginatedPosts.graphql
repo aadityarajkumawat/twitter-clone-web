@@ -12,6 +12,7 @@ query GetPaginatedPosts($offset: Float!, $limit: Float!) {
       comments
       liked
       profile_img
+      img
     }
     error
   }

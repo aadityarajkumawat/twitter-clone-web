@@ -150,7 +150,7 @@ export const TweetAc = styled.div`
 export const TweetButton = styled.button`
   width: 90px;
   height: 40px;
-  background-color: #11119c;
+  background-color: #0066ff;
   color: #eee;
   font-weight: 600;
   font-size: 18px;
@@ -185,4 +185,10 @@ export const Plac = styled.div`
   background-color: #11119c;
   height: 50px;
   width: 100px;
+`;
+
+export const UploadI = styled.div`
+  width: 30px;
+  height: 100%;
+  background-color: #0066ff;
 `;

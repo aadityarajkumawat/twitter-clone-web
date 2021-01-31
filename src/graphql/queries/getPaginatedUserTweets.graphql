@@ -5,6 +5,8 @@ query GetPaginatedUserTweets($offset: Float!, $limit: Float!) {
       tweet_content
       name
       username
+      profile_img
+      img
     }
     error
   }

@@ -12,6 +12,7 @@ subscription ListenTweets {
       likes
       liked
       profile_img
+      img
     }
     error
   }
