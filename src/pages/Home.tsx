@@ -19,6 +19,8 @@ import {
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
 import Axios from "axios";
+import { RightMenu } from "../components/right-menu/RightMenu";
+import { AttachImage } from "../assets/AttachImage";
 
 interface HomeProps {}
 
@@ -33,23 +35,20 @@ const Home: React.FC<HomeProps> = () => {
 
   // Fetching user-feed
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
-  console.log(feed);
   // Listening to realtime tweets
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
-  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+  const [{ data: user }] = useMeQuery();
 
   const [
     { data: profileImage, fetching: fetchingProfileImage },
     // @ts-ignore
   ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
 
-  const [, saveImg] = useSaveImageMutation();
-
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
   const [feedProgress, setFeedProgress] = useState<number>(1);
-  const [img, setImg] = useState<string>("");
+  const [files, setFiles] = useState<any>(null);
 
   const [{ data }] = useGetPaginatedPostsQuery({
     variables: pag,
@@ -63,7 +62,6 @@ const Home: React.FC<HomeProps> = () => {
   const { dataLength, hasMore } = scrollProps;
 
   const getMore = () => {
-    console.log(feed);
     if (feed?.getTweetsByUser) {
       if (
         pag.offset ===
@@ -107,31 +105,49 @@ const Home: React.FC<HomeProps> = () => {
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
 
   const handleFile = async (
-    e: React.ChangeEvent<HTMLInputElement>,
     fn: (value: React.SetStateAction<number>) => void,
-    type: string
+    e: any
   ) => {
     const formData = new FormData();
-    if (e.target.files) formData.append("image", e.target.files[0]);
-    try {
-      const r = await Axios.post(
-        "https://api.imgbb.com/1/upload?key=2db0d9c5d05935a5409a79e77d415b70",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+    if (e) {
+      if (e.target.files) {
+        formData.append("image", e.target.files[0]);
+
+        try {
+          const r = await Axios.post(
+            "https://api.imgbb.com/1/upload?key=2db0d9c5d05935a5409a79e77d415b70",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              onUploadProgress: (p) => {
+                fn((p.loaded * 100) / p.total);
+              },
+            }
+          );
+          await postTweet({
+            tweet_content: tweetInput,
+            img: r.data.data.display_url,
+          });
+        } catch (error) {
+          console.log(error.message);
         }
-      );
-      const k = await saveImg({
-        url: r.data.data.display_url,
-        type,
-      });
-      console.log(k);
-      setImg(r.data.data.display_url);
-    } catch (e) {
-      console.log(e.message);
+      }
+    } else {
+      await postTweet({ tweet_content: tweetInput, img: "" });
     }
+  };
+
+  useEffect(() => {
+    if (feedProgress === 100) {
+      setFeedProgress(1);
+      setFiles(null);
+    }
+  }, [feedProgress]);
+
+  const getFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles(e);
   };
 
   return (
@@ -141,6 +157,12 @@ const Home: React.FC<HomeProps> = () => {
       </S.LeftMenu>
       <S.HomeMain>
         <S.FeedHeader>
+          {feedProgress !== 100 && feedProgress !== 1 && (
+            <S.ProgressBar>
+              <S.Progress style={{ width: `${feedProgress}%` }}></S.Progress>
+            </S.ProgressBar>
+          )}
+
           <S.PageName>Home</S.PageName>
           <S.CreateTweet>
             <S.ProfileImageInc>
@@ -162,14 +184,14 @@ const Home: React.FC<HomeProps> = () => {
               <S.EditTweetOptions>
                 <S.TweetAc>
                   <S.UploadI>
-                    <input
-                      type="file"
-                      onChange={(e) => handleFile(e, setFeedProgress, "feed")}
-                    />
+                    <AttachImage />
+                    <input type="file" onChange={(e) => getFile(e)} />
                   </S.UploadI>
                 </S.TweetAc>
                 <S.TweetButton
-                  onClick={() => postTweet({ tweet_content: tweetInput, img })}
+                  onClick={async () => {
+                    handleFile(setFeedProgress, files);
+                  }}
                 >
                   Tweet
                 </S.TweetButton>
@@ -226,7 +248,9 @@ const Home: React.FC<HomeProps> = () => {
           </InfiniteScroll>
         </S.Tweets>
       </S.HomeMain>
-      <S.RightMenu></S.RightMenu>
+      <S.RightMenu>
+        <RightMenu />
+      </S.RightMenu>
     </S.BaseComponent>
   );
 };

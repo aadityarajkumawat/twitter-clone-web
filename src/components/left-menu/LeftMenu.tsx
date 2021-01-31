@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import * as S from "../../pages/home.styles";
 import TwitterIcon from "../../assets/twitter-icon.svg";
 import { Link } from "react-router-dom";
+import { HomeIcon } from "../../assets/HomeIcon";
 
 interface LeftMenuProps {}
 export const LeftMenu: React.FC<LeftMenuProps> = () => {
@@ -12,17 +13,41 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
       </S.Head>
       <S.MenuOptions>
         <S.ListItem>
-          <Link to="/">Home</Link>
+          <Link to="/">
+            <HomeIcon />
+            <span>Home</span>
+          </Link>
         </S.ListItem>
-        <S.ListItem>Explore</S.ListItem>
-        <S.ListItem>Notifications</S.ListItem>
-        <S.ListItem>Messages</S.ListItem>
-        <S.ListItem>Bookmarks</S.ListItem>
-        <S.ListItem>Lists</S.ListItem>
         <S.ListItem>
-          <a href="/profile">Profile</a>
+          <HomeIcon />
+          <span>Explore</span>
         </S.ListItem>
-        <S.ListItem>Settings</S.ListItem>
+        <S.ListItem>
+          <HomeIcon />
+          <span>Notifications</span>
+        </S.ListItem>
+        <S.ListItem>
+          <HomeIcon />
+          <span>Messages</span>
+        </S.ListItem>
+        <S.ListItem>
+          <HomeIcon />
+          <span>Bookmarks</span>
+        </S.ListItem>
+        <S.ListItem>
+          <HomeIcon />
+          <span>Lists</span>
+        </S.ListItem>
+        <S.ListItem>
+          <a href="/profile">
+            <HomeIcon />
+            <span>Profile</span>
+          </a>
+        </S.ListItem>
+        <S.ListItem>
+          <HomeIcon />
+          <span>Settings</span>
+        </S.ListItem>
       </S.MenuOptions>
     </Fragment>
   );
