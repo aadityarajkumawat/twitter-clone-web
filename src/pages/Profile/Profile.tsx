@@ -17,6 +17,7 @@ import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import {
+  useFollowAUserMutation,
   useGetPaginatedUserTweetsQuery,
   useGetProfileStuffQuery,
   useGetTweetsByUserFQuery,
@@ -39,7 +40,9 @@ export const Profile: React.FC<ProfileProps> = () => {
   const e_id = useStore((s) => s.curr);
 
   useEffect(() => {
-    console.log("rerender");
+    setMore([]);
+    setPag({ offset: 0, limit: -1 });
+    setScrollProps({ dataLength: 1, hasMore: true });
   }, [e_id]);
 
   const [
@@ -47,6 +50,8 @@ export const Profile: React.FC<ProfileProps> = () => {
   ] = useGetProfileStuffQuery({
     variables: { id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20 },
   });
+
+  const [{ data: followUser }, follow] = useFollowAUserMutation();
 
   const [
     { data: userTweets, fetching: fetchingUserTweets },
@@ -101,6 +106,10 @@ export const Profile: React.FC<ProfileProps> = () => {
       }));
     }
   };
+
+  useEffect(() => {
+    console.log(followUser);
+  }, [followUser?.followAUser.followed]);
 
   return (
     <Fragment>
@@ -219,7 +228,13 @@ export const Profile: React.FC<ProfileProps> = () => {
                 <span className="faded"> Followers</span>
               </span>
               {e_id !== user?.me?.id && e_id !== undefined && (
-                <FollowBtn>Follow</FollowBtn>
+                <FollowBtn
+                  onClick={async () => await follow({ thatUser: e_id })}
+                >
+                  {followUser && followUser.followAUser.followed
+                    ? "Unfollow"
+                    : "Follow"}
+                </FollowBtn>
               )}
             </Follows>
           </MoreInfo>

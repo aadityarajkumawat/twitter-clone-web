@@ -10,6 +10,7 @@ query GetProfileStuff($id: Float!) {
       followers
       following
       num
+      isFollowed
     }
     error
   }

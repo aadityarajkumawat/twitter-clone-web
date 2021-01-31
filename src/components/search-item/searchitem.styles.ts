@@ -28,6 +28,7 @@ export const UserD = styled.div`
   width: calc(100% - 50px);
   height: 50px;
   padding: 5px 10px;
+  cursor: pointer;
 
   h4 {
     font-family: "Oxygen";

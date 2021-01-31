@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, useState } from "react";
+import React, { Dispatch, Fragment, useEffect, useState } from "react";
 import {
   useEditProfileMutation,
   useGetProfileImageQuery,
@@ -83,6 +83,14 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     }
   };
 
+  useEffect(() => {
+    if (profileProgress === 100) {
+      setProfileProgress(1);
+    } else {
+      setCoverProgress(1);
+    }
+  }, [profileProgress, coverProgress]);
+
   return (
     <Fragment>
       <EditProfileContainer>
@@ -99,9 +107,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
               onChange={(e) => handleFile(e, setProfileProgress, "profile")}
             />
           </ImageInputWrapper>
-          <ProgressBar>
-            <Progress style={{ width: `${profileProgress}%` }} />
-          </ProgressBar>
+          {profileProgress !== 100 && profileProgress !== 1 && (
+            <ProgressBar>
+              <Progress style={{ width: `${profileProgress}%` }} />
+            </ProgressBar>
+          )}
+
           <ImageInputWrapper>
             <PseudoLabel>Change Cover Image</PseudoLabel>
             <Icon></Icon>
@@ -110,9 +121,13 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
               onChange={(e) => handleFile(e, setCoverProgress, "cover")}
             />
           </ImageInputWrapper>
-          <ProgressBar>
-            <Progress style={{ width: `${coverProgress}%` }} />
-          </ProgressBar>
+
+          {coverProgress !== 100 && coverProgress !== 1 && (
+            <ProgressBar>
+              <Progress style={{ width: `${coverProgress}%` }} />
+            </ProgressBar>
+          )}
+
           <Input>
             <LabelI>Bio</LabelI>
             <InputI

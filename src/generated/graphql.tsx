@@ -94,6 +94,7 @@ export type ProfileItems = {
   followers: Scalars["Float"];
   following: Scalars["Float"];
   num: Scalars["Float"];
+  isFollowed: Scalars["Boolean"];
 };
 
 export type GetTweetResponse = {
@@ -498,6 +499,7 @@ export type GetProfileStuffQuery = { __typename?: "Query" } & {
         | "followers"
         | "following"
         | "num"
+        | "isFollowed"
       >;
     };
 };
@@ -877,6 +879,7 @@ export const GetProfileStuffDocument = gql`
         followers
         following
         num
+        isFollowed
       }
       error
     }
