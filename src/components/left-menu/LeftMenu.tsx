@@ -3,6 +3,13 @@ import * as S from "../../pages/home.styles";
 import TwitterIcon from "../../assets/twitter-icon.svg";
 import { Link } from "react-router-dom";
 import { HomeIcon } from "../../assets/HomeIcon";
+import { ExploreImage } from "../../assets/ExploreImage";
+import { Notifications } from "../../assets/Notifications";
+import { MessagesImage } from "../../assets/MessagesImage";
+import { BookmarkImage } from "../../assets/BookmarkImage";
+import { ListsImage } from "../../assets/ListsImage";
+import { ProfileImage } from "../../assets/ProfileImage";
+import { MoreImage } from "../../assets/MoreImage";
 
 interface LeftMenuProps {}
 export const LeftMenu: React.FC<LeftMenuProps> = () => {
@@ -19,33 +26,33 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
           </Link>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <ExploreImage />
           <span>Explore</span>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <Notifications />
           <span>Notifications</span>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <MessagesImage />
           <span>Messages</span>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <BookmarkImage />
           <span>Bookmarks</span>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <ListsImage />
           <span>Lists</span>
         </S.ListItem>
         <S.ListItem>
           <a href="/profile">
-            <HomeIcon />
+            <ProfileImage />
             <span>Profile</span>
           </a>
         </S.ListItem>
         <S.ListItem>
-          <HomeIcon />
+          <MoreImage />
           <span>Settings</span>
         </S.ListItem>
       </S.MenuOptions>
