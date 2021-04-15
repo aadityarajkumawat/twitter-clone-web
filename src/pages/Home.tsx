@@ -50,7 +50,7 @@ const Home: React.FC<HomeProps> = () => {
   const [feedProgress, setFeedProgress] = useState<number>(1);
   const [files, setFiles] = useState<any>(null);
 
-  const [{ data, fetching: fetchingPag }] = useGetPaginatedPostsQuery({
+  const [{ data, fetching: f }] = useGetPaginatedPostsQuery({
     variables: pag,
   });
 
@@ -61,13 +61,10 @@ const Home: React.FC<HomeProps> = () => {
 
   const { dataLength, hasMore } = scrollProps;
 
-  console.log(fetchingPag);
+  console.log(pag, data);
 
-  const [loadingPaginated, setLoadedPaginated] = useState(false);
-
-  const getMore = () => {
-    setLoadedPaginated(false);
-    if (feed?.getTweetsByUser) {
+  const getMore = async () => {
+    if (feed && feed.getTweetsByUser) {
       if (
         pag.offset ===
         feed.getTweetsByUser.num + (realTime ? realTime.length : 0)
@@ -75,12 +72,19 @@ const Home: React.FC<HomeProps> = () => {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
         return;
       }
+
       setPag({
         limit: 1,
-        offset: 7 + scrollProps.dataLength + (realTime ? realTime.length : 0),
+        offset:
+          7 + scrollProps.dataLength + (realTime ? realTime.length : 0) - 1,
       });
+
+      const s = new Promise((resolve, _) => {});
+
+      await s;
+
       if (data) {
-        if (data.getPaginatedPosts.tweets.length === 1) {
+        if (data.getPaginatedPosts.tweets.length >= 1) {
           // @ts-ignore
           setMore((prev) => [...prev, data.getPaginatedPosts.tweets[0]]);
         }
@@ -89,10 +93,6 @@ const Home: React.FC<HomeProps> = () => {
         ...prev,
         dataLength: prev.dataLength + 1,
       }));
-
-      if (!fetchingPag && !loadingPaginated) {
-        setLoadedPaginated(true);
-      }
     }
   };
 
@@ -231,7 +231,7 @@ const Home: React.FC<HomeProps> = () => {
             dataLength={dataLength}
             hasMore={hasMore}
             next={getMore}
-            loader={fetchingPag ? <h4>loading...</h4> : <div></div>}
+            loader={<h4>loading...</h4>}
           >
             <Fragment>
               {more
