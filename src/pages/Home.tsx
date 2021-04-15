@@ -50,7 +50,7 @@ const Home: React.FC<HomeProps> = () => {
   const [feedProgress, setFeedProgress] = useState<number>(1);
   const [files, setFiles] = useState<any>(null);
 
-  const [{ data }] = useGetPaginatedPostsQuery({
+  const [{ data, fetching: fetchingPag }] = useGetPaginatedPostsQuery({
     variables: pag,
   });
 
@@ -61,7 +61,12 @@ const Home: React.FC<HomeProps> = () => {
 
   const { dataLength, hasMore } = scrollProps;
 
+  console.log(fetchingPag);
+
+  const [loadingPaginated, setLoadedPaginated] = useState(false);
+
   const getMore = () => {
+    setLoadedPaginated(false);
     if (feed?.getTweetsByUser) {
       if (
         pag.offset ===
@@ -84,6 +89,10 @@ const Home: React.FC<HomeProps> = () => {
         ...prev,
         dataLength: prev.dataLength + 1,
       }));
+
+      if (!fetchingPag && !loadingPaginated) {
+        setLoadedPaginated(true);
+      }
     }
   };
 
@@ -191,6 +200,7 @@ const Home: React.FC<HomeProps> = () => {
                 <S.TweetButton
                   onClick={async () => {
                     handleFile(setFeedProgress, files);
+                    setTweetInput(() => "");
                   }}
                 >
                   Tweet
@@ -201,7 +211,7 @@ const Home: React.FC<HomeProps> = () => {
         </S.FeedHeader>
 
         <S.Tweets>
-          {!fetchingFeed && (
+          {!fetchingFeed && feed && (
             <Fragment>
               {[...realTime, ...feed!.getTweetsByUser.tweets].map((tweet) => (
                 <Tweet
@@ -221,13 +231,7 @@ const Home: React.FC<HomeProps> = () => {
             dataLength={dataLength}
             hasMore={hasMore}
             next={getMore}
-            loader={
-              feed ? (
-                feed.getTweetsByUser.num >= 7 && <h4>loading...</h4>
-              ) : (
-                <div></div>
-              )
-            }
+            loader={fetchingPag ? <h4>loading...</h4> : <div></div>}
           >
             <Fragment>
               {more
@@ -246,6 +250,8 @@ const Home: React.FC<HomeProps> = () => {
                 ))}
             </Fragment>
           </InfiniteScroll>
+
+          <div style={{ height: "50px" }}></div>
         </S.Tweets>
       </S.HomeMain>
       <S.RightMenu>

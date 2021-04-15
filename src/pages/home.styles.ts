@@ -150,6 +150,7 @@ export const IncImage = styled.img`
   width: 60px;
   height: 60px;
   border-radius: 100%;
+  object-fit: cover;
 `;
 
 export const TweetInput = styled.div`

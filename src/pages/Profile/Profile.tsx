@@ -92,8 +92,9 @@ export const Profile: React.FC<ProfileProps> = () => {
       }
       setPag({
         limit: 1,
-        offset: 5 + scrollProps.dataLength,
+        offset: 4 + scrollProps.dataLength,
       });
+
       if (data && data.getPaginatedUserTweets) {
         if (data.getPaginatedUserTweets.tweets.length === 1) {
           // @ts-ignore

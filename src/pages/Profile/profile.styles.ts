@@ -60,16 +60,18 @@ export const ImgContainer = styled.div`
   width: 100%;
   height: 240px;
   background-color: #000;
+  overflow: hidden;
 
   img {
     width: 100%;
-    height: 98%;
+    height: auto;
+    object-fit: hidden;
   }
 `;
 
 export const ProfileImgContainer = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   position: absolute;
   bottom: 0;
   left: 20px;
@@ -78,11 +80,13 @@ export const ProfileImgContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   img {
     display: block;
-    width: 142px;
-    height: 142px;
+    width: auto;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 

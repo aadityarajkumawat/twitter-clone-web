@@ -40,6 +40,7 @@ export const UserProfileImg = styled(StyledDiv)`
     border-radius: 100%;
     position: absolute;
     top: 15px;
+    object-fit: cover;
   }
 `;
 
