@@ -12,7 +12,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 
 const sub = new SubscriptionClient("ws://localhost:4001/graphql");
 
-const cli = createClient({
+export const cli = createClient({
   url: "http://localhost:4001/graphql",
   fetchOptions: {
     credentials: "include",

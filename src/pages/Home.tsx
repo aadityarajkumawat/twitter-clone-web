@@ -15,12 +15,14 @@ import {
   useMeQuery,
   useGetProfileImageQuery,
   useSaveImageMutation,
+  GetPaginatedPostsDocument,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
 import Axios from "axios";
 import { RightMenu } from "../components/right-menu/RightMenu";
 import { AttachImage } from "../assets/AttachImage";
+import { cli } from "../index";
 
 interface HomeProps {}
 
@@ -50,18 +52,12 @@ const Home: React.FC<HomeProps> = () => {
   const [feedProgress, setFeedProgress] = useState<number>(1);
   const [files, setFiles] = useState<any>(null);
 
-  const [{ data, fetching: f }] = useGetPaginatedPostsQuery({
-    variables: pag,
-  });
-
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
     dataLength: 1,
     hasMore: true,
   });
 
   const { dataLength, hasMore } = scrollProps;
-
-  console.log(pag, data);
 
   const getMore = async () => {
     if (feed && feed.getTweetsByUser) {
@@ -73,20 +69,18 @@ const Home: React.FC<HomeProps> = () => {
         return;
       }
 
+      const phew = await cli.query(GetPaginatedPostsDocument, pag).toPromise();
+
       setPag({
         limit: 1,
         offset:
           7 + scrollProps.dataLength + (realTime ? realTime.length : 0) - 1,
       });
 
-      const s = new Promise((resolve, _) => {});
-
-      await s;
-
-      if (data) {
-        if (data.getPaginatedPosts.tweets.length >= 1) {
+      if (phew) {
+        if (phew.data) {
           // @ts-ignore
-          setMore((prev) => [...prev, data.getPaginatedPosts.tweets[0]]);
+          setMore((prev) => [...prev, phew.data.getPaginatedPosts.tweets[0]]);
         }
       }
       setScrollProps((prev) => ({
