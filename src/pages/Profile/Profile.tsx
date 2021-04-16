@@ -173,7 +173,7 @@ export const Profile: React.FC<ProfileProps> = () => {
             {(e_id === user?.me?.id || e_id === undefined) && (
               <EditProfileBtn
                 title="Edit Profile"
-                onClick={() =>
+                onClick={(e) =>
                   editProfile
                     ? toggleEditProfile(false)
                     : toggleEditProfile(true)

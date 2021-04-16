@@ -23,6 +23,7 @@
     "stithi": "^1.0.1",
     "styled-components": "^5.2.1",
     "subscriptions-transport-ws": "^0.9.18",
+    "ts-transformer-keys": "^0.4.3",
     "typescript": "^4.0.3",
     "urql": "^1.11.3",
     "uuid": "^8.3.2",

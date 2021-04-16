@@ -20,7 +20,7 @@ import {
   UserProfileImg,
 } from "./tweet.styles";
 
-interface TweetProps {
+export interface TweetProps {
   username: string;
   tweet_content: string;
   name: string;

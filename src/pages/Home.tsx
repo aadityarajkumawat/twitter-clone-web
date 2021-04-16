@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
-import Tweet from "../components/tweet/Tweet";
+import Tweet, { TweetProps } from "../components/tweet/Tweet";
 import {
   InfiniteScrolling,
   PaginationParams,
@@ -16,6 +16,8 @@ import {
   useGetProfileImageQuery,
   useSaveImageMutation,
   GetPaginatedPostsDocument,
+  GetPaginatedPostsQuery,
+  GetPaginatedPostsQueryVariables,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
@@ -23,34 +25,33 @@ import Axios from "axios";
 import { RightMenu } from "../components/right-menu/RightMenu";
 import { AttachImage } from "../assets/AttachImage";
 import { cli } from "../index";
+import { getTweetProps } from "../utils/reshapeTweetType";
+import { ImageURI } from "../constants/urls";
 
 interface HomeProps {}
+type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 
 const Home: React.FC<HomeProps> = () => {
-  // Posting a tweet mutation
   const [, postTweet] = useCreateTweetMutation();
-  // Tweet input field
   const [tweetInput, setTweetInput] = useState<string>("");
 
-  // localstate of realtime-tweets and more-fetched tweets
   const [realTime, setRealTime] = useState<Array<TweetType>>([]);
 
-  // Fetching user-feed
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
-  // Listening to realtime tweets
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
   const [{ data: user }] = useMeQuery();
 
   const [
     { data: profileImage, fetching: fetchingProfileImage },
-    // @ts-ignore
-  ] = useGetProfileImageQuery({ variables: { id: user?.me?.id } });
+  ] = useGetProfileImageQuery({
+    variables: { id: user && user.me ? user.me?.id : -1 },
+  });
 
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
   const [feedProgress, setFeedProgress] = useState<number>(1);
-  const [files, setFiles] = useState<any>(null);
+  const [files, setFiles] = useState<FileEvent>(null);
 
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
     dataLength: 1,
@@ -59,7 +60,7 @@ const Home: React.FC<HomeProps> = () => {
 
   const { dataLength, hasMore } = scrollProps;
 
-  const getMore = async () => {
+  const getMore = async (postLimit = 3) => {
     if (feed && feed.getTweetsByUser) {
       if (
         pag.offset ===
@@ -69,23 +70,32 @@ const Home: React.FC<HomeProps> = () => {
         return;
       }
 
-      const phew = await cli.query(GetPaginatedPostsDocument, pag).toPromise();
-
       setPag({
-        limit: 1,
+        limit: postLimit,
         offset:
-          7 + scrollProps.dataLength + (realTime ? realTime.length : 0) - 1,
+          7 +
+          scrollProps.dataLength +
+          (realTime ? realTime.length : 0) -
+          postLimit,
       });
 
-      if (phew) {
-        if (phew.data) {
-          // @ts-ignore
-          setMore((prev) => [...prev, phew.data.getPaginatedPosts.tweets[0]]);
+      const phew = await cli
+        .query<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(
+          GetPaginatedPostsDocument,
+          pag
+        )
+        .toPromise();
+
+      if (phew && phew.data && phew.data.getPaginatedPosts) {
+        const s = phew.data.getPaginatedPosts.tweets;
+        if (s) {
+          setMore((prev) => [...prev, ...s]);
         }
       }
+
       setScrollProps((prev) => ({
         ...prev,
-        dataLength: prev.dataLength + 1,
+        dataLength: prev.dataLength + postLimit,
       }));
     }
   };
@@ -107,39 +117,34 @@ const Home: React.FC<HomeProps> = () => {
     }
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
 
-  const handleFile = async (
+  const handleFileAndUpload = async (
     fn: (value: React.SetStateAction<number>) => void,
-    e: any
+    e: FileEvent
   ) => {
-    const formData = new FormData();
-    if (e) {
-      if (e.target.files) {
-        formData.append("image", e.target.files[0]);
+    if (e && e.target.files) {
+      const formData = new FormData();
+      formData.append("image", e.target.files[0]);
 
-        try {
-          const r = await Axios.post(
-            "https://api.imgbb.com/1/upload?key=2db0d9c5d05935a5409a79e77d415b70",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              onUploadProgress: (p) => {
-                fn((p.loaded * 100) / p.total);
-              },
-            }
-          );
-          await postTweet({
-            tweet_content: tweetInput,
-            img: r.data.data.display_url,
-          });
-        } catch (error) {
-          console.log(error.message);
-        }
+      try {
+        const r = await Axios.post(ImageURI, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (p) => {
+            fn((p.loaded * 100) / p.total);
+          },
+        });
+        await postTweet({
+          tweet_content: tweetInput,
+          img: r.data.data.display_url,
+        });
+      } catch (error) {
+        console.log(error.message);
       }
     } else {
       await postTweet({ tweet_content: tweetInput, img: "" });
     }
+    setTweetInput("");
   };
 
   useEffect(() => {
@@ -181,7 +186,8 @@ const Home: React.FC<HomeProps> = () => {
               <S.TweetInput>
                 <S.TweetInputField
                   placeholder="What's Happening?"
-                  onBlur={(e) => setTweetInput(e.target.value)}
+                  onChange={(e) => setTweetInput(e.target.value)}
+                  value={tweetInput}
                 />
               </S.TweetInput>
               <S.EditTweetOptions>
@@ -193,8 +199,7 @@ const Home: React.FC<HomeProps> = () => {
                 </S.TweetAc>
                 <S.TweetButton
                   onClick={async () => {
-                    handleFile(setFeedProgress, files);
-                    setTweetInput(() => "");
+                    handleFileAndUpload(setFeedProgress, files);
                   }}
                 >
                   Tweet
@@ -208,16 +213,7 @@ const Home: React.FC<HomeProps> = () => {
           {!fetchingFeed && feed && (
             <Fragment>
               {[...realTime, ...feed!.getTweetsByUser.tweets].map((tweet) => (
-                <Tweet
-                  tweet_id={tweet.tweet_id}
-                  tweet_content={tweet.tweet_content}
-                  name={tweet.name}
-                  comments={tweet.comments}
-                  username={tweet.username}
-                  key={tweet.tweet_id}
-                  img={tweet.profile_img}
-                  captain={tweet.img}
-                />
+                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
               ))}
             </Fragment>
           )}
@@ -228,20 +224,9 @@ const Home: React.FC<HomeProps> = () => {
             loader={<h4>loading...</h4>}
           >
             <Fragment>
-              {more
-                .filter((t) => t !== undefined)
-                .map((tweet) => (
-                  <Tweet
-                    tweet_id={tweet.tweet_id}
-                    tweet_content={tweet.tweet_content}
-                    name={tweet.name}
-                    comments={tweet.comments}
-                    username={tweet.username}
-                    key={tweet.tweet_id}
-                    img={tweet.profile_img}
-                    captain={tweet.img}
-                  />
-                ))}
+              {more.map((tweet) => (
+                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+              ))}
             </Fragment>
           </InfiniteScroll>
 
