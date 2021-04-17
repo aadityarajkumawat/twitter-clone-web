@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
 import Tweet from "../components/tweet/Tweet";
@@ -9,18 +9,15 @@ import {
   TweetType,
 } from "../constants/interfaces";
 import {
-  GetTweetsByUserQuery,
-  useCreateTweetMutation,
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
   useMeQuery,
 } from "../generated/graphql";
-import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
+import { tweetAlreadyExist, ifHasMore } from "../helpers";
 import * as S from "./home.styles";
-import Axios from "axios";
 import { RightMenu } from "../components/right-menu/RightMenu";
 import { getTweetProps } from "../utils/reshapeTweetType";
-import { ImageURI, placeholderImg } from "../constants/urls";
+import { placeholderImg } from "../constants/urls";
 import { getMore } from "../utils/getMore";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
@@ -30,7 +27,6 @@ import { Box } from "@chakra-ui/layout";
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
 
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
@@ -70,36 +66,6 @@ const Home: React.FC<HomeProps> = () => {
     }
   }, [realTimePost?.listenTweets.tweet?.tweet_id]);
 
-  const handleFileAndUpload = async (
-    fn: (value: React.SetStateAction<number>) => void,
-    e: FileEvent
-  ) => {
-    if (e && e.target.files) {
-      const formData = new FormData();
-      formData.append("image", e.target.files[0]);
-
-      try {
-        const r = await Axios.post(ImageURI, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (p) => {
-            fn((p.loaded * 100) / p.total);
-          },
-        });
-        await postTweet({
-          tweet_content: tweetInput,
-          img: r.data.data.display_url,
-        });
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      await postTweet({ tweet_content: tweetInput, img: "" });
-    }
-    setTweetInput("");
-  };
-
   useEffect(() => {
     if (feedProgress === 100) {
       setFeedProgress(1);
@@ -110,13 +76,6 @@ const Home: React.FC<HomeProps> = () => {
   const getFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e);
   };
-
-  const ifHasMore = (hasMore: boolean, feed: GetTweetsByUserQuery): boolean => {
-    if (feed.getTweetsByUser.num > 7) return hasMore;
-    return false;
-  };
-
-  console.log(user);
 
   return (
     <S.BaseComponent className="main">
@@ -135,7 +94,6 @@ const Home: React.FC<HomeProps> = () => {
             </S.ProfileImageInc>
             <ComposeTweet
               getFile={getFile}
-              handleFileAndUpload={handleFileAndUpload}
               setTweetInput={setTweetInput}
               setFeedProgress={setFeedProgress}
               tweetInput={tweetInput}

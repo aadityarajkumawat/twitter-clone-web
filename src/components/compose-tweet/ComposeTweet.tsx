@@ -1,28 +1,26 @@
 import React from "react";
 import { AttachImage } from "../../assets/AttachImage";
 import { FileEvent } from "../../constants/interfaces";
+import { useCreateTweetMutation } from "../../generated/graphql";
+import { handleFileAndUpload } from "../../helpers/handleFileAndUpload";
 import * as S from "../../pages/home.styles";
 
 interface ComposeTweetProps {
   setTweetInput: (value: React.SetStateAction<string>) => void;
   tweetInput: string;
   getFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleFileAndUpload: (
-    fn: (value: React.SetStateAction<number>) => void,
-    e: FileEvent
-  ) => Promise<void>;
   setFeedProgress: (value: React.SetStateAction<number>) => void;
   files: FileEvent;
 }
 
 export const ComposeTweet: React.FC<ComposeTweetProps> = ({
   getFile,
-  handleFileAndUpload,
   setTweetInput,
   setFeedProgress,
   tweetInput,
   files,
 }) => {
+  const [, postTweet] = useCreateTweetMutation();
   return (
     <S.MTweet>
       <S.TweetInput>
@@ -41,7 +39,13 @@ export const ComposeTweet: React.FC<ComposeTweetProps> = ({
         </S.TweetAc>
         <S.TweetButton
           onClick={async () => {
-            handleFileAndUpload(setFeedProgress, files);
+            handleFileAndUpload(
+              setFeedProgress,
+              files,
+              tweetInput,
+              postTweet,
+              setTweetInput
+            );
           }}
         >
           Tweet

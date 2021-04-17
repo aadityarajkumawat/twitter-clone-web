@@ -24,3 +24,8 @@ export interface TweetType {
   profile_img: string;
   img: string;
 }
+
+export interface UploadTweetImage {
+  img: string | null;
+  error: string | null;
+}
