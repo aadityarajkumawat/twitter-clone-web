@@ -27,6 +27,7 @@ import { AttachImage } from "../assets/AttachImage";
 import { cli } from "../index";
 import { getTweetProps } from "../utils/reshapeTweetType";
 import { ImageURI } from "../constants/urls";
+import { Flex, Spinner } from "@chakra-ui/react";
 
 interface HomeProps {}
 type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
@@ -49,12 +50,12 @@ const Home: React.FC<HomeProps> = () => {
   });
 
   const [more, setMore] = useState<Array<TweetType>>([]);
-  const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
+  const [pag, setPag] = useState<PaginationParams>({ offset: 0 });
   const [feedProgress, setFeedProgress] = useState<number>(1);
   const [files, setFiles] = useState<FileEvent>(null);
 
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
-    dataLength: 1,
+    dataLength: 3,
     hasMore: true,
   });
 
@@ -62,27 +63,18 @@ const Home: React.FC<HomeProps> = () => {
 
   const getMore = async (postLimit = 3) => {
     if (feed && feed.getTweetsByUser) {
-      if (
-        pag.offset ===
-        feed.getTweetsByUser.num + (realTime ? realTime.length : 0)
-      ) {
+      if (pag.offset === feed.getTweetsByUser.num + realTime.length) {
         setScrollProps((prev) => ({ ...prev, hasMore: false }));
         return;
       }
 
-      setPag({
-        limit: postLimit,
-        offset:
-          7 +
-          scrollProps.dataLength +
-          (realTime ? realTime.length : 0) -
-          postLimit,
-      });
-
       const phew = await cli
         .query<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(
           GetPaginatedPostsDocument,
-          pag
+          {
+            limit: postLimit,
+            offset: 7 + dataLength + realTime.length - postLimit,
+          }
         )
         .toPromise();
 
@@ -91,12 +83,16 @@ const Home: React.FC<HomeProps> = () => {
         if (s) {
           setMore((prev) => [...prev, ...s]);
         }
-      }
 
-      setScrollProps((prev) => ({
-        ...prev,
-        dataLength: prev.dataLength + postLimit,
-      }));
+        setPag({
+          offset: 7 + dataLength + realTime.length - postLimit + s.length,
+        });
+
+        setScrollProps((prev) => ({
+          ...prev,
+          dataLength: prev.dataLength + s.length,
+        }));
+      }
     }
   };
 
@@ -217,18 +213,29 @@ const Home: React.FC<HomeProps> = () => {
               ))}
             </Fragment>
           )}
-          <InfiniteScroll
-            dataLength={dataLength}
-            hasMore={hasMore}
-            next={getMore}
-            loader={<h4>loading...</h4>}
-          >
-            <Fragment>
-              {more.map((tweet) => (
-                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-              ))}
-            </Fragment>
-          </InfiniteScroll>
+          {!fetchingFeed && feed?.getTweetsByUser && (
+            <InfiniteScroll
+              dataLength={dataLength}
+              hasMore={feed.getTweetsByUser.num > 7 ? hasMore : false}
+              next={getMore}
+              loader={
+                <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  mt="50px"
+                  overflowY="hidden"
+                >
+                  <Spinner />
+                </Flex>
+              }
+            >
+              <Fragment>
+                {more.map((tweet) => (
+                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                ))}
+              </Fragment>
+            </InfiniteScroll>
+          )}
 
           <div style={{ height: "50px" }}></div>
         </S.Tweets>

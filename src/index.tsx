@@ -9,6 +9,7 @@ import {
   subscriptionExchange,
 } from "urql";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const sub = new SubscriptionClient("ws://localhost:4001/graphql");
 
@@ -27,7 +28,9 @@ export const cli = createClient({
 
 ReactDOM.render(
   <UrqlProvider value={cli}>
-    <App />
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
   </UrqlProvider>,
   document.getElementById("root")
 );

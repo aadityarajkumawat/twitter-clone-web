@@ -1,5 +1,5 @@
 export interface PaginationParams {
-  limit: number;
+  // limit: number;
   offset: number;
 }
 

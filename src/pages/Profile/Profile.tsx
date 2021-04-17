@@ -68,7 +68,10 @@ export const Profile: React.FC<ProfileProps> = () => {
   }, [editProfile]);
 
   const [more, setMore] = useState<Array<TweetType>>([]);
-  const [pag, setPag] = useState<PaginationParams>({ offset: 0, limit: -1 });
+  const [pag, setPag] = useState<{ offset: number; limit: number }>({
+    offset: 0,
+    limit: -1,
+  });
 
   const [{ data }] = useGetPaginatedUserTweetsQuery({
     variables: {
