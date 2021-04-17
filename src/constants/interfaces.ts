@@ -1,3 +1,5 @@
+export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
+
 export interface PaginationParams {
   // limit: number;
   offset: number;

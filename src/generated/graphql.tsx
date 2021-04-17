@@ -17,7 +17,7 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  me?: Maybe<User>;
+  me?: Maybe<MeResponse>;
   getProfileStuff: ProfileStuff;
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetFeedTweets;
@@ -70,8 +70,14 @@ export type QueryGetCoverImageArgs = {
   id: Scalars['Float'];
 };
 
-export type User = {
-  __typename?: 'User';
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  user?: Maybe<MeUser>;
+  error?: Maybe<Scalars['String']>;
+};
+
+export type MeUser = {
+  __typename?: 'MeUser';
   id: Scalars['Float'];
   email: Scalars['String'];
   createdAt: Scalars['String'];
@@ -79,6 +85,7 @@ export type User = {
   username: Scalars['String'];
   name: Scalars['String'];
   phone: Scalars['String'];
+  img: Scalars['String'];
 };
 
 export type ProfileStuff = {
@@ -253,6 +260,17 @@ export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['Float'];
+  email: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  username: Scalars['String'];
+  name: Scalars['String'];
+  phone: Scalars['String'];
 };
 
 export type UserRegisterInput = {
@@ -453,7 +471,7 @@ export type GetPaginatedUserTweetsQuery = (
     & Pick<GetPaginatedUserTweets, 'error'>
     & { tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'name' | 'username' | 'profile_img' | 'img' | 'comments'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
     )> }
   ) }
 );
@@ -572,8 +590,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt' | 'username' | 'phone' | 'name'>
+    { __typename?: 'MeResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'MeUser' }
+      & Pick<MeUser, 'id' | 'email' | 'createdAt' | 'updatedAt' | 'username' | 'phone' | 'name' | 'img'>
+    )> }
   )> }
 );
 
@@ -725,11 +746,16 @@ export const GetPaginatedUserTweetsDocument = gql`
     tweets {
       tweet_id
       tweet_content
-      name
+      created_At
+      _type
+      rel_acc
       username
+      name
+      likes
+      comments
+      liked
       profile_img
       img
-      comments
     }
     error
   }
@@ -883,13 +909,16 @@ export function useGetTweetsByUserFQuery(options: Omit<Urql.UseQueryArgs<GetTwee
 export const MeDocument = gql`
     query Me {
   me {
-    id
-    email
-    createdAt
-    updatedAt
-    username
-    phone
-    name
+    user {
+      id
+      email
+      createdAt
+      updatedAt
+      username
+      phone
+      name
+      img
+    }
   }
 }
     `;

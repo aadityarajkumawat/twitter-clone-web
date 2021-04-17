@@ -17,28 +17,18 @@ import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import {
-  GetOneTweet,
-  GetPaginatedUserTweetsDocument,
-  GetPaginatedUserTweetsQuery,
-  GetPaginatedUserTweetsQueryVariables,
   useFollowAUserMutation,
-  useGetPaginatedUserTweetsQuery,
   useGetProfileStuffQuery,
   useGetTweetsByUserFQuery,
   useMeQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
-import {
-  InfiniteScrolling,
-  PaginationParams,
-  TweetType,
-} from "../../constants/interfaces";
+import { InfiniteScrolling, TweetType } from "../../constants/interfaces";
 import { useStore } from "../../zustand/store";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { RightMenu } from "../../components/right-menu/RightMenu";
-import { Spinner } from "@chakra-ui/spinner";
-import { cli } from "../..";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
+import { getMoreUserPosts } from "../../utils/getMore";
 
 interface ProfileProps {}
 
@@ -55,7 +45,9 @@ export const Profile: React.FC<ProfileProps> = () => {
   const [
     { data: profile, fetching: fetchingProfile },
   ] = useGetProfileStuffQuery({
-    variables: { id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20 },
+    variables: {
+      id: 1,
+    },
   });
 
   const [{ data: followUser }, follow] = useFollowAUserMutation();
@@ -64,7 +56,7 @@ export const Profile: React.FC<ProfileProps> = () => {
     { data: userTweets, fetching: fetchingUserTweets },
     refetchTweets,
   ] = useGetTweetsByUserFQuery({
-    variables: { id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20 },
+    variables: { id: 1 },
   });
 
   const editProfile = useStore((state) => state.editProfile);
@@ -74,30 +66,10 @@ export const Profile: React.FC<ProfileProps> = () => {
     refetchTweets({ requestPolicy: "network-only" });
   }, [editProfile]);
 
-  const [more, setMore] = useState<
-    ({
-      __typename?: "GetOneTweet" | undefined;
-    } & Pick<
-      GetOneTweet,
-      | "username"
-      | "name"
-      | "tweet_id"
-      | "tweet_content"
-      | "profile_img"
-      | "img"
-      | "comments"
-    >)[]
-  >([]);
+  const [more, setMore] = useState<TweetType[]>([]);
   const [pag, setPag] = useState<{ offset: number }>({
     offset: 0,
   });
-
-  // const [{ data }] = useGetPaginatedUserTweetsQuery({
-  //   variables: {
-  //     ...pag,
-  //     id: e_id ? e_id : user && !fetchingUser ? user!.me!.id : 20,
-  //   },
-  // });
 
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
     dataLength: 1,
@@ -105,49 +77,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   });
 
   const { dataLength, hasMore } = scrollProps;
-
-  const getMore = async (
-    // feed: GetTweetsByUserQuery | undefined,
-    // pag: PaginationParams,
-    // realTime: Array<TweetType>,
-    // dataLength: number,
-    // { setMore, setPag, setScrollProps }: PaginationFunctions,
-    postLimit = 3
-  ) => {
-    if (userTweets && userTweets.getTweetsByUserF) {
-      if (pag.offset === userTweets.getTweetsByUserF.num) {
-        setScrollProps((prev) => ({ ...prev, hasMore: false }));
-        return;
-      }
-
-      const phew = await cli
-        .query<
-          GetPaginatedUserTweetsQuery,
-          GetPaginatedUserTweetsQueryVariables
-        >(GetPaginatedUserTweetsDocument, {
-          limit: postLimit,
-          offset: 5 + dataLength - postLimit,
-          id: user ? (user.me ? user.me.id : -1) : -1,
-        })
-        .toPromise();
-
-      if (phew && phew.data && phew.data.getPaginatedUserTweets) {
-        const s = phew.data.getPaginatedUserTweets.tweets;
-        if (s) {
-          setMore((prev) => [...prev, ...s]);
-        }
-
-        setPag({
-          offset: 5 + dataLength - postLimit + s.length,
-        });
-
-        setScrollProps((prev) => ({
-          ...prev,
-          dataLength: prev.dataLength + s.length,
-        }));
-      }
-    }
-  };
+  const paginationFunctions = { setMore, setPag, setScrollProps };
 
   useEffect(() => {
     console.log(followUser);
@@ -155,7 +85,7 @@ export const Profile: React.FC<ProfileProps> = () => {
 
   return (
     <Fragment>
-      <ProfileContainer>
+      {/* <ProfileContainer>
         {editProfile && (
           <EditProfile
             bio={
@@ -211,7 +141,7 @@ export const Profile: React.FC<ProfileProps> = () => {
                 }
               />
             </ProfileImgContainer>
-            {(e_id === user?.me?.id || e_id === undefined) && (
+            {(e_id === user?.me?.user.id || e_id === undefined) && (
               <EditProfileBtn
                 title="Edit Profile"
                 onClick={(e) =>
@@ -299,32 +229,42 @@ export const Profile: React.FC<ProfileProps> = () => {
               <h4>Loading...</h4>
             )}
           </Fragment>
-          <InfiniteScroll
-            dataLength={dataLength}
-            hasMore={hasMore}
-            next={() => getMore()}
-            loader={<LoadingSpinner />}
-          >
-            <Fragment>
-              {more.map((tweet) => (
-                <Tweet
-                  tweet_id={tweet.tweet_id}
-                  tweet_content={tweet.tweet_content}
-                  name={tweet.name}
-                  comments={tweet.comments}
-                  username={tweet.username}
-                  key={tweet.tweet_id}
-                  img={tweet.profile_img}
-                  captain={tweet.img}
-                />
-              ))}
-            </Fragment>
-          </InfiniteScroll>
+          {!fetchingUserTweets && userTweets && (
+            <InfiniteScroll
+              dataLength={dataLength}
+              hasMore={userTweets.getTweetsByUserF.num > 5 ? hasMore : false}
+              next={() =>
+                getMoreUserPosts(
+                  userTweets,
+                  pag,
+                  dataLength,
+                  user,
+                  paginationFunctions
+                )
+              }
+              loader={<LoadingSpinner />}
+            >
+              <Fragment>
+                {more.map((tweet) => (
+                  <Tweet
+                    tweet_id={tweet.tweet_id}
+                    tweet_content={tweet.tweet_content}
+                    name={tweet.name}
+                    comments={tweet.comments}
+                    username={tweet.username}
+                    key={tweet.tweet_id}
+                    img={tweet.profile_img}
+                    captain={tweet.img}
+                  />
+                ))}
+              </Fragment>
+            </InfiniteScroll>
+          )}
         </S.HomeMain>
         <S.RightMenu>
           <RightMenu />
         </S.RightMenu>
-      </ProfileContainer>
+      </ProfileContainer> */}
     </Fragment>
   );
 };

@@ -3,11 +3,16 @@ query GetPaginatedUserTweets($offset: Float!, $limit: Float!, $id: Float!) {
     tweets {
       tweet_id
       tweet_content
-      name
+      created_At
+      _type
+      rel_acc
       username
+      name
+      likes
+      comments
+      liked
       profile_img
       img
-      comments
     }
     error
   }

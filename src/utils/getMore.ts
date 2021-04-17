@@ -8,7 +8,12 @@ import {
   GetPaginatedPostsDocument,
   GetPaginatedPostsQuery,
   GetPaginatedPostsQueryVariables,
+  GetPaginatedUserTweetsDocument,
+  GetPaginatedUserTweetsQuery,
+  GetPaginatedUserTweetsQueryVariables,
+  GetTweetsByUserFQuery,
   GetTweetsByUserQuery,
+  MeQuery,
 } from "../generated/graphql";
 
 type PaginationFunctions = {
@@ -49,6 +54,52 @@ export const getMore = async (
 
       setPag({
         offset: 7 + dataLength + realTime.length - postLimit + s.length,
+      });
+
+      setScrollProps((prev) => ({
+        ...prev,
+        dataLength: prev.dataLength + s.length,
+      }));
+    }
+  }
+};
+
+export const getMoreUserPosts = async (
+  userTweets: GetTweetsByUserFQuery,
+  pag: PaginationParams,
+  dataLength: number,
+  user: MeQuery | undefined,
+  { setMore, setPag, setScrollProps }: PaginationFunctions,
+  postLimit = 3
+) => {
+  if (userTweets && userTweets.getTweetsByUserF) {
+    if (pag.offset === userTweets.getTweetsByUserF.num) {
+      setScrollProps((prev) => ({ ...prev, hasMore: false }));
+      return;
+    }
+
+    if (!user || !user.me || !user.me.user) return;
+    // if (!user.me) return;
+
+    const phew = await cli
+      .query<GetPaginatedUserTweetsQuery, GetPaginatedUserTweetsQueryVariables>(
+        GetPaginatedUserTweetsDocument,
+        {
+          limit: postLimit,
+          offset: 5 + dataLength - postLimit,
+          id: user.me.user.id,
+        }
+      )
+      .toPromise();
+
+    if (phew && phew.data && phew.data.getPaginatedUserTweets) {
+      const s = phew.data.getPaginatedUserTweets.tweets;
+      if (s) {
+        setMore((prev) => [...prev, ...s]);
+      }
+
+      setPag({
+        offset: 5 + dataLength - postLimit + s.length,
       });
 
       setScrollProps((prev) => ({

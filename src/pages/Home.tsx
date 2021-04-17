@@ -3,30 +3,31 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
 import Tweet from "../components/tweet/Tweet";
 import {
+  FileEvent,
   InfiniteScrolling,
   PaginationParams,
   TweetType,
 } from "../constants/interfaces";
 import {
+  GetTweetsByUserQuery,
   useCreateTweetMutation,
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
   useMeQuery,
-  useGetProfileImageQuery,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
 import Axios from "axios";
 import { RightMenu } from "../components/right-menu/RightMenu";
-import { AttachImage } from "../assets/AttachImage";
 import { getTweetProps } from "../utils/reshapeTweetType";
-import { ImageURI } from "../constants/urls";
-import { Flex, Spinner } from "@chakra-ui/react";
+import { ImageURI, placeholderImg } from "../constants/urls";
 import { getMore } from "../utils/getMore";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
+import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
+import { TopLoader } from "../components/top-loader/TopLoader";
+import { Box } from "@chakra-ui/layout";
 
 interface HomeProps {}
-type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
@@ -35,13 +36,7 @@ const Home: React.FC<HomeProps> = () => {
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
   const [{ data: realTimePost }] = useListenTweetsSubscription();
 
-  const [{ data: user }] = useMeQuery();
-
-  const [
-    { data: profileImage, fetching: fetchingProfileImage },
-  ] = useGetProfileImageQuery({
-    variables: { id: user && user.me ? user.me?.id : -1 },
-  });
+  const [{ data: user, fetching: loadingUser }] = useMeQuery();
 
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0 });
@@ -116,6 +111,13 @@ const Home: React.FC<HomeProps> = () => {
     setFiles(e);
   };
 
+  const ifHasMore = (hasMore: boolean, feed: GetTweetsByUserQuery): boolean => {
+    if (feed.getTweetsByUser.num > 7) return hasMore;
+    return false;
+  };
+
+  console.log(user);
+
   return (
     <S.BaseComponent className="main">
       <S.LeftMenu>
@@ -123,72 +125,46 @@ const Home: React.FC<HomeProps> = () => {
       </S.LeftMenu>
       <S.HomeMain>
         <S.FeedHeader>
-          {feedProgress !== 100 && feedProgress !== 1 && (
-            <S.ProgressBar>
-              <S.Progress style={{ width: `${feedProgress}%` }}></S.Progress>
-            </S.ProgressBar>
-          )}
-
+          <TopLoader feedProgress={feedProgress} />
           <S.PageName>Home</S.PageName>
           <S.CreateTweet>
             <S.ProfileImageInc>
               <S.IncImage
-                src={
-                  !fetchingProfileImage && profileImage?.getProfileImage
-                    ? profileImage!.getProfileImage
-                    : ""
-                }
+                src={!loadingUser && user ? user.me?.user?.img : placeholderImg}
               />
             </S.ProfileImageInc>
-            <S.MTweet>
-              <S.TweetInput>
-                <S.TweetInputField
-                  placeholder="What's Happening?"
-                  onChange={(e) => setTweetInput(e.target.value)}
-                  value={tweetInput}
-                />
-              </S.TweetInput>
-              <S.EditTweetOptions>
-                <S.TweetAc>
-                  <S.UploadI>
-                    <AttachImage />
-                    <input type="file" onChange={(e) => getFile(e)} />
-                  </S.UploadI>
-                </S.TweetAc>
-                <S.TweetButton
-                  onClick={async () => {
-                    handleFileAndUpload(setFeedProgress, files);
-                  }}
-                >
-                  Tweet
-                </S.TweetButton>
-              </S.EditTweetOptions>
-            </S.MTweet>
+            <ComposeTweet
+              getFile={getFile}
+              handleFileAndUpload={handleFileAndUpload}
+              setTweetInput={setTweetInput}
+              setFeedProgress={setFeedProgress}
+              tweetInput={tweetInput}
+              files={files}
+            />
           </S.CreateTweet>
         </S.FeedHeader>
 
         <S.Tweets>
           {!fetchingFeed && feed && (
-            <Fragment>
-              {[...realTime, ...feed!.getTweetsByUser.tweets].map((tweet) => (
+            <Box>
+              {[...realTime, ...feed.getTweetsByUser.tweets].map((tweet) => (
                 <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
               ))}
-            </Fragment>
+            </Box>
           )}
+
           {!fetchingFeed && feed?.getTweetsByUser && (
             <InfiniteScroll
               dataLength={dataLength}
-              hasMore={feed.getTweetsByUser.num > 7 ? hasMore : false}
+              hasMore={ifHasMore(hasMore, feed)}
               next={() =>
                 getMore(feed, pag, realTime, dataLength, paginationFunctions)
               }
               loader={<LoadingSpinner />}
             >
-              <Fragment>
-                {more.map((tweet) => (
-                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                ))}
-              </Fragment>
+              {more.map((tweet) => (
+                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+              ))}
             </InfiniteScroll>
           )}
 
