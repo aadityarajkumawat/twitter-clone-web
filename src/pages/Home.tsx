@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
-import Tweet, { TweetProps } from "../components/tweet/Tweet";
+import Tweet from "../components/tweet/Tweet";
 import {
   InfiniteScrolling,
   PaginationParams,
@@ -9,25 +9,21 @@ import {
 } from "../constants/interfaces";
 import {
   useCreateTweetMutation,
-  useGetPaginatedPostsQuery,
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
   useMeQuery,
   useGetProfileImageQuery,
-  useSaveImageMutation,
-  GetPaginatedPostsDocument,
-  GetPaginatedPostsQuery,
-  GetPaginatedPostsQueryVariables,
 } from "../generated/graphql";
 import { tweetAlreadyExist } from "../helpers/tweetAlreadyExist";
 import * as S from "./home.styles";
 import Axios from "axios";
 import { RightMenu } from "../components/right-menu/RightMenu";
 import { AttachImage } from "../assets/AttachImage";
-import { cli } from "../index";
 import { getTweetProps } from "../utils/reshapeTweetType";
 import { ImageURI } from "../constants/urls";
 import { Flex, Spinner } from "@chakra-ui/react";
+import { getMore } from "../utils/getMore";
+import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 
 interface HomeProps {}
 type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
@@ -35,8 +31,6 @@ type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 const Home: React.FC<HomeProps> = () => {
   const [, postTweet] = useCreateTweetMutation();
   const [tweetInput, setTweetInput] = useState<string>("");
-
-  const [realTime, setRealTime] = useState<Array<TweetType>>([]);
 
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
   const [{ data: realTimePost }] = useListenTweetsSubscription();
@@ -51,50 +45,18 @@ const Home: React.FC<HomeProps> = () => {
 
   const [more, setMore] = useState<Array<TweetType>>([]);
   const [pag, setPag] = useState<PaginationParams>({ offset: 0 });
-  const [feedProgress, setFeedProgress] = useState<number>(1);
-  const [files, setFiles] = useState<FileEvent>(null);
-
+  const [realTime, setRealTime] = useState<Array<TweetType>>([]);
   const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
     dataLength: 3,
     hasMore: true,
   });
 
+  const paginationFunctions = { setMore, setPag, setScrollProps };
+
+  const [feedProgress, setFeedProgress] = useState<number>(1);
+  const [files, setFiles] = useState<FileEvent>(null);
+
   const { dataLength, hasMore } = scrollProps;
-
-  const getMore = async (postLimit = 3) => {
-    if (feed && feed.getTweetsByUser) {
-      if (pag.offset === feed.getTweetsByUser.num + realTime.length) {
-        setScrollProps((prev) => ({ ...prev, hasMore: false }));
-        return;
-      }
-
-      const phew = await cli
-        .query<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(
-          GetPaginatedPostsDocument,
-          {
-            limit: postLimit,
-            offset: 7 + dataLength + realTime.length - postLimit,
-          }
-        )
-        .toPromise();
-
-      if (phew && phew.data && phew.data.getPaginatedPosts) {
-        const s = phew.data.getPaginatedPosts.tweets;
-        if (s) {
-          setMore((prev) => [...prev, ...s]);
-        }
-
-        setPag({
-          offset: 7 + dataLength + realTime.length - postLimit + s.length,
-        });
-
-        setScrollProps((prev) => ({
-          ...prev,
-          dataLength: prev.dataLength + s.length,
-        }));
-      }
-    }
-  };
 
   useEffect(() => {
     if (realTimePost && feed) {
@@ -217,17 +179,10 @@ const Home: React.FC<HomeProps> = () => {
             <InfiniteScroll
               dataLength={dataLength}
               hasMore={feed.getTweetsByUser.num > 7 ? hasMore : false}
-              next={getMore}
-              loader={
-                <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  mt="50px"
-                  overflowY="hidden"
-                >
-                  <Spinner />
-                </Flex>
+              next={() =>
+                getMore(feed, pag, realTime, dataLength, paginationFunctions)
               }
+              loader={<LoadingSpinner />}
             >
               <Fragment>
                 {more.map((tweet) => (
