@@ -10,6 +10,8 @@ export const reducer = (state: HomeState, action: HomeAction): HomeState => {
       return { ...state, scrollProps: action.updatedScroll };
     case "rl":
       return { ...state, realTime: action.updatedRL };
+    case "prog":
+      return { ...state, feedProgress: action.updatedProg };
     case "file":
       return { ...state, files: action.updatedFile };
     case "tweet":

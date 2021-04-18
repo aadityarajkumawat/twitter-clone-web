@@ -53,7 +53,7 @@ const Login: React.FC<{}> = () => {
             value={email}
             type="text"
             onChange={handleChange}
-            autoComplete="off"
+            // autoComplete="off"
           />
           <InputField
             placeholder="Password"

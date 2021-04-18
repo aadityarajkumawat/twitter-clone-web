@@ -4,7 +4,6 @@ import { ImageURI } from "../constants/urls";
 import React from "react";
 
 export const uploadTweetImage = async (
-  fn: (prog: number, dispatch: React.Dispatch<HomeAction>) => void,
   file: File,
   dispatch: React.Dispatch<HomeAction>
 ): Promise<UploadTweetImage> => {
@@ -16,7 +15,7 @@ export const uploadTweetImage = async (
       "Content-Type": "multipart/form-data",
     },
     onUploadProgress: (p) => {
-      fn((p.loaded * 100) / p.total, dispatch);
+      dispatch({ type: "prog", updatedProg: (p.loaded * 100) / p.total });
     },
   });
 

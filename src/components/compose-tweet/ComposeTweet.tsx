@@ -1,5 +1,5 @@
 import React from "react";
-import { setFeedProgress, setFile, setTweetInput } from "../../actions";
+import { setFile, setTweetInput } from "../../actions";
 import { AttachImage } from "../../assets/AttachImage";
 import { FileEvent, HomeAction } from "../../constants/interfaces";
 import { useCreateTweetMutation } from "../../generated/graphql";
@@ -37,7 +37,6 @@ export const ComposeTweet: React.FC<ComposeTweetProps> = ({
         <S.TweetButton
           onClick={async () => {
             handleFileAndUpload(
-              setFeedProgress,
               files,
               tweetInput,
               postTweet,

@@ -8,7 +8,6 @@ interface PostTweetInput {
 }
 
 export const handleFileAndUpload = async (
-  fn: (prog: number, dispatch: React.Dispatch<HomeAction>) => void,
   e: FileEvent,
   tweetInput: string,
   postTweet: (vars: PostTweetInput) => Promise<any>,
@@ -17,7 +16,7 @@ export const handleFileAndUpload = async (
 ): Promise<void> => {
   let imgUrl = "";
   if (e && e.target.files) {
-    const res = await uploadTweetImage(fn, e.target.files[0], dispatch);
+    const res = await uploadTweetImage(e.target.files[0], dispatch);
     if (res.img) imgUrl = res.img;
   }
   await postTweet({ tweet_content: tweetInput, img: imgUrl });

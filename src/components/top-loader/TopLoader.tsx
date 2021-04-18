@@ -10,7 +10,12 @@ export const TopLoader: React.FC<TopLoaderProps> = ({ feedProgress }) => {
     <Fragment>
       {feedProgress !== 100 && feedProgress !== 1 && (
         <S.ProgressBar>
-          <S.Progress style={{ width: `${feedProgress}%` }}></S.Progress>
+          <S.Progress
+            style={{
+              width: `${feedProgress}%`,
+              transition: "all 0.2s ease-in",
+            }}
+          ></S.Progress>
         </S.ProgressBar>
       )}
     </Fragment>

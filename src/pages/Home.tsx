@@ -42,13 +42,21 @@ const Home: React.FC<HomeProps> = () => {
   const context = useReducer(reducer, initialState);
   const [state, dispatch] = context;
 
-  const [{ data: user, fetching: loadingUser }] = useMeQuery();
-  const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
+  const [{ data: user, fetching: loadingUser }, refreshUser] = useMeQuery();
+  const [
+    { data: feed, fetching: fetchingFeed },
+    refreshFeed,
+  ] = useGetTweetsByUserQuery();
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
 
   const paginationProps = { feed, state, dispatch };
+
+  useEffect(() => {
+    refreshUser({ requestPolicy: "network-only" });
+    refreshFeed({ requestPolicy: "network-only" });
+  }, []);
 
   useEffect(() => {
     subscribeToRealtime(dispatch);
@@ -67,6 +75,8 @@ const Home: React.FC<HomeProps> = () => {
       setFile(null, dispatch);
     }
   }, [state.feedProgress]);
+
+  console.log(state.feedProgress);
 
   return (
     <S.BaseComponent className="main">
