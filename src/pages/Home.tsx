@@ -8,7 +8,7 @@ import {
   useListenTweetsSubscription,
   useMeQuery,
 } from "../generated/graphql";
-import { getTweetProps } from "../helpers";
+import { getTweetProps, tweetAlreadyExist } from "../helpers";
 import * as S from "./home.styles";
 import { RightMenu } from "../components/right-menu/RightMenu";
 import { placeholderImg } from "../constants/urls";
@@ -54,19 +54,21 @@ const Home: React.FC<HomeProps> = () => {
   const paginationProps = { feed, state, dispatch };
 
   useEffect(() => {
+    subscribeToRealtime(dispatch);
     refreshUser({ requestPolicy: "network-only" });
     refreshFeed({ requestPolicy: "network-only" });
+
+    return () => unsubscribeToRealtime(dispatch);
   }, []);
 
   useEffect(() => {
-    subscribeToRealtime(dispatch);
-
     if (rtPosts && feed) {
+      const alreadyExists = tweetAlreadyExist(state, feed, rtPosts);
+      if (alreadyExists) return;
+
       const tweet = rtPosts.listenTweets.tweet;
       pushTweetToFeed(tweet, context);
     }
-
-    return () => unsubscribeToRealtime(dispatch);
   }, [JSON.stringify(rtPosts)]);
 
   useEffect(() => {
@@ -75,8 +77,6 @@ const Home: React.FC<HomeProps> = () => {
       setFile(null, dispatch);
     }
   }, [state.feedProgress]);
-
-  console.log(state.feedProgress);
 
   return (
     <S.BaseComponent className="main">

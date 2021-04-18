@@ -1,9 +1,19 @@
+import { HomeState } from "../constants/interfaces";
+import {
+  GetTweetsByUserQuery,
+  ListenTweetsSubscription,
+} from "../generated/graphql";
+
 export const tweetAlreadyExist = (
-  arr1: Array<any>,
-  arr2: Array<any>,
-  arr3: Array<any>,
-  id: number
+  state: HomeState,
+  feed: GetTweetsByUserQuery,
+  rtPosts: ListenTweetsSubscription
 ): boolean => {
+  const arr1 = state.more;
+  const arr2 = feed.getTweetsByUser.tweets;
+  const arr3 = state.realTime;
+  const id = rtPosts.listenTweets.tweet.tweet_id;
+
   let found = false;
   for (let i = 0; i < arr1.length; i++) {
     const arr = arr1;
