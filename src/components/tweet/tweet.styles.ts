@@ -55,10 +55,10 @@ export const CommentSpan = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   div {
     margin-left: 5px;
-    color: white;
   }
 `;
 
@@ -66,10 +66,10 @@ export const LikeSpan = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   div {
     margin-left: 5px;
-    color: white;
   }
 `;
 

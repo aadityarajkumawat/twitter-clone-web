@@ -39,11 +39,16 @@ const Tweet: React.FC<TweetProps> = ({
   img,
   captain,
 }) => {
-  const [{ data }, reloadQuery] = useGetTweetByIdQuery({
+  const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
     variables: { tweet_id },
   });
 
   const [refresh, setRefresh] = useState<string>("");
+
+  let liked = false;
+  if (!fetching && data) {
+    liked = data.getTweetById.tweet.liked;
+  }
 
   useEffect(() => {
     reloadQuery({ requestPolicy: "network-only" });
@@ -67,16 +72,18 @@ const Tweet: React.FC<TweetProps> = ({
         <TweetActionBar>
           <CommentSpan>
             {SVG.commentSVG}
-            <div>{comments}</div>
+            <div style={{ color: "rgb(136, 153, 166)" }}>{comments}</div>
           </CommentSpan>
           <span>{SVG.retweetSVG}</span>
           <LikeSpan>
-            <LikeSVG
-              liked={data ? data!.getTweetById.tweet?.liked : false}
-              tweet_id={tweet_id}
-              setR={setRefresh}
-            />
-            <div>{data ? data!.getTweetById.tweet?.likes : 0}</div>
+            <LikeSVG liked={liked} tweet_id={tweet_id} setR={setRefresh} />
+            <div
+              style={{
+                color: liked ? "rgb(224, 36, 94)" : "rgb(136, 153, 166)",
+              }}
+            >
+              {data ? data!.getTweetById.tweet?.likes : 0}
+            </div>
           </LikeSpan>
           <span>{SVG.shareSVG}</span>
         </TweetActionBar>
