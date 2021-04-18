@@ -1,81 +1,72 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
 import Tweet from "../components/tweet/Tweet";
-import {
-  FileEvent,
-  InfiniteScrolling,
-  PaginationParams,
-  TweetType,
-} from "../constants/interfaces";
+import { HomeState } from "../constants/interfaces";
 import {
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
   useMeQuery,
 } from "../generated/graphql";
-import { tweetAlreadyExist, ifHasMore } from "../helpers";
+import { getTweetProps } from "../helpers";
 import * as S from "./home.styles";
 import { RightMenu } from "../components/right-menu/RightMenu";
-import { getTweetProps } from "../utils/reshapeTweetType";
 import { placeholderImg } from "../constants/urls";
-import { getMore } from "../utils/getMore";
-import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
 import { TopLoader } from "../components/top-loader/TopLoader";
 import { Box } from "@chakra-ui/layout";
+import { reducer } from "../reducers/homeReducer";
+import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
+import {
+  setFeedProgress,
+  setFile,
+  pushTweetToFeed,
+  subscribeToRealtime,
+  unsubscribeToRealtime,
+} from "../actions";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const [tweetInput, setTweetInput] = useState<string>("");
+  const initialState: HomeState = {
+    more: [],
+    pag: { offset: 0 },
+    realTime: [],
+    feedProgress: 1,
+    files: null,
+    scrollProps: { dataLength: 3, hasMore: true },
+    tweetInput: "",
+    subscribed: true,
+  };
 
-  const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
-  const [{ data: realTimePost }] = useListenTweetsSubscription();
+  const context = useReducer(reducer, initialState);
+  const [state, dispatch] = context;
 
   const [{ data: user, fetching: loadingUser }] = useMeQuery();
-
-  const [more, setMore] = useState<Array<TweetType>>([]);
-  const [pag, setPag] = useState<PaginationParams>({ offset: 0 });
-  const [realTime, setRealTime] = useState<Array<TweetType>>([]);
-  const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
-    dataLength: 3,
-    hasMore: true,
+  const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
+  const [{ data: rtPosts }] = useListenTweetsSubscription({
+    pause: !state.subscribed,
   });
 
-  const paginationFunctions = { setMore, setPag, setScrollProps };
-
-  const [feedProgress, setFeedProgress] = useState<number>(1);
-  const [files, setFiles] = useState<FileEvent>(null);
-
-  const { dataLength, hasMore } = scrollProps;
+  const paginationProps = { feed, state, dispatch };
 
   useEffect(() => {
-    if (realTimePost && feed) {
-      if (
-        !tweetAlreadyExist(
-          more,
-          feed?.getTweetsByUser.tweets,
-          realTime,
-          realTimePost.listenTweets.tweet!.tweet_id
-        ) &&
-        realTimePost.listenTweets.tweet
-      ) {
-        const post = realTimePost.listenTweets.tweet;
-        setRealTime((prev) => [post, ...prev]);
-      }
+    subscribeToRealtime(dispatch);
+
+    if (rtPosts && feed) {
+      const tweet = rtPosts.listenTweets.tweet;
+      pushTweetToFeed(tweet, context);
     }
-  }, [realTimePost?.listenTweets.tweet?.tweet_id]);
+
+    return () => unsubscribeToRealtime(dispatch);
+  }, [JSON.stringify(rtPosts)]);
 
   useEffect(() => {
-    if (feedProgress === 100) {
-      setFeedProgress(1);
-      setFiles(null);
+    if (state.feedProgress === 100) {
+      setFeedProgress(1, dispatch);
+      setFile(null, dispatch);
     }
-  }, [feedProgress]);
-
-  const getFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(e);
-  };
+  }, [state.feedProgress]);
 
   return (
     <S.BaseComponent className="main">
@@ -84,48 +75,41 @@ const Home: React.FC<HomeProps> = () => {
       </S.LeftMenu>
       <S.HomeMain>
         <S.FeedHeader>
-          <TopLoader feedProgress={feedProgress} />
+          <TopLoader feedProgress={state.feedProgress} />
           <S.PageName>Home</S.PageName>
           <S.CreateTweet>
             <S.ProfileImageInc>
               <S.IncImage
-                src={!loadingUser && user ? user.me?.user?.img : placeholderImg}
+                src={!loadingUser && user ? user.me.user.img : placeholderImg}
               />
             </S.ProfileImageInc>
             <ComposeTweet
-              getFile={getFile}
-              setTweetInput={setTweetInput}
-              setFeedProgress={setFeedProgress}
-              tweetInput={tweetInput}
-              files={files}
+              dispatch={dispatch}
+              tweetInput={state.tweetInput}
+              files={state.files}
             />
           </S.CreateTweet>
         </S.FeedHeader>
 
         <S.Tweets>
           {!fetchingFeed && feed && (
-            <Box>
-              {[...realTime, ...feed.getTweetsByUser.tweets].map((tweet) => (
-                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-              ))}
-            </Box>
+            <Fragment>
+              <Box>
+                {[...state.realTime, ...feed.getTweetsByUser.tweets].map(
+                  (tweet) => (
+                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                  )
+                )}
+              </Box>
+              <InfiniteScroll
+                {...getInfiniteScrollProps(feed, paginationProps, context)}
+              >
+                {state.more.map((tweet) => (
+                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                ))}
+              </InfiniteScroll>
+            </Fragment>
           )}
-
-          {!fetchingFeed && feed?.getTweetsByUser && (
-            <InfiniteScroll
-              dataLength={dataLength}
-              hasMore={ifHasMore(hasMore, feed)}
-              next={() =>
-                getMore(feed, pag, realTime, dataLength, paginationFunctions)
-              }
-              loader={<LoadingSpinner />}
-            >
-              {more.map((tweet) => (
-                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-              ))}
-            </InfiniteScroll>
-          )}
-
           <div style={{ height: "50px" }}></div>
         </S.Tweets>
       </S.HomeMain>

@@ -28,7 +28,7 @@ import { useStore } from "../../zustand/store";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
-import { getMoreUserPosts } from "../../utils/getMore";
+// import { getMoreUserPosts } from "../../utils/getMore";
 
 interface ProfileProps {}
 
