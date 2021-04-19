@@ -17,6 +17,7 @@ import {
   Input,
   Flex,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import { Form } from "../auth/login/login.styles";
 import styled from "styled-components";
@@ -151,7 +152,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         url: r.data.data.display_url,
         type,
       });
-      console.log(k);
     } catch (e) {
       console.log(e.message);
     }
@@ -183,29 +183,54 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalBody>
               <Form>
-                <WrapperBox>
-                  <Image src={profile ? profile.cover_img : ""} />
-                  <Box className="mid"></Box>
-                  <Input
-                    w="350px"
-                    my="0.5rem"
-                    type="file"
-                    onChange={(e) =>
-                      handleFile(e, setProfileProgress, "profile")
-                    }
-                  />
-                </WrapperBox>
                 <Box>
-                  <Input
-                    w="350px"
-                    my="0.5rem"
-                    type="file"
-                    onChange={(e) => handleFile(e, setCoverProgress, "cover")}
-                  />
+                  <Text>Cover Profile</Text>
+                  <WrapperBox>
+                    <Image
+                      src={profile ? profile.cover_img : ""}
+                      borderRadius="10px"
+                    />
+                    <Input
+                      w="350px"
+                      my="0.5rem"
+                      type="file"
+                      onChange={async (e) =>
+                        await handleFile(e, setCoverProgress, "cover")
+                      }
+                      borderRadius="10px"
+                    />
+                    <Box className="mid" borderRadius="10px"></Box>
+                  </WrapperBox>
                 </Box>
+                <Flex
+                  mt="20px"
+                  w="100%"
+                  flexDir="column"
+                  alignItems="flex-start"
+                >
+                  <Text>Profile Image</Text>
+                  <WrapperBox>
+                    <Image
+                      src={profile ? profile.profile_img : ""}
+                      w={"150px"}
+                      height={"150px"}
+                      borderRadius="150px"
+                      objectFit="cover"
+                    />
+                    <Input
+                      w="350px"
+                      my="0.5rem"
+                      type="file"
+                      onChange={async (e) =>
+                        await handleFile(e, setProfileProgress, "profile")
+                      }
+                    />
+                    <Box className="mid" borderRadius="150px"></Box>
+                  </WrapperBox>
+                </Flex>
                 <Box>
                   <Input
-                    w="350px"
+                    w="400px"
                     my="0.5rem"
                     type="text"
                     name="bio"
@@ -216,7 +241,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 </Box>
                 <Box>
                   <Input
-                    w="350px"
+                    w="400px"
                     my="0.5rem"
                     type="text"
                     name="link"
@@ -249,14 +274,11 @@ const WrapperBox = styled.div`
   .mid {
     width: 100%;
     height: 100%;
-    background-color: #00000070;
+    background-color: #000000;
+    opacity: 0;
     position: absolute;
     top: 0;
     z-index: 0;
-
-    &:hover {
-      background-color: #fff;
-    }
   }
   input {
     top: 0;
@@ -267,5 +289,10 @@ const WrapperBox = styled.div`
     width: 100%;
     opacity: 0;
     z-index: 20;
+    cursor: pointer;
+  }
+
+  input:hover + .mid {
+    opacity: 0.5;
   }
 `;
