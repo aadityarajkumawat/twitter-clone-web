@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ProfileContainer = styled.div`
   width: 100%;
   /* height: 100vh; */
-  background-color: #222;
+  background-color: #222 !important;
   display: flex;
   justify-content: center;
 `;
@@ -99,7 +99,6 @@ export const MoreInfo = styled.div`
   color: #fff;
   font-family: "Oxygen";
   padding-bottom: 25px;
-  border-bottom: 1px solid #eeeeee20;
 
   b {
     font-weight: 700;

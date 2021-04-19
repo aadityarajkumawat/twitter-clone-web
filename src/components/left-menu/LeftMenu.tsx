@@ -46,10 +46,10 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
           <span>Lists</span>
         </S.ListItem>
         <S.ListItem>
-          <a href="/profile">
+          <Link to="/profile">
             <ProfileImage />
             <span>Profile</span>
-          </a>
+          </Link>
         </S.ListItem>
         <S.ListItem>
           <MoreImage />

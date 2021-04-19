@@ -29,6 +29,7 @@ export const LeftMenu = styled.div`
   left: 0;
   padding: 20px;
   text-align: end;
+  background-color: #222;
 
   @media only screen and (max-width: 1300px) {
     width: 90px;
@@ -95,13 +96,14 @@ export const RightMenu = styled.div`
   position: fixed;
   top: 0;
   right: 0;
+  background-color: #222;
 `;
 
 export const HomeMain = styled.div`
   max-width: 1300px;
   min-height: 100vh;
-  background-color: #222;
-  width: 650px;
+  background-color: #222 !important;
+  width: 600px;
   border-right: 1px solid #eeeeee20;
   border-left: 1px solid #eeeeee20;
   ${flexCenter}

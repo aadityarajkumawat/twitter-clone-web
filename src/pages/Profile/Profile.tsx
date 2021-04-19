@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
@@ -18,88 +18,80 @@ import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { BackSVG } from "../../assets/BackSVG";
 import {
   useFollowAUserMutation,
-  useGetProfileStuffQuery,
-  useGetTweetsByUserFQuery,
   useMeQuery,
+  useProfileStuffAndUserTweetsQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
-import { InfiniteScrolling, TweetType } from "../../constants/interfaces";
-import { useStore } from "../../zustand/store";
-import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { ProfileProperties, ProfileState } from "../../constants/interfaces";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
-// import { getMoreUserPosts } from "../../utils/getMore";
+import { getMoreUserPosts } from "../../helpers/getMore";
+import { profileReducer } from "../../reducers/profileReducer";
+import { Box, Flex } from "@chakra-ui/layout";
+import { getTweetProps } from "../../helpers";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 interface ProfileProps {}
 
 export const Profile: React.FC<ProfileProps> = () => {
-  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
-  const e_id = useStore((s) => s.curr);
+  const initialState: ProfileState = {
+    more: [],
+    offset: 0,
+    scrollProps: { dataLength: 3, hasMore: true },
+  };
 
-  useEffect(() => {
-    setMore([]);
-    setPag({ offset: 0 });
-    setScrollProps({ dataLength: 1, hasMore: true });
-  }, [e_id]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const context = useReducer(profileReducer, initialState);
+  const [state, dispatch] = context;
+
+  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+  const id = !fetchingUser && user ? user.me.user.id : -1;
 
   const [
-    { data: profile, fetching: fetchingProfile },
-  ] = useGetProfileStuffQuery({
-    variables: {
-      id: 1,
-    },
-  });
+    { data: profileObj, fetching: fetchingProfile },
+  ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
   const [{ data: followUser }, follow] = useFollowAUserMutation();
 
-  const [
-    { data: userTweets, fetching: fetchingUserTweets },
-    refetchTweets,
-  ] = useGetTweetsByUserFQuery({
-    variables: { id: 1 },
-  });
+  const paginationProps = { profile: profileObj, state, dispatch };
 
-  const editProfile = useStore((state) => state.editProfile);
-  const toggleEditProfile = useStore((state) => state.toggleEditProfile);
+  const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
+    if (!fetchingProfile && profileObj) {
+      const profile = profileObj.profileStuffAndUserTweets.profile;
+      const val = profile[key];
 
-  useEffect(() => {
-    refetchTweets({ requestPolicy: "network-only" });
-  }, [editProfile]);
-
-  const [more, setMore] = useState<TweetType[]>([]);
-  const [pag, setPag] = useState<{ offset: number }>({
-    offset: 0,
-  });
-
-  const [scrollProps, setScrollProps] = useState<InfiniteScrolling>({
-    dataLength: 1,
-    hasMore: true,
-  });
-
-  const { dataLength, hasMore } = scrollProps;
-  const paginationFunctions = { setMore, setPag, setScrollProps };
-
-  useEffect(() => {
-    console.log(followUser);
-  }, [followUser?.followAUser.followed]);
+      return val.toString();
+    }
+    return fallback;
+  };
 
   return (
     <Fragment>
-      {/* <ProfileContainer>
-        {editProfile && (
-          <EditProfile
-            bio={
-              profile && !fetchingProfile
-                ? profile.getProfileStuff.profile.bio
-                : ""
-            }
-            link={
-              profile && !fetchingProfile
-                ? profile.getProfileStuff.profile.link
-                : "#"
-            }
-          />
-        )}
+      <ProfileContainer>
+        <Box>
+          <Modal onClose={onClose} isOpen={isOpen} isCentered>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Modal Title</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody></ModalBody>
+              <ModalFooter>
+                <Button onClick={onClose}>Close</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>
@@ -109,162 +101,105 @@ export const Profile: React.FC<ProfileProps> = () => {
               <BackSVG />
             </Back>
             <ProfileInfo>
-              <b>
-                {profile && !fetchingProfile
-                  ? profile.getProfileStuff.profile.name
-                  : ""}
-              </b>
-              <span>
-                {profile && !fetchingProfile
-                  ? profile.getProfileStuff.profile.num
-                  : 0}{" "}
-                Tweets
-              </span>
+              <Flex flexDir="column">
+                <b>{getProfileValByKey("name", "")}</b>
+                <span>
+                  {getProfileValByKey("num", "0")}
+                  {" Tweets"}
+                </span>
+              </Flex>
             </ProfileInfo>
           </ProfileNav>
           <CoverImageContainer>
             <ImgContainer>
-              <img
-                src={
-                  profile && !fetchingProfile
-                    ? profile.getProfileStuff.profile.cover_img
-                    : ""
-                }
-              />
+              <img src={getProfileValByKey("cover_img", "")} />
             </ImgContainer>
             <ProfileImgContainer>
-              <img
-                src={
-                  !fetchingProfile && profile
-                    ? profile.getProfileStuff.profile.profile_img
-                    : ""
-                }
-              />
+              <img src={getProfileValByKey("profile_img", "")} />
             </ProfileImgContainer>
-            {(e_id === user?.me?.user.id || e_id === undefined) && (
-              <EditProfileBtn
-                title="Edit Profile"
-                onClick={(e) =>
-                  editProfile
-                    ? toggleEditProfile(false)
-                    : toggleEditProfile(true)
-                }
-              >
-                <span title="Edit Profile"></span>
-                <span className="mm" title="Edit Profile"></span>
-                <span title="Edit Profile"></span>
-              </EditProfileBtn>
-            )}
+            <EditProfileBtn title="Edit Profile" onClick={onOpen}>
+              <span title="Edit Profile"></span>
+              <span className="mm" title="Edit Profile"></span>
+              <span title="Edit Profile"></span>
+            </EditProfileBtn>
           </CoverImageContainer>
-          <MoreInfo>
-            <b>
-              {profile && !fetchingProfile
-                ? profile.getProfileStuff.profile.name
-                : ""}
-            </b>
-            <p className="username">
-              @
-              {profile && !fetchingProfile
-                ? profile.getProfileStuff.profile.username
-                : ""}
-            </p>
-            <p className="bio">
-              {profile && !fetchingProfile
-                ? profile.getProfileStuff.profile.bio
-                : ""}
-            </p>
-            <p className="link">
-              <a
-                href={
-                  profile && !fetchingProfile
-                    ? profile.getProfileStuff.profile.link
-                    : "#"
-                }
-              >
-                {profile && !fetchingProfile
-                  ? profile.getProfileStuff.profile.link
-                  : ""}
-              </a>
-            </p>
-            <Follows>
-              <span>
-                {profile && !fetchingProfile
-                  ? profile!.getProfileStuff.profile.following
-                  : ""}
-                <span className="faded"> Following</span>
-              </span>
-              <span>
-                {profile && !fetchingProfile
-                  ? profile.getProfileStuff.profile.followers
-                  : ""}
-                <span className="faded"> Followers</span>
-              </span>
-              {e_id !== user?.me?.id && e_id !== undefined && (
-                <FollowBtn
-                  onClick={async () => await follow({ thatUser: e_id })}
-                >
-                  {followUser && followUser.followAUser.followed
-                    ? "Unfollow"
-                    : "Follow"}
-                </FollowBtn>
-              )}
-            </Follows>
-          </MoreInfo>
+          {!fetchingProfile && profileObj ? (
+            <MoreInfo>
+              <b>{getProfileValByKey("name", "")}</b>
+              <p className="username">@{getProfileValByKey("username", "")}</p>
+              <p className="bio">{getProfileValByKey("bio", "")}</p>
+              <p className="link">
+                <a href={getProfileValByKey("link", "")}>
+                  {getProfileValByKey("link", "")}
+                </a>
+              </p>
+              <Follows>
+                <span>
+                  {getProfileValByKey("following", "0")}
+                  <span className="faded"> Following</span>
+                </span>
+                <span>
+                  {getProfileValByKey("followers", "0")}
+                  <span className="faded"> Followers</span>
+                </span>
+                {/* {e_id !== user?.me?.user.id && e_id !== undefined && (
+                  <FollowBtn
+                    onClick={async () => await follow({ thatUser: e_id })}
+                  >
+                    {followUser && followUser.followAUser.followed
+                      ? "Unfollow"
+                      : "Follow"}
+                  </FollowBtn>
+                )} */}
+              </Follows>
+            </MoreInfo>
+          ) : (
+            <LoadingSpinner />
+          )}
 
-          <Fragment>
-            {userTweets && !fetchingUserTweets ? (
-              userTweets.getTweetsByUserF.tweets.map((tweet) => (
-                <Tweet
-                  tweet_id={tweet.tweet_id}
-                  tweet_content={tweet.tweet_content}
-                  name={tweet.name}
-                  comments={tweet.comments}
-                  username={tweet.username}
-                  key={tweet.tweet_id}
-                  img={tweet.profile_img}
-                  captain={tweet.img}
-                />
-              ))
-            ) : (
-              <h4>Loading...</h4>
-            )}
-          </Fragment>
-          {!fetchingUserTweets && userTweets && (
-            <InfiniteScroll
-              dataLength={dataLength}
-              hasMore={userTweets.getTweetsByUserF.num > 5 ? hasMore : false}
-              next={() =>
-                getMoreUserPosts(
-                  userTweets,
-                  pag,
-                  dataLength,
-                  user,
-                  paginationFunctions
-                )
-              }
-              loader={<LoadingSpinner />}
-            >
+          <div
+            style={{
+              borderBottom: "1px solid #eeeeee20",
+              width: "100%",
+              height: "0px",
+            }}
+          ></div>
+
+          {!fetchingProfile && profileObj ? (
+            <Fragment>
               <Fragment>
-                {more.map((tweet) => (
-                  <Tweet
-                    tweet_id={tweet.tweet_id}
-                    tweet_content={tweet.tweet_content}
-                    name={tweet.name}
-                    comments={tweet.comments}
-                    username={tweet.username}
-                    key={tweet.tweet_id}
-                    img={tweet.profile_img}
-                    captain={tweet.img}
-                  />
+                {profileObj.profileStuffAndUserTweets.tweets.map((tweet) => (
+                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                 ))}
               </Fragment>
-            </InfiniteScroll>
+
+              <InfiniteScroll
+                dataLength={state.scrollProps.dataLength}
+                hasMore={
+                  profileObj.profileStuffAndUserTweets.profile.num > 5
+                    ? state.scrollProps.hasMore
+                    : false
+                }
+                next={() => getMoreUserPosts(paginationProps)}
+                loader={<LoadingSpinner />}
+              >
+                <Fragment>
+                  {state.more.map((tweet) => (
+                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                  ))}
+                </Fragment>
+              </InfiniteScroll>
+            </Fragment>
+          ) : (
+            <LoadingSpinner />
           )}
+
+          <Box my="30px"></Box>
         </S.HomeMain>
         <S.RightMenu>
           <RightMenu />
         </S.RightMenu>
-      </ProfileContainer> */}
+      </ProfileContainer>
     </Fragment>
   );
 };

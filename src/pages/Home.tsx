@@ -56,7 +56,6 @@ const Home: React.FC<HomeProps> = () => {
   useEffect(() => {
     subscribeToRealtime(dispatch);
     refreshUser({ requestPolicy: "network-only" });
-    refreshFeed({ requestPolicy: "network-only" });
 
     return () => unsubscribeToRealtime(dispatch);
   }, []);

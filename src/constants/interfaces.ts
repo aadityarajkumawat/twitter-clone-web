@@ -1,4 +1,8 @@
-import { GetTweetsByUserQuery } from "../generated/graphql";
+import {
+  GetTweetsByUserFQuery,
+  GetTweetsByUserQuery,
+  ProfileStuffAndUserTweetsQuery,
+} from "../generated/graphql";
 
 export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 
@@ -57,3 +61,32 @@ export type PaginationProps = {
   feed: GetTweetsByUserQuery | undefined;
   dispatch: React.Dispatch<HomeAction>;
 };
+
+export type PaginationPropsProfile = {
+  state: ProfileState;
+  profile: ProfileStuffAndUserTweetsQuery | undefined;
+  dispatch: React.Dispatch<ProfileAction>;
+};
+
+export type ProfileState = {
+  more: Array<TweetType>;
+  offset: number;
+  scrollProps: InfiniteScrolling;
+};
+
+export type ProfileAction =
+  | { type: "more"; moreTweets: Array<TweetType> }
+  | { type: "offset"; updatedOffset: number }
+  | { type: "scroll"; updatedScroll: InfiniteScrolling };
+
+export type ProfileProperties =
+  | "username"
+  | "profile_img"
+  | "cover_img"
+  | "name"
+  | "bio"
+  | "link"
+  | "followers"
+  | "following"
+  | "num"
+  | "isFollowed";

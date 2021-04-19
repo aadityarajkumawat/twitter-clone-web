@@ -1,5 +1,8 @@
 import { cli } from "..";
-import { PaginationProps } from "../constants/interfaces";
+import {
+  PaginationProps,
+  PaginationPropsProfile,
+} from "../constants/interfaces";
 import {
   GetPaginatedPostsDocument,
   GetPaginatedPostsQuery,
@@ -56,45 +59,50 @@ export const getMore = async (
   }
 };
 
-// export const getMoreUserPosts = async (
-//   { feed, state }: PaginationProps,
-//   { setMore, setPag, setScrollProps }: PaginationFunctions,
-//   postLimit = 3
-// ) => {
-//   const {} = state;
-//   if (userTweets && userTweets.getTweetsByUserF) {
-//     if (pag.offset === userTweets.getTweetsByUserF.num) {
-//       setScrollProps((prev) => ({ ...prev, hasMore: false }));
-//       return;
-//     }
+export const getMoreUserPosts = async (
+  { profile, state, dispatch }: PaginationPropsProfile,
+  postLimit = 3
+) => {
+  const { scrollProps, offset, more } = state;
+  const { dataLength } = scrollProps;
+  if (!profile || !profile.profileStuffAndUserTweets) return;
+  if (offset === profile.profileStuffAndUserTweets.profile.num) {
+    dispatch({
+      type: "scroll",
+      updatedScroll: { ...scrollProps, hasMore: false },
+    });
+    return;
+  }
 
-//     if (!user || !user.me || !user.me.user) return;
+  const phew = await cli
+    .query<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(
+      GetPaginatedPostsDocument,
+      {
+        limit: postLimit,
+        offset: 5 + dataLength - postLimit,
+      }
+    )
+    .toPromise();
 
-//     const phew = await cli
-//       .query<GetPaginatedUserTweetsQuery, GetPaginatedUserTweetsQueryVariables>(
-//         GetPaginatedUserTweetsDocument,
-//         {
-//           limit: postLimit,
-//           offset: 5 + dataLength - postLimit,
-//           id: user.me.user.id,
-//         }
-//       )
-//       .toPromise();
+  if (phew && phew.data && phew.data.getPaginatedPosts) {
+    const paginatedTweets = phew.data.getPaginatedPosts.tweets;
+    if (paginatedTweets) {
+      dispatch({
+        type: "more",
+        moreTweets: [...more, ...paginatedTweets],
+      });
+    }
 
-//     if (phew && phew.data && phew.data.getPaginatedUserTweets) {
-//       const s = phew.data.getPaginatedUserTweets.tweets;
-//       if (s) {
-//         setMore(s);
-//       }
+    const updatedOffset = 5 + dataLength - postLimit + paginatedTweets.length;
 
-//       setPag({
-//         offset: 5 + dataLength - postLimit + s.length,
-//       });
+    dispatch({ type: "offset", updatedOffset });
 
-//       setScrollProps((prev) => ({
-//         ...prev,
-//         dataLength: prev.dataLength + s.length,
-//       }));
-//     }
-//   }
-// };
+    dispatch({
+      type: "scroll",
+      updatedScroll: {
+        ...scrollProps,
+        dataLength: dataLength + paginatedTweets.length,
+      },
+    });
+  }
+};
