@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer } from "react";
+import React, { Fragment, useEffect, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
@@ -40,6 +40,7 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+import { EditProfile } from "../../components/edit-profile/EditProfile";
 
 interface ProfileProps {}
 
@@ -79,19 +80,15 @@ export const Profile: React.FC<ProfileProps> = () => {
   return (
     <Fragment>
       <ProfileContainer>
-        <Box>
-          <Modal onClose={onClose} isOpen={isOpen} isCentered>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Modal Title</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody></ModalBody>
-              <ModalFooter>
-                <Button onClick={onClose}>Close</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
+        <EditProfile
+          onClose={onClose}
+          isOpen={isOpen}
+          profile={
+            !fetchingProfile && profileObj
+              ? profileObj.profileStuffAndUserTweets.profile
+              : null
+          }
+        />
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>

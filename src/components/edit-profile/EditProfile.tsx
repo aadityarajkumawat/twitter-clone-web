@@ -1,29 +1,25 @@
-import React, { Dispatch, Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useReducer } from "react";
 import {
+  ProfileItems,
   useEditProfileMutation,
-  useGetProfileImageQuery,
   useSaveImageMutation,
 } from "../../generated/graphql";
-import { useStore } from "../../zustand/store";
-import {
-  BackDrop,
-  CloseEditProfile,
-  EditProfileContainer,
-  EditProfileForm,
-  EditProfileHeading,
-  Icon,
-  ImageInput,
-  ImageInputWrapper,
-  Input,
-  InputI,
-  LabelI,
-  Progress,
-  ProgressBar,
-  PseudoLabel,
-  SubmitBtn,
-  SubmitContainer,
-} from "./editprofile.styles";
 import Axios from "axios";
+import {
+  Box,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+  Flex,
+  Image,
+} from "@chakra-ui/react";
+import { Form } from "../auth/login/login.styles";
+import styled from "styled-components";
 
 interface EditProfileI {
   bio: string;
@@ -31,31 +27,109 @@ interface EditProfileI {
 }
 
 interface EditProfileProps {
-  bio: string;
-  link: string;
+  onClose: () => void;
+  isOpen: boolean;
+  profile: ProfileType | null;
 }
 
-export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
-  const toggle = useStore((state) => state.toggleEditProfile);
-  const [form, setForm] = useState<EditProfileI>({ bio, link });
-  const { bio: formBio, link: linkBio } = form;
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-  const [profileProgress, setProfileProgress] = useState<number>(1);
-  const [coverProgress, setCoverProgress] = useState<number>(1);
+type EditProfileState = {
+  form: EditProfileI;
+  profileProgress: number;
+  coverProgress: number;
+};
+
+type EditProfileAction =
+  | { type: "form"; updatedForm: EditProfileI }
+  | { type: "profile"; updatedProgress: number }
+  | { type: "cover"; updatedCover: number };
+
+type ProfileType = {
+  __typename?: "ProfileItems" | undefined;
+} & Pick<
+  ProfileItems,
+  | "username"
+  | "profile_img"
+  | "cover_img"
+  | "name"
+  | "bio"
+  | "link"
+  | "followers"
+  | "following"
+  | "num"
+  | "isFollowed"
+>;
+
+export const EditProfile: React.FC<EditProfileProps> = ({
+  onClose,
+  isOpen,
+  profile,
+}) => {
+  // const [form, setForm] = useState<EditProfileI>({ bio, link });
+  // const { bio: formBio, link: linkBio } = form;
+  // const [profileProgress, setProfileProgress] = useState<number>(1);
+  // const [coverProgress, setCoverProgress] = useState<number>(1);
 
   const [, save] = useEditProfileMutation();
-  const submit = () => {
-    save({ bio: formBio, link: linkBio });
+
+  const submit = async () => {
+    await save({ bio: state.form.bio, link: state.form.link });
+    onClose();
+  };
+
+  const sBio = profile ? profile.bio : "";
+  const sLink = profile ? profile.link : "";
+
+  const initialState: EditProfileState = {
+    form: { bio: sBio, link: sLink },
+    profileProgress: 1,
+    coverProgress: 1,
+  };
+
+  const editProfileReducer = (
+    state: EditProfileState,
+    action: EditProfileAction
+  ): EditProfileState => {
+    switch (action.type) {
+      case "form":
+        return { ...state, form: action.updatedForm };
+      case "cover":
+        return { ...state, coverProgress: action.updatedCover };
+      case "profile":
+        return { ...state, profileProgress: action.updatedProgress };
+      default:
+        return state;
+    }
+  };
+
+  const context = useReducer(editProfileReducer, initialState);
+  const [state, dispatch] = context;
+
+  const setProfileProgress = (
+    dispatch: React.Dispatch<EditProfileAction>,
+    val: number
+  ) => {
+    dispatch({ type: "profile", updatedProgress: val });
+  };
+
+  const setCoverProgress = (
+    dispatch: React.Dispatch<EditProfileAction>,
+    val: number
+  ) => {
+    dispatch({ type: "cover", updatedCover: val });
+  };
+
+  const setForm = (
+    dispatch: React.Dispatch<EditProfileAction>,
+    val: EditProfileI
+  ) => {
+    dispatch({ type: "form", updatedForm: val });
   };
 
   const [, saveImg] = useSaveImageMutation();
 
   const handleFile = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    fn: (value: React.SetStateAction<number>) => void,
+    fn: (dispatch: React.Dispatch<EditProfileAction>, value: number) => void,
     type: string
   ) => {
     const formData = new FormData();
@@ -69,7 +143,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (p) => {
-            fn((p.loaded * 100) / p.total);
+            fn(dispatch, (p.loaded * 100) / p.total);
           },
         }
       );
@@ -83,75 +157,115 @@ export const EditProfile: React.FC<EditProfileProps> = ({ bio, link }) => {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm(dispatch, { ...state.form, [name]: value });
+  };
+
   useEffect(() => {
-    if (profileProgress === 100) {
-      setProfileProgress(1);
-    } else {
-      setCoverProgress(1);
-    }
-  }, [profileProgress, coverProgress]);
+    setForm(dispatch, { bio: sBio, link: sLink });
+  }, [JSON.stringify(profile)]);
+
+  // useEffect(() => {
+  //   if (profileProgress === 100) {
+  //     setProfileProgress(1);
+  //   } else {
+  //     setCoverProgress(1);
+  //   }
+  // }, [profileProgress, coverProgress]);
 
   return (
     <Fragment>
-      <EditProfileContainer>
-        <EditProfileHeading>
-          <span>Edit Profile</span>
-          <CloseEditProfile onClick={() => toggle(false)}></CloseEditProfile>
-        </EditProfileHeading>
-        <EditProfileForm>
-          <ImageInputWrapper>
-            <PseudoLabel>Change Profile Image</PseudoLabel>
-            <Icon></Icon>
-            <ImageInput
-              type="file"
-              onChange={(e) => handleFile(e, setProfileProgress, "profile")}
-            />
-          </ImageInputWrapper>
-          {profileProgress !== 100 && profileProgress !== 1 && (
-            <ProgressBar>
-              <Progress style={{ width: `${profileProgress}%` }} />
-            </ProgressBar>
-          )}
+      <Box>
+        <Modal onClose={() => null} isOpen={isOpen} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Edit Profile</ModalHeader>
+            <ModalBody>
+              <Form>
+                <WrapperBox>
+                  <Image src={profile ? profile.cover_img : ""} />
+                  <Box className="mid"></Box>
+                  <Input
+                    w="350px"
+                    my="0.5rem"
+                    type="file"
+                    onChange={(e) =>
+                      handleFile(e, setProfileProgress, "profile")
+                    }
+                  />
+                </WrapperBox>
+                <Box>
+                  <Input
+                    w="350px"
+                    my="0.5rem"
+                    type="file"
+                    onChange={(e) => handleFile(e, setCoverProgress, "cover")}
+                  />
+                </Box>
+                <Box>
+                  <Input
+                    w="350px"
+                    my="0.5rem"
+                    type="text"
+                    name="bio"
+                    placeholder="Bio"
+                    onChange={handleChange}
+                    value={state.form.bio}
+                  />
+                </Box>
+                <Box>
+                  <Input
+                    w="350px"
+                    my="0.5rem"
+                    type="text"
+                    name="link"
+                    placeholder="Link"
+                    onChange={handleChange}
+                    value={state.form.link}
+                  />
+                </Box>
 
-          <ImageInputWrapper>
-            <PseudoLabel>Change Cover Image</PseudoLabel>
-            <Icon></Icon>
-            <ImageInput
-              type="file"
-              onChange={(e) => handleFile(e, setCoverProgress, "cover")}
-            />
-          </ImageInputWrapper>
-
-          {coverProgress !== 100 && coverProgress !== 1 && (
-            <ProgressBar>
-              <Progress style={{ width: `${coverProgress}%` }} />
-            </ProgressBar>
-          )}
-
-          <Input>
-            <LabelI>Bio</LabelI>
-            <InputI
-              type="text"
-              onChange={handleChange}
-              name="bio"
-              value={formBio}
-            />
-          </Input>
-          <Input>
-            <LabelI>Link</LabelI>
-            <InputI
-              type="text"
-              onChange={handleChange}
-              name="link"
-              value={linkBio}
-            />
-          </Input>
-        </EditProfileForm>
-        <SubmitContainer>
-          <SubmitBtn onClick={submit}>Edit Profile</SubmitBtn>
-        </SubmitContainer>
-      </EditProfileContainer>
-      <BackDrop onClick={() => toggle(false)}></BackDrop>
+                <Flex w="350px" justifyContent="flex-end" mt="1rem">
+                  <Button ml="1rem" onClick={submit}>
+                    Save
+                  </Button>
+                  <Button ml="1rem" onClick={onClose}>
+                    Cancel
+                  </Button>
+                </Flex>
+              </Form>
+            </ModalBody>
+            <ModalFooter></ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
     </Fragment>
   );
 };
+
+const WrapperBox = styled.div`
+  position: relative;
+  .mid {
+    width: 100%;
+    height: 100%;
+    background-color: #00000070;
+    position: absolute;
+    top: 0;
+    z-index: 0;
+
+    &:hover {
+      background-color: #fff;
+    }
+  }
+  input {
+    top: 0;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    z-index: 20;
+  }
+`;
