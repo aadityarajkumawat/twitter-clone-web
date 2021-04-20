@@ -13,6 +13,9 @@ type StateI = {
 
   curr: number | undefined;
   setCurr: (curr: number) => void;
+
+  refreshProfileToken: string;
+  refreshProfile: (token: string) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -28,4 +31,7 @@ export const useStore = create<StateI>((set) => ({
 
   curr: undefined,
   setCurr: (curr) => set(() => ({ curr })),
+
+  refreshProfileToken: "",
+  refreshProfile: (token) => set(() => ({ refreshProfileToken: token })),
 }));

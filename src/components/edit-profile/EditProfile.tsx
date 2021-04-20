@@ -21,6 +21,8 @@ import {
 } from "@chakra-ui/react";
 import { Form } from "../auth/login/login.styles";
 import styled from "styled-components";
+import { useStore } from "../../zustand/store";
+import { v4 as uuid } from "uuid";
 
 interface EditProfileI {
   bio: string;
@@ -65,16 +67,13 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   isOpen,
   profile,
 }) => {
-  // const [form, setForm] = useState<EditProfileI>({ bio, link });
-  // const { bio: formBio, link: linkBio } = form;
-  // const [profileProgress, setProfileProgress] = useState<number>(1);
-  // const [coverProgress, setCoverProgress] = useState<number>(1);
-
+  const refreshToken = useStore((s) => s.refreshProfile);
   const [, save] = useEditProfileMutation();
 
   const submit = async () => {
     await save({ bio: state.form.bio, link: state.form.link });
     onClose();
+    refreshToken(uuid());
   };
 
   const sBio = profile ? profile.bio : "";

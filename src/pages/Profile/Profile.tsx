@@ -41,6 +41,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { useStore } from "../../zustand/store";
 
 interface ProfileProps {}
 
@@ -50,6 +51,8 @@ export const Profile: React.FC<ProfileProps> = () => {
     offset: 0,
     scrollProps: { dataLength: 3, hasMore: true },
   };
+
+  const refreshToken = useStore((s) => s.refreshProfileToken);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -61,6 +64,7 @@ export const Profile: React.FC<ProfileProps> = () => {
 
   const [
     { data: profileObj, fetching: fetchingProfile },
+    refetchProfileStuffAndUserTweets,
   ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
   const [{ data: followUser }, follow] = useFollowAUserMutation();
@@ -76,6 +80,10 @@ export const Profile: React.FC<ProfileProps> = () => {
     }
     return fallback;
   };
+
+  useEffect(() => {
+    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
+  }, [refreshToken]);
 
   return (
     <Fragment>
