@@ -1,6 +1,7 @@
 import {
   GetTweetsByUserFQuery,
   GetTweetsByUserQuery,
+  ProfileItems,
   ProfileStuffAndUserTweetsQuery,
 } from "../generated/graphql";
 
@@ -90,3 +91,41 @@ export type ProfileProperties =
   | "following"
   | "num"
   | "isFollowed";
+
+export interface EditProfileI {
+  bio: string;
+  link: string;
+}
+
+export interface EditProfileProps {
+  onClose: () => void;
+  isOpen: boolean;
+  profile: ProfileType | null;
+}
+
+export type EditProfileState = {
+  form: EditProfileI;
+  profileProgress: number;
+  coverProgress: number;
+};
+
+export type EditProfileAction =
+  | { type: "form"; updatedForm: EditProfileI }
+  | { type: "profile"; updatedProgress: number }
+  | { type: "cover"; updatedCover: number };
+
+export type ProfileType = {
+  __typename?: "ProfileItems" | undefined;
+} & Pick<
+  ProfileItems,
+  | "username"
+  | "profile_img"
+  | "cover_img"
+  | "name"
+  | "bio"
+  | "link"
+  | "followers"
+  | "following"
+  | "num"
+  | "isFollowed"
+>;
