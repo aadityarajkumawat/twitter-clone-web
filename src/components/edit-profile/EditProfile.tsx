@@ -61,6 +61,22 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     setForm(dispatch, { ...state.form, [name]: value });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name;
+    dispatch({
+      type: "image",
+      updatedImages: {
+        ...state.images,
+        [name]: e.target.files,
+      },
+    });
+  };
+
+  const modalStyles: React.CSSProperties = {
+    backgroundColor: "#2e2e2e",
+    color: "#eee",
+  };
+
   useEffect(() => {
     setForm(dispatch, { bio: sBio, link: sLink });
   }, [JSON.stringify(profile)]);
@@ -70,36 +86,30 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       <Box>
         <Modal onClose={() => null} isOpen={isOpen} isCentered>
           <ModalOverlay />
-          <ModalContent>
-            <Progress
-              value={state.savingProgress}
-              size="xs"
-              colorScheme="blue"
-            />
+          <ModalContent style={modalStyles}>
+            {state.savingProgress > 0 && (
+              <Progress
+                value={state.savingProgress}
+                size="xs"
+                colorScheme="blackAlpha"
+              />
+            )}
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalBody>
               <Form>
                 <Box>
-                  <Text>Cover Profile</Text>
+                  <Text mb="5px">Cover Profile</Text>
                   <WrapperBox>
                     <Image
                       src={profile ? profile.cover_img : ""}
                       borderRadius="10px"
                     />
                     <Input
-                      w="350px"
+                      w="400px"
                       my="0.5rem"
                       type="file"
-                      onChange={(e) =>
-                        dispatch({
-                          type: "image",
-                          updatedImages: {
-                            ...state.images,
-                            cover_img: e.target.files,
-                          },
-                        })
-                      }
-                      borderRadius="10px"
+                      name="cover_img"
+                      onChange={handleFileChange}
                     />
                     <Box className="mid" borderRadius="10px"></Box>
                   </WrapperBox>
@@ -110,7 +120,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                   flexDir="column"
                   alignItems="flex-start"
                 >
-                  <Text>Profile Image</Text>
+                  <Text mb="5px">Profile Image</Text>
                   <WrapperBox>
                     <Image
                       src={profile ? profile.profile_img : ""}
@@ -120,23 +130,17 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                       objectFit="cover"
                     />
                     <Input
-                      w="350px"
+                      w="400px"
                       my="0.5rem"
                       type="file"
-                      onChange={(e) =>
-                        dispatch({
-                          type: "image",
-                          updatedImages: {
-                            ...state.images,
-                            profile_img: e.target.files,
-                          },
-                        })
-                      }
+                      name="profile_img"
+                      onChange={handleFileChange}
                     />
                     <Box className="mid" borderRadius="150px"></Box>
                   </WrapperBox>
                 </Flex>
                 <Box>
+                  <Text>Bio</Text>
                   <Input
                     w="400px"
                     my="0.5rem"
@@ -148,6 +152,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                   />
                 </Box>
                 <Box>
+                  <Text>Link</Text>
                   <Input
                     w="400px"
                     my="0.5rem"
@@ -159,11 +164,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                   />
                 </Box>
 
-                <Flex w="350px" justifyContent="flex-end" mt="1rem">
-                  <Button ml="1rem" onClick={submit}>
+                <Flex w="400px" justifyContent="flex-end" mt="1rem">
+                  <Button ml="1rem" onClick={submit} variant="dark">
                     Save
                   </Button>
-                  <Button ml="1rem" onClick={onClose}>
+                  <Button ml="1rem" onClick={onClose} variant="dark">
                     Cancel
                   </Button>
                 </Flex>
