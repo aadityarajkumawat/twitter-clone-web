@@ -1,4 +1,5 @@
 import React from "react";
+import { OperationContext } from "urql";
 import {
   GetTweetsByUserQuery,
   ProfileItems,
@@ -101,6 +102,9 @@ export interface EditProfileProps {
   onClose: () => void;
   isOpen: boolean;
   profile: ProfileType | null;
+  refetchProfileStuffAndUserTweets: (
+    opts?: Partial<OperationContext> | undefined
+  ) => void;
 }
 
 export type EditImagesI = {

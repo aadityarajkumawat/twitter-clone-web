@@ -7,7 +7,7 @@ export const TweetContainer = styled(StyledDiv)`
 `;
 
 export const TweetUsername = styled(StyledDiv)`
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   font-size: 14px;
   ${flexCenter}
   justify-content: flex-start;
@@ -16,7 +16,7 @@ export const TweetUsername = styled(StyledDiv)`
 `;
 
 export const TweetContent = styled(StyledDiv)`
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   color: white;
 `;
 

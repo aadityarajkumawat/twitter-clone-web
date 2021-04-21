@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useReducer } from "react";
+import React, { Fragment, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
@@ -31,7 +31,6 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { getTweetProps } from "../../helpers";
 import { useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
-import { useStore } from "../../zustand/store";
 
 interface ProfileProps {}
 
@@ -41,8 +40,6 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     offset: 0,
     scrollProps: { dataLength: 3, hasMore: true },
   };
-
-  const refreshToken = useStore((s) => s.refreshProfileToken);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -71,10 +68,6 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     return fallback;
   };
 
-  useEffect(() => {
-    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
-  }, [refreshToken]);
-
   return (
     <Fragment>
       <ProfileContainer>
@@ -86,6 +79,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
               ? profileObj.profileStuffAndUserTweets.profile
               : null
           }
+          refetchProfileStuffAndUserTweets={refetchProfileStuffAndUserTweets}
         />
         <S.LeftMenu>
           <LeftMenu />

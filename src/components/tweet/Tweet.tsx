@@ -61,9 +61,11 @@ const Tweet: React.FC<TweetProps> = ({
           <FadedUsername>@{username}</FadedUsername>
         </TweetUsername>
         <TweetContent>{tweet_content}</TweetContent>
-        <TweetImageContainer>
-          {captain !== "" && <img src={captain} alt="" />}
-        </TweetImageContainer>
+        {captain !== "" && (
+          <TweetImageContainer>
+            <img src={captain} alt="" />
+          </TweetImageContainer>
+        )}
         <TweetActionBar>
           <CommentSpan>
             {SVG.commentSVG}

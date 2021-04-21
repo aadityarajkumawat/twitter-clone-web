@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useReducer } from "react";
 import {
   useEditProfileMutation,
   useSaveImageMutation,
+  useMeQuery,
+  useProfileStuffAndUserTweetsQuery,
 } from "../../generated/graphql";
 import {
   Box,
@@ -19,8 +21,6 @@ import {
   Progress,
 } from "@chakra-ui/react";
 import { Form } from "../auth/login/login.styles";
-import { useStore } from "../../zustand/store";
-import { v4 as uuid } from "uuid";
 import { EditProfileState, EditProfileProps } from "../../constants/interfaces";
 import { editProfileReducer } from "../../reducers/editProfileReducer";
 import { setForm } from "../../actions/editProfileActions";
@@ -32,6 +32,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onClose,
   isOpen,
   profile,
+  refetchProfileStuffAndUserTweets,
 }) => {
   const sBio = profile ? profile.bio : "";
   const sLink = profile ? profile.link : "";
@@ -45,14 +46,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const context = useReducer(editProfileReducer, initialState);
   const [state, dispatch] = context;
 
-  const refreshToken = useStore((s) => s.refreshProfile);
-
   const [, saveImg] = useSaveImageMutation();
   const [, save] = useEditProfileMutation();
 
   const submit = async () => {
     await uploadImagesAndSave(context, saveImg, save);
-    refreshToken(uuid());
+    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
     dispatch({ type: "saving", updatedProgress: 0 });
     onClose();
   };
