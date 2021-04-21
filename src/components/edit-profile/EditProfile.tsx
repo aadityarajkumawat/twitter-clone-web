@@ -70,7 +70,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
               <Progress
                 value={state.savingProgress}
                 size="xs"
-                colorScheme="blackAlpha"
+                colorScheme="blue"
               />
             )}
             <ModalHeader>Edit Profile</ModalHeader>

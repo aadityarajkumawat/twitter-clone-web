@@ -1,6 +1,8 @@
 import React from "react";
 import { useLikeTweetMutation } from "../../generated/graphql";
 import { v4 as uuidv4 } from "uuid";
+import Heart from "react-animated-heart";
+import { TwitterLike } from "../like/TwitterLike";
 
 interface LikeSVGProps {
   liked: boolean | undefined;
@@ -18,6 +20,7 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
         setR(uuidv4());
       }}
     >
+      {/* <Heart isClick={liked} /> */}
       {liked ? (
         <svg width="20px" viewBox="0 0 24 24">
           <g>
@@ -37,6 +40,8 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
           </g>
         </svg>
       )}
+
+      {/* <TwitterLike /> */}
     </div>
   );
 };
