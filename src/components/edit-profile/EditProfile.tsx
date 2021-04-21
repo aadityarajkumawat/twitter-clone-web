@@ -16,22 +16,16 @@ import {
   Flex,
   Image,
   Text,
+  Progress,
 } from "@chakra-ui/react";
 import { Form } from "../auth/login/login.styles";
 import styled from "styled-components";
 import { useStore } from "../../zustand/store";
 import { v4 as uuid } from "uuid";
-import {
-  EditProfileState,
-  EditProfileProps,
-} from "../../constants/interfaces";
+import { EditProfileState, EditProfileProps } from "../../constants/interfaces";
 import { editProfileReducer } from "../../reducers/editProfileReducer";
-import {
-  setCoverProgress,
-  setForm,
-  setProfileProgress,
-} from "../../actions/editProfileActions";
-import { handleFile } from "../../helpers/handleProfileImages";
+import { setForm } from "../../actions/editProfileActions";
+import { uploadImagesAndSave } from "../../helpers/handleProfileImages";
 
 export const EditProfile: React.FC<EditProfileProps> = ({
   onClose,
@@ -43,8 +37,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   const initialState: EditProfileState = {
     form: { bio: sBio, link: sLink },
-    profileProgress: 1,
-    coverProgress: 1,
+    images: { profile_img: null, cover_img: null },
+    savingProgress: 0,
   };
 
   const context = useReducer(editProfileReducer, initialState);
@@ -54,9 +48,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [, save] = useEditProfileMutation();
 
   const submit = async () => {
-    await save({ bio: state.form.bio, link: state.form.link });
-    onClose();
+    await uploadImagesAndSave(context, saveImg, save);
     refreshToken(uuid());
+    dispatch({ type: "saving", updatedProgress: 0 });
+    onClose();
   };
 
   const [, saveImg] = useSaveImageMutation();
@@ -76,6 +71,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <Modal onClose={() => null} isOpen={isOpen} isCentered>
           <ModalOverlay />
           <ModalContent>
+            <Progress
+              value={state.savingProgress}
+              size="xs"
+              colorScheme="blue"
+            />
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalBody>
               <Form>
@@ -90,14 +90,14 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                       w="350px"
                       my="0.5rem"
                       type="file"
-                      onChange={async (e) =>
-                        await handleFile(
-                          e,
-                          setCoverProgress,
-                          "cover",
-                          dispatch,
-                          saveImg
-                        )
+                      onChange={(e) =>
+                        dispatch({
+                          type: "image",
+                          updatedImages: {
+                            ...state.images,
+                            cover_img: e.target.files,
+                          },
+                        })
                       }
                       borderRadius="10px"
                     />
@@ -123,14 +123,14 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                       w="350px"
                       my="0.5rem"
                       type="file"
-                      onChange={async (e) =>
-                        await handleFile(
-                          e,
-                          setProfileProgress,
-                          "profile",
-                          dispatch,
-                          saveImg
-                        )
+                      onChange={(e) =>
+                        dispatch({
+                          type: "image",
+                          updatedImages: {
+                            ...state.images,
+                            profile_img: e.target.files,
+                          },
+                        })
                       }
                     />
                     <Box className="mid" borderRadius="150px"></Box>

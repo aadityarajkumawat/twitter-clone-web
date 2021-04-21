@@ -1,5 +1,5 @@
+import React from "react";
 import {
-  GetTweetsByUserFQuery,
   GetTweetsByUserQuery,
   ProfileItems,
   ProfileStuffAndUserTweetsQuery,
@@ -103,29 +103,33 @@ export interface EditProfileProps {
   profile: ProfileType | null;
 }
 
+export type EditImagesI = {
+  profile_img: FileList | null;
+  cover_img: FileList | null;
+};
+
 export type EditProfileState = {
   form: EditProfileI;
-  profileProgress: number;
-  coverProgress: number;
+  images: EditImagesI;
+  savingProgress: number;
 };
 
 export type EditProfileAction =
   | { type: "form"; updatedForm: EditProfileI }
-  | { type: "profile"; updatedProgress: number }
-  | { type: "cover"; updatedCover: number };
+  | { type: "saving"; updatedProgress: number }
+  | { type: "image"; updatedImages: EditImagesI };
 
 export type ProfileType = {
   __typename?: "ProfileItems" | undefined;
-} & Pick<
-  ProfileItems,
-  | "username"
-  | "profile_img"
-  | "cover_img"
-  | "name"
-  | "bio"
-  | "link"
-  | "followers"
-  | "following"
-  | "num"
-  | "isFollowed"
->;
+} & Pick<ProfileItems, ProfileProperties>;
+
+export type EditProfileContext = [
+  EditProfileState,
+  React.Dispatch<EditProfileAction>
+];
+
+export type HandleFileF = (
+  context: EditProfileContext,
+  saveImg: (o: any) => Promise<any>,
+  save: (o: { bio: string; link: string }) => Promise<any>
+) => Promise<void>;

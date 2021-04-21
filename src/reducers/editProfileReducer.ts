@@ -7,11 +7,11 @@ export const editProfileReducer = (
   switch (action.type) {
     case "form":
       return { ...state, form: action.updatedForm };
-    case "cover":
-      return { ...state, coverProgress: action.updatedCover };
-    case "profile":
-      return { ...state, profileProgress: action.updatedProgress };
+    case "saving":
+      return { ...state, savingProgress: action.updatedProgress };
+    case "image":
+      return { ...state, images: action.updatedImages };
     default:
-      return state;
+      return state
   }
 };
