@@ -148,3 +148,30 @@ export const Progress = styled.div`
   height: 4px;
   background-color: #0066ff;
 `;
+export const WrapperBox = styled.div`
+  position: relative;
+  .mid {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    z-index: 0;
+  }
+  input {
+    top: 0;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    z-index: 20;
+    cursor: pointer;
+  }
+
+  input:hover + .mid {
+    opacity: 0.5;
+  }
+`;

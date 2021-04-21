@@ -5,6 +5,7 @@ import { tweetAlreadyExist } from "./tweetAlreadyExist";
 import { uploadTweetImage } from "./uploadTweetImage";
 import { getMore } from "./getMore";
 import { getTweetProps } from "./reshapeTweetType";
+import { handleChange } from "./handleChange";
 
 export {
   handleFileAndUpload,
@@ -14,4 +15,5 @@ export {
   uploadTweetImage,
   getMore,
   getTweetProps,
+  handleChange,
 };

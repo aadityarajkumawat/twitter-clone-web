@@ -19,13 +19,14 @@ import {
   Progress,
 } from "@chakra-ui/react";
 import { Form } from "../auth/login/login.styles";
-import styled from "styled-components";
 import { useStore } from "../../zustand/store";
 import { v4 as uuid } from "uuid";
 import { EditProfileState, EditProfileProps } from "../../constants/interfaces";
 import { editProfileReducer } from "../../reducers/editProfileReducer";
 import { setForm } from "../../actions/editProfileActions";
 import { uploadImagesAndSave } from "../../helpers/handleProfileImages";
+import { WrapperBox } from "./editprofile.styles";
+import { fileInput, modalStyles, textInput } from "../../constants/consts";
 
 export const EditProfile: React.FC<EditProfileProps> = ({
   onClose,
@@ -45,6 +46,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [state, dispatch] = context;
 
   const refreshToken = useStore((s) => s.refreshProfile);
+
+  const [, saveImg] = useSaveImageMutation();
   const [, save] = useEditProfileMutation();
 
   const submit = async () => {
@@ -52,29 +55,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     refreshToken(uuid());
     dispatch({ type: "saving", updatedProgress: 0 });
     onClose();
-  };
-
-  const [, saveImg] = useSaveImageMutation();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm(dispatch, { ...state.form, [name]: value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    dispatch({
-      type: "image",
-      updatedImages: {
-        ...state.images,
-        [name]: e.target.files,
-      },
-    });
-  };
-
-  const modalStyles: React.CSSProperties = {
-    backgroundColor: "#2e2e2e",
-    color: "#eee",
   };
 
   useEffect(() => {
@@ -104,13 +84,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                       src={profile ? profile.cover_img : ""}
                       borderRadius="10px"
                     />
-                    <Input
-                      w="400px"
-                      my="0.5rem"
-                      type="file"
-                      name="cover_img"
-                      onChange={handleFileChange}
-                    />
+                    <Input name="cover_img" {...fileInput(context)} />
                     <Box className="mid" borderRadius="10px"></Box>
                   </WrapperBox>
                 </Box>
@@ -129,38 +103,26 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                       borderRadius="150px"
                       objectFit="cover"
                     />
-                    <Input
-                      w="400px"
-                      my="0.5rem"
-                      type="file"
-                      name="profile_img"
-                      onChange={handleFileChange}
-                    />
+                    <Input name="profile_img" {...fileInput(context)} />
                     <Box className="mid" borderRadius="150px"></Box>
                   </WrapperBox>
                 </Flex>
                 <Box>
                   <Text>Bio</Text>
                   <Input
-                    w="400px"
-                    my="0.5rem"
-                    type="text"
                     name="bio"
                     placeholder="Bio"
-                    onChange={handleChange}
                     value={state.form.bio}
+                    {...textInput(context)}
                   />
                 </Box>
                 <Box>
                   <Text>Link</Text>
                   <Input
-                    w="400px"
-                    my="0.5rem"
-                    type="text"
                     name="link"
                     placeholder="Link"
-                    onChange={handleChange}
                     value={state.form.link}
+                    {...textInput(context)}
                   />
                 </Box>
 
@@ -181,31 +143,3 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     </Fragment>
   );
 };
-
-const WrapperBox = styled.div`
-  position: relative;
-  .mid {
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    z-index: 0;
-  }
-  input {
-    top: 0;
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0;
-    z-index: 20;
-    cursor: pointer;
-  }
-
-  input:hover + .mid {
-    opacity: 0.5;
-  }
-`;
