@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { flexCenter, StyledDiv } from "../../constants/styles";
 
 export const TweetContainer = styled(StyledDiv)`
-  width: 80%;
-  padding: 14px 25px 14px 0;
+  width: 90%;
+  padding: 7px 25px 14px 0;
 `;
 
 export const TweetUsername = styled(StyledDiv)`
@@ -21,8 +21,13 @@ export const TweetContent = styled(StyledDiv)`
 `;
 
 export const TweetActionBar = styled(StyledDiv)`
-  ${flexCenter}
-  justify-content: space-between;
+  display: flex;
+  align-items: center;
+
+  span {
+    width: 40px;
+    margin-right: 80px;
+  }
 `;
 
 export const FadedUsername = styled(StyledDiv)`
@@ -32,15 +37,22 @@ export const FadedUsername = styled(StyledDiv)`
 `;
 
 export const UserProfileImg = styled(StyledDiv)`
-  width: 20%;
+  width: 10%;
+  height: inherit;
+  box-sizing: content-box;
+  padding: 0 13px;
   ${flexCenter}
-  img {
-    width: 60px;
-    height: 60px;
-    border-radius: 100%;
+  overflow-y: hidden;
+
+  div {
     position: absolute;
-    top: 15px;
-    object-fit: cover;
+    top: 7px;
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 100%;
+      object-fit: cover;
+    }
   }
 `;
 
@@ -59,6 +71,7 @@ export const CommentSpan = styled.span`
 
   div {
     margin-left: 5px;
+    font-size: 14px;
   }
 `;
 
@@ -70,6 +83,7 @@ export const LikeSpan = styled.span`
 
   div {
     margin-left: 5px;
+    font-size: 14px;
   }
 `;
 

@@ -100,10 +100,10 @@ export const RightMenu = styled.div`
 `;
 
 export const HomeMain = styled.div`
-  max-width: 1300px;
+  max-width: 598px;
   min-height: 100vh;
   background-color: #222 !important;
-  width: 600px;
+  width: 598px;
   border-right: 1px solid #eeeeee20;
   border-left: 1px solid #eeeeee20;
   ${flexCenter}
@@ -123,13 +123,12 @@ export const PageName = styled.div`
   color: #eee;
   font-weight: 600;
   font-size: 20px;
-  padding: 20px 30px;
+  padding: 8px 30px;
   border-bottom: 1px solid #eeeeee20;
 `;
 
 export const CreateTweet = styled.div`
   width: 100%;
-  height: 160px;
   border-bottom: 8px solid #ffffff20;
   ${flexCenter}
   box-sizing: content-box;
@@ -149,23 +148,20 @@ export const MTweet = styled.div`
 `;
 
 export const IncImage = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 100%;
   object-fit: cover;
 `;
 
 export const TweetInput = styled.div`
   width: 100%;
-  border-bottom: 1px solid #eeeeee20;
-  height: 90px;
 `;
 
 export const TweetInputField = styled.input`
   width: 100%;
   background-color: #ffffff00;
-  height: 30px;
-  padding: 30px 15px;
+  padding: 15px 15px 10px 15px;
   font-size: 18px;
   border: none;
   color: #eee;
@@ -173,24 +169,23 @@ export const TweetInputField = styled.input`
 
 export const EditTweetOptions = styled.div`
   width: 100%;
-  height: 70px;
   ${flexCenter}
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 10px 20px;
+  padding-left: 7px;
 `;
 
 export const TweetAc = styled.div`
   width: 50px;
-  /* height: 20px; */
 `;
 
 export const TweetButton = styled.button`
   width: 90px;
-  height: 40px;
-  background-color: #0066ff;
+  height: 35px;
+  background-color: #0b688f;
   color: #eee;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 15px;
   border: none;
   border-radius: 40px;
   transition: all 0.3s ease;

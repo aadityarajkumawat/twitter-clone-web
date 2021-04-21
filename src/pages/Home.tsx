@@ -43,10 +43,7 @@ const Home: React.FC<HomeProps> = () => {
   const [state, dispatch] = context;
 
   const [{ data: user, fetching: loadingUser }, refreshUser] = useMeQuery();
-  const [
-    { data: feed, fetching: fetchingFeed },
-    refreshFeed,
-  ] = useGetTweetsByUserQuery();
+  const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
@@ -56,7 +53,6 @@ const Home: React.FC<HomeProps> = () => {
   useEffect(() => {
     subscribeToRealtime(dispatch);
     refreshUser({ requestPolicy: "network-only" });
-
     return () => unsubscribeToRealtime(dispatch);
   }, []);
 

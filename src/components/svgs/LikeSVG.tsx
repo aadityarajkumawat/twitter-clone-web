@@ -22,7 +22,7 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
     >
       {/* <Heart isClick={liked} /> */}
       {liked ? (
-        <svg width="20px" viewBox="0 0 24 24">
+        <svg width="16px" viewBox="0 0 24 24">
           <g>
             <path
               style={{ fill: "rgb(224, 36, 94)" }}
@@ -31,7 +31,7 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
           </g>
         </svg>
       ) : (
-        <svg width="20px" viewBox="0 0 24 24">
+        <svg width="16px" viewBox="0 0 24 24">
           <g>
             <path
               style={{ fill: "rgb(136, 153, 166)" }}

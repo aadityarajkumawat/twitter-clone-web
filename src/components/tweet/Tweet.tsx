@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
 import {
-  CommentSpan,
   FadedUsername,
-  LikeSpan,
   TweetActionBar,
   TweetContainer,
   TweetContent,
@@ -53,7 +52,9 @@ const Tweet: React.FC<TweetProps> = ({
   return (
     <TweetWrapper>
       <UserProfileImg>
-        <img src={img} alt="user" />
+        <div>
+          <img src={img} alt="user" />
+        </div>
       </UserProfileImg>
       <TweetContainer>
         <TweetUsername>
@@ -67,22 +68,41 @@ const Tweet: React.FC<TweetProps> = ({
           </TweetImageContainer>
         )}
         <TweetActionBar>
-          <CommentSpan>
-            {SVG.commentSVG}
-            <div style={{ color: "rgb(136, 153, 166)" }}>{comments}</div>
-          </CommentSpan>
-          <span>{SVG.retweetSVG}</span>
-          <LikeSpan>
-            <LikeSVG liked={liked} tweet_id={tweet_id} setR={setRefresh} />
-            <div
-              style={{
-                color: liked ? "rgb(224, 36, 94)" : "rgb(136, 153, 166)",
-              }}
-            >
-              {data ? data!.getTweetById.tweet?.likes : 0}
-            </div>
-          </LikeSpan>
-          <span>{SVG.shareSVG}</span>
+          <span>
+            <Flex fontSize="14px">
+              {SVG.commentSVG}
+              <Box ml="5px" color="rgb(136, 153, 166)">
+                {comments}
+              </Box>
+            </Flex>
+          </span>
+          <span>
+            <Flex fontSize="14px">
+              {SVG.retweetSVG}
+              <Box ml="5px" color="rgb(136, 153, 166)">
+                1
+              </Box>
+            </Flex>
+          </span>
+          <span>
+            <Flex fontSize="14px" alignItems="center" cursor="pointer">
+              <LikeSVG liked={liked} tweet_id={tweet_id} setR={setRefresh} />
+              <Box
+                ml="5px"
+                color={liked ? "rgb(224, 36, 94)" : "rgb(136, 153, 166)"}
+              >
+                {data ? data!.getTweetById.tweet?.likes : 0}
+              </Box>
+            </Flex>
+          </span>
+          <span>
+            <Flex fontSize="14px">
+              {SVG.shareSVG}
+              <Box ml="5px" color="rgb(136, 153, 166)">
+                1
+              </Box>
+            </Flex>
+          </span>
         </TweetActionBar>
       </TweetContainer>
     </TweetWrapper>

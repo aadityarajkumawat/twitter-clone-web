@@ -4,11 +4,11 @@ interface AttachImageProps {}
 export const AttachImage: React.FC<AttachImageProps> = () => {
   return (
     <Fragment>
-      <div style={{ width: "25px", cursor: "pointer" }}>
+      <div style={{ width: "22.5px", cursor: "pointer" }}>
         <svg
           viewBox="0 0 24 24"
           className="r-13gxpu9 r-4qtqp9 r-yyyyoo r-1q142lx r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"
-          fill="#fff"
+          fill="rgb(197, 211, 221)"
           cursor="pointer"
         >
           <g>

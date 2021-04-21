@@ -3,7 +3,7 @@ import React from "react";
 export const retweetSVG = (
   <svg
     fill="rgb(136, 153, 166)"
-    width="20px"
+    width="16px"
     viewBox="0 0 24 24"
     className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
   >
@@ -16,7 +16,7 @@ export const retweetSVG = (
 export const commentSVG = (
   <svg
     fill="rgb(136, 153, 166)"
-    width="20px"
+    width="16px"
     viewBox="0 0 24 24"
     className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
   >
@@ -29,7 +29,7 @@ export const commentSVG = (
 export const shareSVG = (
   <svg
     fill="rgb(136, 153, 166)"
-    width="20px"
+    width="16px"
     viewBox="0 0 24 24"
     className="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"
   >
