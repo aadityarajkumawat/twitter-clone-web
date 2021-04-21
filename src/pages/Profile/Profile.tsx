@@ -29,23 +29,13 @@ import { getMoreUserPosts } from "../../helpers/getMore";
 import { profileReducer } from "../../reducers/profileReducer";
 import { Box, Flex } from "@chakra-ui/layout";
 import { getTweetProps } from "../../helpers";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { useStore } from "../../zustand/store";
 
 interface ProfileProps {}
 
-export const Profile: React.FC<ProfileProps> = () => {
+export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   const initialState: ProfileState = {
     more: [],
     offset: 0,

@@ -16,7 +16,7 @@ export const CenterItems = styled.div`
 
 export const ProfileNav = styled.div`
   width: 100%;
-  height: 70px;
+  height: 50px;
   background-color: #222;
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@ export const Back = styled(CenterItems)`
 
   div {
     svg {
-      width: 30px;
+      width: 25px;
     }
   }
 `;
@@ -41,15 +41,19 @@ export const ProfileInfo = styled.div`
   flex-direction: column;
   color: #fff;
 
+  b {
+    font-size: 14px;
+  }
+
   span {
-    font-size: 13px;
+    font-size: 12px;
     font-family: "Oxygen";
   }
 `;
 
 export const CoverImageContainer = styled.div`
   width: 100%;
-  height: 300px;
+  height: 250px;
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -58,7 +62,7 @@ export const CoverImageContainer = styled.div`
 
 export const ImgContainer = styled.div`
   width: 100%;
-  height: 240px;
+  height: 250px;
   background-color: #000;
   overflow: hidden;
 
@@ -70,8 +74,8 @@ export const ImgContainer = styled.div`
 `;
 
 export const ProfileImgContainer = styled.div`
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   position: absolute;
   bottom: 0;
   left: 20px;
@@ -103,28 +107,26 @@ export const MoreInfo = styled.div`
   b {
     font-weight: 700;
     font-size: 19px;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
   }
 
   p {
-    margin-bottom: 4px;
+    margin-top: 0;
   }
 
   .username {
     font-size: 14px;
     color: #ccc;
     font-family: "Oxygen";
-    margin-bottom: 5px;
   }
 
   .bio {
     font-size: 15px;
-    margin: 8px 0;
+    margin-top: 6px;
   }
 
   .link {
     font-size: 15px;
-    margin: 0px 0 8px 0;
 
     a {
       color: #0066ff;

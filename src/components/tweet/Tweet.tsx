@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
-import { me } from "../../constants/urls";
-import {
-  useGetTweetByIdQuery,
-  useMeQuery,
-  useGetProfileImageQuery,
-} from "../../generated/graphql";
+import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
 import {
   CommentSpan,
