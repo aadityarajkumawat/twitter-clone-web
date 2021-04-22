@@ -33,7 +33,7 @@ const Home: React.FC<HomeProps> = () => {
     more: [],
     pag: { offset: 0 },
     realTime: [],
-    feedProgress: 1,
+    feedProgress: 0,
     files: null,
     scrollProps: { dataLength: 3, hasMore: true },
     tweetInput: "",
@@ -69,7 +69,7 @@ const Home: React.FC<HomeProps> = () => {
 
   useEffect(() => {
     if (state.feedProgress === 100) {
-      setFeedProgress(1, dispatch);
+      setFeedProgress(0, dispatch);
       setFile(null, dispatch);
     }
   }, [state.feedProgress]);

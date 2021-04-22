@@ -15,6 +15,7 @@ export const uploadTweetImage = async (
       "Content-Type": "multipart/form-data",
     },
     onUploadProgress: (p) => {
+      console.log((p.loaded * 100) / p.total);
       dispatch({ type: "prog", updatedProg: (p.loaded * 100) / p.total });
     },
   });
