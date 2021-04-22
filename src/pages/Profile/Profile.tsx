@@ -1,10 +1,9 @@
-import React, { Fragment, useReducer } from "react";
+import React, { Fragment, useEffect, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
   CoverImageContainer,
   EditProfileBtn,
-  FollowBtn,
   Follows,
   ImgContainer,
   MoreInfo,
@@ -20,6 +19,7 @@ import {
   useFollowAUserMutation,
   useMeQuery,
   useProfileStuffAndUserTweetsQuery,
+  useGetUserByUsernameQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
 import { ProfileProperties, ProfileState } from "../../constants/interfaces";
@@ -31,9 +31,14 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { getTweetProps } from "../../helpers";
 import { useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
-import { useHistory } from "react-router";
+import { useHistory, useParams } from "react-router";
+import { Follow } from "../../components/follow/Follow";
 
 interface ProfileProps {}
+
+interface ProfileRouteParams {
+  username: string;
+}
 
 export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   const initialState: ProfileState = {
@@ -42,6 +47,8 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     scrollProps: { dataLength: 3, hasMore: true },
   };
 
+  const { username } = useParams<ProfileRouteParams>();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
 
@@ -49,14 +56,26 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   const [state, dispatch] = context;
 
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
-  const id = !fetchingUser && user ? user.me.user.id : -1;
+  const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
+    variables: { username },
+  });
+
+  let id = 0;
+  let isLoggedUser = false;
+  if (!fetchingUser && user && user.me.user.username === username) {
+    id = user.me.user.id;
+    isLoggedUser = true;
+  } else if (!fetchingNUser && nUser) {
+    id = nUser.getUserByUsername.user.id;
+    isLoggedUser = false;
+  }
 
   const [
     { data: profileObj, fetching: fetchingProfile },
     refetchProfileStuffAndUserTweets,
   ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
-  const [{ data: followUser }, follow] = useFollowAUserMutation();
+  const followContext = useFollowAUserMutation();
 
   const paginationProps = { profile: profileObj, state, dispatch };
 
@@ -69,6 +88,10 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     }
     return fallback;
   };
+
+  useEffect(() => {
+    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
+  }, []);
 
   return (
     <Fragment>
@@ -134,15 +157,12 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
                   {getProfileValByKey("followers", "0")}
                   <span className="faded"> Followers</span>
                 </span>
-                {/* {e_id !== user?.me?.user.id && e_id !== undefined && (
-                  <FollowBtn
-                    onClick={async () => await follow({ thatUser: e_id })}
-                  >
-                    {followUser && followUser.followAUser.followed
-                      ? "Unfollow"
-                      : "Follow"}
-                  </FollowBtn>
-                )} */}
+                <Follow
+                  isLoggedUser={isLoggedUser}
+                  followContext={followContext}
+                  id={id}
+                  refr={refetchProfileStuffAndUserTweets}
+                />
               </Follows>
             </MoreInfo>
           ) : (

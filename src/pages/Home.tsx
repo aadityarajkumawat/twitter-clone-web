@@ -24,7 +24,6 @@ import {
   subscribeToRealtime,
   unsubscribeToRealtime,
 } from "../actions";
-import { motion } from "framer-motion";
 
 interface HomeProps {}
 
@@ -102,7 +101,7 @@ const Home: React.FC<HomeProps> = () => {
             <Fragment>
               <Box>
                 {[...state.realTime, ...feed.getTweetsByUser.tweets].map(
-                  (tweet, i) => (
+                  (tweet) => (
                     <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                   )
                 )}

@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { useHistory } from "react-router-dom";
-import { useStore } from "../../zustand/store";
 import {
   ImageContainer,
   SearchItemContainer,
@@ -10,17 +9,15 @@ import {
 interface SearchItemProps {
   name: string;
   username: string;
-  id: number;
   user_img: string;
 }
 export const SearchItem: React.FC<SearchItemProps> = ({
   name,
   username,
-  id,
   user_img,
 }) => {
-  const setCurr = useStore((s) => s.setCurr);
   const history = useHistory();
+
   return (
     <Fragment>
       <SearchItemContainer>
@@ -29,8 +26,7 @@ export const SearchItem: React.FC<SearchItemProps> = ({
         </ImageContainer>
         <UserD
           onClick={() => {
-            setCurr(id);
-            history.push("/profile");
+            history.push(`/profile/${username}`);
           }}
         >
           <h4>{name}</h4>

@@ -10,9 +10,13 @@ import { BookmarkImage } from "../../assets/BookmarkImage";
 import { ListsImage } from "../../assets/ListsImage";
 import { ProfileImage } from "../../assets/ProfileImage";
 import { MoreImage } from "../../assets/MoreImage";
+import { useMeQuery } from "../../generated/graphql";
 
 interface LeftMenuProps {}
 export const LeftMenu: React.FC<LeftMenuProps> = () => {
+  const [{ data, fetching }] = useMeQuery();
+  const identifier = !fetching && data ? data.me.user.username : "";
+
   return (
     <Fragment>
       <S.Head>
@@ -46,7 +50,7 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
           <span>Lists</span>
         </S.ListItem>
         <S.ListItem>
-          <Link to="/profile">
+          <Link to={`/profile/${identifier}`}>
             <ProfileImage />
             <span>Profile</span>
           </Link>
