@@ -31,6 +31,7 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { getTweetProps } from "../../helpers";
 import { useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { useHistory } from "react-router";
 
 interface ProfileProps {}
 
@@ -42,6 +43,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const history = useHistory();
 
   const context = useReducer(profileReducer, initialState);
   const [state, dispatch] = context;
@@ -86,10 +88,11 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
         </S.LeftMenu>
         <S.HomeMain>
           <ProfileNav>
-            <Back>
+            <Back onClick={() => history.goBack()}>
               <BackSVG />
             </Back>
             <ProfileInfo>
+              {/* {"#696969"} */}
               <Flex flexDir="column">
                 <b>{getProfileValByKey("name", "")}</b>
                 <span>

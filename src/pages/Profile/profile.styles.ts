@@ -12,6 +12,12 @@ export const CenterItems = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #696969;
+  }
 `;
 
 export const ProfileNav = styled.div`
@@ -28,6 +34,10 @@ export const Back = styled(CenterItems)`
   height: 40px;
   margin-left: 10px;
   margin-right: 20px;
+
+  &:hover {
+    background-color: #222;
+  }
 
   div {
     svg {
