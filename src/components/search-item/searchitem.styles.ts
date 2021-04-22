@@ -7,6 +7,7 @@ export const SearchItemContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: hidden;
 `;
 
 export const ImageContainer = styled.div`
@@ -29,6 +30,7 @@ export const UserD = styled.div`
   height: 50px;
   padding: 5px 10px;
   cursor: pointer;
+  overflow-y: hidden;
 
   h4 {
     font-family: "Oxygen";

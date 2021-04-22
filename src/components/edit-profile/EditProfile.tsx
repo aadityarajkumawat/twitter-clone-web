@@ -2,8 +2,6 @@ import React, { Fragment, useEffect, useReducer } from "react";
 import {
   useEditProfileMutation,
   useSaveImageMutation,
-  useMeQuery,
-  useProfileStuffAndUserTweetsQuery,
 } from "../../generated/graphql";
 import {
   Box,
@@ -76,17 +74,31 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalBody>
               <Form>
-                <Box>
+                <Flex
+                  mt="20px"
+                  w="100%"
+                  flexDir="column"
+                  alignItems="flex-start"
+                >
                   <Text mb="5px">Cover Profile</Text>
                   <WrapperBox>
-                    <Image
-                      src={profile ? profile.cover_img : ""}
-                      borderRadius="10px"
-                    />
-                    <Input name="cover_img" {...fileInput(context)} />
-                    <Box className="mid" borderRadius="10px"></Box>
+                    {profile && profile.cover_img !== "" ? (
+                      <Fragment>
+                        <Image
+                          src={profile ? profile.cover_img : ""}
+                          borderRadius="10px"
+                        />
+                        <Input name="cover_img" {...fileInput(context)} />
+                        <Box className="mid" borderRadius="10px"></Box>
+                      </Fragment>
+                    ) : (
+                      <Box w="400px" h="150px" bg="black" borderRadius="10px">
+                        <Input name="cover_img" {...fileInput(context)} />
+                        <Box className="mid" borderRadius="10px"></Box>
+                      </Box>
+                    )}
                   </WrapperBox>
-                </Box>
+                </Flex>
                 <Flex
                   mt="20px"
                   w="100%"
