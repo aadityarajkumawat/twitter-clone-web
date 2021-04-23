@@ -16,6 +16,7 @@ interface LeftMenuProps {}
 export const LeftMenu: React.FC<LeftMenuProps> = () => {
   const [{ data, fetching }] = useMeQuery();
   const identifier = !fetching && data ? data.me.user.username : "";
+  console.log(identifier);
 
   return (
     <Fragment>

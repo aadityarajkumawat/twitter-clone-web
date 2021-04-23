@@ -51,9 +51,9 @@ const Home: React.FC<HomeProps> = () => {
   const paginationProps = { feed, state, dispatch };
 
   useEffect(() => {
-    subscribeToRealtime(dispatch);
+    // subscribeToRealtime(dispatch);
     refreshUser({ requestPolicy: "network-only" });
-    return () => unsubscribeToRealtime(dispatch);
+    // return () => unsubscribeToRealtime(dispatch);
   }, []);
 
   useEffect(() => {
@@ -72,6 +72,8 @@ const Home: React.FC<HomeProps> = () => {
       setFile(null, dispatch);
     }
   }, [state.feedProgress]);
+
+  console.log({ realTime: state.realTime, feed: feed });
 
   return (
     <S.BaseComponent className="main">

@@ -10,6 +10,7 @@ import {
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
+import "dotenv/config";
 
 const theme = extendTheme({
   components: {
@@ -25,8 +26,9 @@ const theme = extendTheme({
 
 const sub = new SubscriptionClient("ws://localhost:4001/graphql");
 
+console.log({ api: process.env.API_URL });
 export const cli = createClient({
-  url: "http://localhost:4001/graphql",
+  url: process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "",
   fetchOptions: {
     credentials: "include",
   },
