@@ -137,3 +137,16 @@ export type HandleFileF = (
   saveImg: (o: any) => Promise<any>,
   save: (o: { bio: string; link: string }) => Promise<any>
 ) => Promise<void>;
+
+export interface HomeActionFn {
+  setFeedProgress: (n: number) => void;
+  setFile: (e: FileEvent) => void;
+  setTweetInput: (input: string) => void;
+  pushTweetToFeed: (tweet: TweetType | null | undefined) => void;
+}
+
+export type HomeContextType = {
+  state: HomeState;
+  HomeActionFn: HomeActionFn;
+  dispatch: React.Dispatch<HomeAction>;
+};

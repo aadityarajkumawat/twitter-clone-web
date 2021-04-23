@@ -1,5 +1,4 @@
-import React from "react";
-import { FileEvent, HomeAction } from "../constants/interfaces";
+import { FileEvent } from "../constants/interfaces";
 import { uploadTweetImage } from "./uploadTweetImage";
 
 interface PostTweetInput {
@@ -11,14 +10,13 @@ export const handleFileAndUpload = async (
   e: FileEvent,
   tweetInput: string,
   postTweet: (vars: PostTweetInput) => Promise<any>,
-  setTweetInput: (value: string, dispatch: React.Dispatch<HomeAction>) => void,
-  dispatch: React.Dispatch<HomeAction>
+  setTweetInput: (value: string) => void
 ): Promise<void> => {
   let imgUrl = "";
   if (e && e.target.files) {
-    const res = await uploadTweetImage(e.target.files[0], dispatch);
+    const res = await uploadTweetImage(e.target.files[0]);
     if (res.img) imgUrl = res.img;
   }
   await postTweet({ tweet_content: tweetInput, img: imgUrl });
-  setTweetInput("", dispatch);
+  setTweetInput("");
 };

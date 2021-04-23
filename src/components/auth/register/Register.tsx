@@ -26,7 +26,7 @@ interface RegisterUserI {
 }
 
 const Register: React.FC<{}> = () => {
-  const [ee, registerUser] = useRegisterMutation();
+  const [, registerUser] = useRegisterMutation();
   const { user, handleChange, handleSubmit } = useForm<RegisterUserI>(
     {
       email: "",

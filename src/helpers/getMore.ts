@@ -1,18 +1,21 @@
 import { cli } from "..";
 import {
-  PaginationProps,
+  HomeContextType,
   PaginationPropsProfile,
 } from "../constants/interfaces";
 import {
   GetPaginatedPostsDocument,
   GetPaginatedPostsQuery,
   GetPaginatedPostsQueryVariables,
+  GetTweetsByUserQuery,
 } from "../generated/graphql";
 
 export const getMore = async (
-  { feed, state, dispatch }: PaginationProps,
+  feed: GetTweetsByUserQuery | undefined,
+  context: HomeContextType,
   postLimit = 3
 ) => {
+  const { state, dispatch } = context;
   const { scrollProps, realTime, pag, more } = state;
   const { dataLength } = scrollProps;
   if (feed && feed.getTweetsByUser) {

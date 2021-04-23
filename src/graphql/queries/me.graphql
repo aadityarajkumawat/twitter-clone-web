@@ -10,5 +10,6 @@ query Me {
       name
       img
     }
+    error
   }
 }

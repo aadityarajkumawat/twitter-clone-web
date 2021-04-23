@@ -24,7 +24,11 @@ const theme = extendTheme({
   },
 });
 
-const sub = new SubscriptionClient("ws://localhost:4001/graphql");
+const sub = new SubscriptionClient(
+  process.env.REACT_APP_SUB_API_URL
+    ? process.env.REACT_APP_SUB_API_URL
+    : "ws://localhost:4001/graphql"
+);
 
 export const cli = createClient({
   url: process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "",

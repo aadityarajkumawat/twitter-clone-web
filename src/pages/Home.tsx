@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect, useReducer } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
 import Tweet from "../components/tweet/Tweet";
-import { HomeState } from "../constants/interfaces";
+import { HomeContextType } from "../constants/interfaces";
 import {
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
@@ -15,34 +15,20 @@ import { placeholderImg } from "../constants/urls";
 import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
 import { TopLoader } from "../components/top-loader/TopLoader";
 import { Box } from "@chakra-ui/layout";
-import { reducer } from "../reducers/homeReducer";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
-import { setFeedProgress, setFile, pushTweetToFeed } from "../actions";
+import { HomeContextI } from "../context/HomeContext";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const initialState: HomeState = {
-    more: [],
-    pag: { offset: 0 },
-    realTime: [],
-    feedProgress: 0,
-    files: null,
-    scrollProps: { dataLength: 3, hasMore: true },
-    tweetInput: "",
-    subscribed: true,
-  };
-
-  const context = useReducer(reducer, initialState);
-  const [state, dispatch] = context;
+  const context = useContext<HomeContextType>(HomeContextI);
+  const { state, HomeActionFn } = context;
 
   const [{ data: user, fetching: loadingUser }, refreshUser] = useMeQuery();
   const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
-
-  const paginationProps = { feed, state, dispatch };
 
   useEffect(() => {
     refreshUser({ requestPolicy: "network-only" });
@@ -55,19 +41,18 @@ const Home: React.FC<HomeProps> = () => {
       if (alreadyExists) return;
 
       const tweet = rtPosts.listenTweets.tweet;
-      pushTweetToFeed(tweet, context);
+      HomeActionFn.pushTweetToFeed(tweet);
     }
     // eslint-disable-next-line
   }, [JSON.stringify(rtPosts)]);
 
   useEffect(() => {
     if (state.feedProgress === 100) {
-      setFeedProgress(0, dispatch);
-      setFile(null, dispatch);
+      HomeActionFn.setFeedProgress(0);
+      HomeActionFn.setFile(null);
     }
     // eslint-disable-next-line
   }, [state.feedProgress]);
-
 
   return (
     <S.BaseComponent className="main">
@@ -84,11 +69,7 @@ const Home: React.FC<HomeProps> = () => {
                 src={!loadingUser && user ? user.me.user.img : placeholderImg}
               />
             </S.ProfileImageInc>
-            <ComposeTweet
-              dispatch={dispatch}
-              tweetInput={state.tweetInput}
-              files={state.files}
-            />
+            <ComposeTweet tweetInput={state.tweetInput} files={state.files} />
           </S.CreateTweet>
         </S.FeedHeader>
 
@@ -102,9 +83,7 @@ const Home: React.FC<HomeProps> = () => {
                   )
                 )}
               </Box>
-              <InfiniteScroll
-                {...getInfiniteScrollProps(feed, paginationProps, context)}
-              >
+              <InfiniteScroll {...getInfiniteScrollProps(feed, context)}>
                 {state.more.map((tweet) => (
                   <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                 ))}

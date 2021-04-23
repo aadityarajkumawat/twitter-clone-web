@@ -13,7 +13,7 @@ import {
 import TwitterIcon from "../../../assets/twitter-icon.svg";
 import { useForm } from "../../../hooks/useForm";
 import { Link, useHistory } from "react-router-dom";
-import { useLoginMutation } from "../../../generated/graphql";
+import { useLoginMutation, useMeQuery } from "../../../generated/graphql";
 
 interface LoginUserI {
   email: string;
@@ -23,6 +23,7 @@ interface LoginUserI {
 const Login: React.FC<{}> = () => {
   const history = useHistory();
   const [loginData, loginUser] = useLoginMutation();
+  const [{ data, fetching }] = useMeQuery();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(
     {
       email: "",
@@ -30,6 +31,12 @@ const Login: React.FC<{}> = () => {
     },
     loginUser
   );
+
+  useEffect(() => {
+    if (!fetching && data && data.me.user.id) {
+      history.push("/");
+    }
+  }, [JSON.stringify(data)]);
 
   useEffect(() => {
     if (loginData.data?.login.user) {

@@ -660,6 +660,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: (
     { __typename?: 'MeResponse' }
+    & Pick<MeResponse, 'error'>
     & { user: (
       { __typename?: 'MeUser' }
       & Pick<MeUser, 'id' | 'email' | 'createdAt' | 'updatedAt' | 'username' | 'phone' | 'name' | 'img'>
@@ -1041,6 +1042,7 @@ export const MeDocument = gql`
       name
       img
     }
+    error
   }
 }
     `;
