@@ -38,7 +38,7 @@ const Register: React.FC<{}> = () => {
     registerUser
   );
 
-  console.log(ee);
+  // console.log(ee);
 
   const { email, password, username, phone, name } = user;
 

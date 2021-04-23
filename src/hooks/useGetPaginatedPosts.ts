@@ -50,7 +50,7 @@ export const useGetPaginatedPosts = (
   const { dataLength, hasMore } = scrollProps;
 
   const getMore = () => {
-    console.log(feed);
+    // console.log(feed);
     if (feed?.getTweetsByUser || feed?.getTweetsByUserF) {
       let n = 0;
 

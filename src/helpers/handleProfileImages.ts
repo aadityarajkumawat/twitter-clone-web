@@ -54,7 +54,7 @@ async function uploadImage(
         type,
       });
     } catch (e) {
-      console.log(e.message);
+      // console.log(e.message);
     }
   }
 }
