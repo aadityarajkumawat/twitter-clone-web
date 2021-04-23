@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   FormHeader,
@@ -12,10 +12,8 @@ import {
 } from "../login/login.styles";
 import TwitterIcon from "../../../assets/twitter-icon.svg";
 import { useForm } from "../../../hooks/useForm";
-import { Link } from "react-router-dom";
-import { useRegisterMutation } from "../../../generated/graphql";
-
-// interface RegisterProps {}
+import { Link, useHistory } from "react-router-dom";
+import { useMeQuery, useRegisterMutation } from "../../../generated/graphql";
 
 interface RegisterUserI {
   email: string;
@@ -26,6 +24,7 @@ interface RegisterUserI {
 }
 
 const Register: React.FC<{}> = () => {
+  const history = useHistory();
   const [, registerUser] = useRegisterMutation();
   const { user, handleChange, handleSubmit } = useForm<RegisterUserI>(
     {
@@ -37,8 +36,13 @@ const Register: React.FC<{}> = () => {
     },
     registerUser
   );
+  const [{ data, fetching }] = useMeQuery();
 
-  // console.log(ee);
+  useEffect(() => {
+    if (!fetching && data && data.me.user.id) {
+      history.push("/");
+    } // eslint-disable-next-line
+  }, [JSON.stringify(data)]);
 
   const { email, password, username, phone, name } = user;
 

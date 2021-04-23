@@ -14,10 +14,7 @@ export function useForm<T>(
   type?: string
 ): useFormI<T> {
   const [user, setUser] = useState<T>(fieldObject);
-  const [{ data, fetching }] = useMeQuery({
-    requestPolicy: "network-only",
-    pollInterval: 1000,
-  });
+  const [{ data, fetching }] = useMeQuery();
 
   const setAuthenticated = useStore((state) => state.setAuthenticated);
 

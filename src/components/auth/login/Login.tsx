@@ -22,7 +22,7 @@ interface LoginUserI {
 
 const Login: React.FC<{}> = () => {
   const history = useHistory();
-  const [loginData, loginUser] = useLoginMutation();
+  const [, loginUser] = useLoginMutation();
   const [{ data, fetching }] = useMeQuery();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(
     {
@@ -35,15 +35,8 @@ const Login: React.FC<{}> = () => {
   useEffect(() => {
     if (!fetching && data && data.me.user.id) {
       history.push("/");
-    }
+    } // eslint-disable-next-line
   }, [JSON.stringify(data)]);
-
-  useEffect(() => {
-    if (loginData.data?.login.user) {
-      history.push("/");
-    }
-    // eslint-disable-next-line
-  }, [loginData.fetching]);
 
   const { email, password } = user;
 
