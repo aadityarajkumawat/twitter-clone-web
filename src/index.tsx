@@ -26,7 +26,6 @@ const theme = extendTheme({
 
 const sub = new SubscriptionClient("ws://localhost:4001/graphql");
 
-console.log({ api: process.env.API_URL });
 export const cli = createClient({
   url: process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "",
   fetchOptions: {

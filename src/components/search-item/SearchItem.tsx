@@ -22,7 +22,7 @@ export const SearchItem: React.FC<SearchItemProps> = ({
     <Fragment>
       <SearchItemContainer>
         <ImageContainer>
-          <img src={user_img} />
+          <img src={user_img} alt="user" />
         </ImageContainer>
         <UserD
           onClick={() => {

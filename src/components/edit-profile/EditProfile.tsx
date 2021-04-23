@@ -56,6 +56,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   useEffect(() => {
     setForm(dispatch, { bio: sBio, link: sLink });
+    // eslint-disable-next-line
   }, [JSON.stringify(profile)]);
 
   return (

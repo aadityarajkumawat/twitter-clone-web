@@ -17,13 +17,7 @@ import { TopLoader } from "../components/top-loader/TopLoader";
 import { Box } from "@chakra-ui/layout";
 import { reducer } from "../reducers/homeReducer";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
-import {
-  setFeedProgress,
-  setFile,
-  pushTweetToFeed,
-  subscribeToRealtime,
-  unsubscribeToRealtime,
-} from "../actions";
+import { setFeedProgress, setFile, pushTweetToFeed } from "../actions";
 
 interface HomeProps {}
 
@@ -51,9 +45,8 @@ const Home: React.FC<HomeProps> = () => {
   const paginationProps = { feed, state, dispatch };
 
   useEffect(() => {
-    // subscribeToRealtime(dispatch);
     refreshUser({ requestPolicy: "network-only" });
-    // return () => unsubscribeToRealtime(dispatch);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -64,6 +57,7 @@ const Home: React.FC<HomeProps> = () => {
       const tweet = rtPosts.listenTweets.tweet;
       pushTweetToFeed(tweet, context);
     }
+    // eslint-disable-next-line
   }, [JSON.stringify(rtPosts)]);
 
   useEffect(() => {
@@ -71,9 +65,9 @@ const Home: React.FC<HomeProps> = () => {
       setFeedProgress(0, dispatch);
       setFile(null, dispatch);
     }
+    // eslint-disable-next-line
   }, [state.feedProgress]);
 
-  console.log({ realTime: state.realTime, feed: feed });
 
   return (
     <S.BaseComponent className="main">

@@ -35,6 +35,7 @@ const Login: React.FC<{}> = () => {
     if (loginData.data?.login.user) {
       history.push("/");
     }
+    // eslint-disable-next-line
   }, [loginData.fetching]);
 
   const { email, password } = user;

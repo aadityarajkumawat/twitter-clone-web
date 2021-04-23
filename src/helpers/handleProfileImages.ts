@@ -35,7 +35,7 @@ async function uploadImage(
           "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (p) => {
-          if (count == 2 && type == "profile") {
+          if (count === 2 && type === "profile") {
             dispatch({
               type: "saving",
               updatedProgress: imagePart + (p.loaded * imagePart) / p.loaded,

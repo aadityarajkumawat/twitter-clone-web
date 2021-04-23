@@ -1,8 +1,6 @@
 import React from "react";
 import { useLikeTweetMutation } from "../../generated/graphql";
 import { v4 as uuidv4 } from "uuid";
-import Heart from "react-animated-heart";
-import { TwitterLike } from "../like/TwitterLike";
 
 interface LikeSVGProps {
   liked: boolean | undefined;

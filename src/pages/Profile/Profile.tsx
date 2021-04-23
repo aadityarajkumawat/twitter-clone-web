@@ -91,6 +91,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
 
   useEffect(() => {
     refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -127,10 +128,10 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
           </ProfileNav>
           <CoverImageContainer>
             <ImgContainer>
-              <img src={getProfileValByKey("cover_img", "")} />
+              <img src={getProfileValByKey("cover_img", "")} alt="user-cover" />
             </ImgContainer>
             <ProfileImgContainer>
-              <img src={getProfileValByKey("profile_img", "")} />
+              <img src={getProfileValByKey("profile_img", "")} alt="user" />
             </ProfileImgContainer>
             <EditProfileBtn title="Edit Profile" onClick={onOpen}>
               <span title="Edit Profile"></span>
