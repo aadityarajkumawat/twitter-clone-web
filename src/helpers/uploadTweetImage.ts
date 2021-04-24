@@ -5,9 +5,9 @@ import React, { useContext } from "react";
 import { HomeContextI } from "../context/HomeContext";
 
 export const uploadTweetImage = async (
-  file: File
+  file: File,
+  dispatch: React.Dispatch<HomeAction>
 ): Promise<UploadTweetImage> => {
-  const { dispatch } = useContext(HomeContextI);
   const formData = new FormData();
   formData.append("image", file);
 

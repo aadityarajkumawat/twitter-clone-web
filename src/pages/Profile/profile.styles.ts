@@ -6,6 +6,7 @@ export const ProfileContainer = styled.div`
   background-color: #222 !important;
   display: flex;
   justify-content: center;
+  margin-left: 15px;
 `;
 
 export const CenterItems = styled.div`

@@ -7,6 +7,9 @@ import {
   GetPaginatedPostsDocument,
   GetPaginatedPostsQuery,
   GetPaginatedPostsQueryVariables,
+  GetPaginatedUserTweetsDocument,
+  GetPaginatedUserTweetsQuery,
+  GetPaginatedUserTweetsQueryVariables,
   GetTweetsByUserQuery,
 } from "../generated/graphql";
 
@@ -78,17 +81,18 @@ export const getMoreUserPosts = async (
   }
 
   const phew = await cli
-    .query<GetPaginatedPostsQuery, GetPaginatedPostsQueryVariables>(
-      GetPaginatedPostsDocument,
+    .query<GetPaginatedUserTweetsQuery, GetPaginatedUserTweetsQueryVariables>(
+      GetPaginatedUserTweetsDocument,
       {
         limit: postLimit,
         offset: 5 + dataLength - postLimit,
+        id: 1,
       }
     )
     .toPromise();
 
-  if (phew && phew.data && phew.data.getPaginatedPosts) {
-    const paginatedTweets = phew.data.getPaginatedPosts.tweets;
+  if (phew && phew.data && phew.data.getPaginatedUserTweets) {
+    const paginatedTweets = phew.data.getPaginatedUserTweets.tweets;
     if (paginatedTweets) {
       dispatch({
         type: "more",

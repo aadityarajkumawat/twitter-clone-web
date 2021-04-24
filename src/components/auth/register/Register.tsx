@@ -36,13 +36,22 @@ const Register: React.FC<{}> = () => {
     },
     registerUser
   );
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data, fetching }, refe] = useMeQuery();
 
   useEffect(() => {
     if (!fetching && data && data.me.user.id) {
       history.push("/");
     } // eslint-disable-next-line
   }, [JSON.stringify(data)]);
+
+  const registerAndMoveOn = async (e: React.FormEvent<HTMLFormElement>) => {
+    await handleSubmit(e);
+    refe({ requestPolicy: "network-only" });
+
+    if (!fetching && data && data.me.user.id) {
+      history.push("/");
+    }
+  };
 
   const { email, password, username, phone, name } = user;
 
@@ -53,7 +62,7 @@ const Register: React.FC<{}> = () => {
           <Icon src={TwitterIcon}></Icon>
           <Name>Register</Name>
         </FormHeader>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={registerAndMoveOn}>
           <InputField
             placeholder="Name"
             name="name"

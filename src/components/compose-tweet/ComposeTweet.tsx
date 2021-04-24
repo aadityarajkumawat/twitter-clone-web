@@ -18,6 +18,7 @@ export const ComposeTweet: React.FC<ComposeTweetProps> = ({
   const [, postTweet] = useCreateTweetMutation();
   const {
     HomeActionFn: { setTweetInput, setFile },
+    dispatch,
   } = useContext<HomeContextType>(HomeContextI);
   return (
     <S.MTweet>
@@ -37,7 +38,13 @@ export const ComposeTweet: React.FC<ComposeTweetProps> = ({
         </S.TweetAc>
         <S.TweetButton
           onClick={async () => {
-            handleFileAndUpload(files, tweetInput, postTweet, setTweetInput);
+            handleFileAndUpload(
+              files,
+              tweetInput,
+              postTweet,
+              setTweetInput,
+              dispatch
+            );
           }}
         >
           Tweet

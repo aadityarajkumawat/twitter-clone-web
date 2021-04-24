@@ -23,7 +23,7 @@ interface LoginUserI {
 const Login: React.FC<{}> = () => {
   const history = useHistory();
   const [, loginUser] = useLoginMutation();
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data, fetching }, refe] = useMeQuery();
   const { user, handleChange, handleSubmit } = useForm<LoginUserI>(
     {
       email: "",
@@ -40,6 +40,15 @@ const Login: React.FC<{}> = () => {
 
   const { email, password } = user;
 
+  const loginAndMoveOn = async (e: React.FormEvent<HTMLFormElement>) => {
+    await handleSubmit(e);
+    refe({ requestPolicy: "network-only" });
+
+    if (!fetching && data && data.me.user.id) {
+      history.push("/");
+    }
+  };
+
   return (
     <LoginContainer>
       <LoginFormContainer>
@@ -47,7 +56,7 @@ const Login: React.FC<{}> = () => {
           <Icon src={TwitterIcon}></Icon>
           <Name>Login</Name>
         </FormHeader>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={loginAndMoveOn}>
           <InputField
             placeholder="Email"
             name="email"

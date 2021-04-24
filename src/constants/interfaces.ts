@@ -101,10 +101,7 @@ export interface EditProfileI {
 export interface EditProfileProps {
   onClose: () => void;
   isOpen: boolean;
-  profile: ProfileType | null;
-  refetchProfileStuffAndUserTweets: (
-    opts?: Partial<OperationContext> | undefined
-  ) => void;
+  id: number;
 }
 
 export type EditImagesI = {

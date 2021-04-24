@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useReducer } from "react";
 import {
   useEditProfileMutation,
+  useProfileStuffAndUserTweetsQuery,
   useSaveImageMutation,
 } from "../../generated/graphql";
 import {
@@ -25,18 +26,24 @@ import { setForm } from "../../actions/editProfileActions";
 import { uploadImagesAndSave } from "../../helpers/handleProfileImages";
 import { WrapperBox } from "./editprofile.styles";
 import { fileInput, modalStyles, textInput } from "../../constants/consts";
+import { notFetchingProfileAndHasProfile } from "../../helpers/notFetchingProfileAndHasProfile";
 
 export const EditProfile: React.FC<EditProfileProps> = ({
   onClose,
   isOpen,
-  profile,
-  refetchProfileStuffAndUserTweets,
+  id,
 }) => {
-  const sBio = profile ? profile.bio : "";
-  const sLink = profile ? profile.link : "";
+  const [
+    { data: profileObj, fetching: fetchingProfile },
+    refetchProfileStuffAndUserTweets,
+  ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
+
+  const profile = notFetchingProfileAndHasProfile(fetchingProfile, profileObj)
+    ? profileObj!.profileStuffAndUserTweets.profile
+    : null;
 
   const initialState: EditProfileState = {
-    form: { bio: sBio, link: sLink },
+    form: { bio: "", link: "" },
     images: { profile_img: null, cover_img: null },
     savingProgress: 0,
   };
@@ -55,9 +62,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   useEffect(() => {
-    setForm(dispatch, { bio: sBio, link: sLink });
+    if (notFetchingProfileAndHasProfile(fetchingProfile, profileObj)) {
+      const profile = profileObj!.profileStuffAndUserTweets.profile;
+      setForm(dispatch, { bio: profile.bio, link: profile.link });
+    }
     // eslint-disable-next-line
-  }, [JSON.stringify(profile)]);
+  }, [JSON.stringify(profileObj)]);
 
   return (
     <Fragment>

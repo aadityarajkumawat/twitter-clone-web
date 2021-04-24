@@ -5,12 +5,12 @@ import { useStore } from "../zustand/store";
 interface useFormI<T> {
   user: T;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
 export function useForm<T>(
   fieldObject: T,
-  mutationFunction: any,
+  mutationFunction: (o: any) => Promise<any>,
   type?: string
 ): useFormI<T> {
   const [user, setUser] = useState<T>(fieldObject);

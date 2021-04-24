@@ -4,6 +4,6 @@ export const ifHasMore = (
   hasMore: boolean,
   feed: GetTweetsByUserQuery
 ): boolean => {
-  if (feed.getTweetsByUser.num > 7) return hasMore;
+  if (feed.getTweetsByUser.num > 10) return hasMore;
   return false;
 };

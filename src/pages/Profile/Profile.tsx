@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useReducer } from "react";
+import React, { Fragment, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {
   Back,
@@ -20,6 +20,8 @@ import {
   useMeQuery,
   useProfileStuffAndUserTweetsQuery,
   useGetUserByUsernameQuery,
+  MeQuery,
+  GetUserByUsernameQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
 import { ProfileProperties, ProfileState } from "../../constants/interfaces";
@@ -29,10 +31,12 @@ import { getMoreUserPosts } from "../../helpers/getMore";
 import { profileReducer } from "../../reducers/profileReducer";
 import { Box, Flex } from "@chakra-ui/layout";
 import { getTweetProps } from "../../helpers";
-import { useDisclosure } from "@chakra-ui/react";
+import { Button, useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { useHistory, useParams } from "react-router";
 import { Follow } from "../../components/follow/Follow";
+import { UserProfile } from "../../components/user-profile/UserProfile";
+import { UseQueryResponse } from "urql";
 
 interface ProfileProps {}
 
@@ -40,7 +44,21 @@ interface ProfileRouteParams {
   username: string;
 }
 
-export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
+type MeParam = {
+  fetchingUser: UseQueryResponse<MeQuery, object>[0]["fetching"];
+  user: UseQueryResponse<MeQuery, object>[0]["data"];
+};
+type NUserParam = {
+  fetchingNUser: UseQueryResponse<
+    GetUserByUsernameQuery,
+    object
+  >[0]["fetching"];
+  nUser: UseQueryResponse<GetUserByUsernameQuery, object>[0]["data"];
+};
+
+type DecideAndReturnCorrectId = (cU: MeParam, nU: NUserParam) => number;
+
+export const Profile: React.FC<ProfileProps> = () => {
   const initialState: ProfileState = {
     more: [],
     offset: 0,
@@ -50,7 +68,6 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   const { username } = useParams<ProfileRouteParams>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const history = useHistory();
 
   const context = useReducer(profileReducer, initialState);
   const [state, dispatch] = context;
@@ -60,63 +77,57 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     variables: { username },
   });
 
-  let id = 0;
-  let isLoggedUser = false;
-  if (!fetchingUser && user && user.me.user.username === username) {
-    id = user.me.user.id;
-    isLoggedUser = true;
-  } else if (!fetchingNUser && nUser) {
-    id = nUser.getUserByUsername.user.id;
-    isLoggedUser = false;
-  }
+  const decideAndReturnCorrectId: DecideAndReturnCorrectId = (fetchingUser) => {
+    let id = 0;
+    let isLoggedUser = false;
+    if (!fetchingUser && user && user.me.user.username === username) {
+      id = user.me.user.id;
+      isLoggedUser = true;
+    } else if (!fetchingNUser && nUser) {
+      id = nUser.getUserByUsername.user.id;
+      isLoggedUser = false;
+    }
+
+    return id;
+  };
+
+  const id = decideAndReturnCorrectId(
+    { fetchingUser, user },
+    { fetchingNUser, nUser }
+  );
 
   const [
     { data: profileObj, fetching: fetchingProfile },
-    refetchProfileStuffAndUserTweets,
   ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
   const followContext = useFollowAUserMutation();
 
   const paginationProps = { profile: profileObj, state, dispatch };
 
-  const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
-    if (!fetchingProfile && profileObj) {
-      const profile = profileObj.profileStuffAndUserTweets.profile;
-      const val = profile[key];
+  // const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
+  //   if (!fetchingProfile && profileObj) {
+  //     const profile = profileObj.profileStuffAndUserTweets.profile;
+  //     const val = profile[key];
 
-      return val.toString();
-    }
-    return fallback;
-  };
-
-  useEffect(() => {
-    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
-    // eslint-disable-next-line
-  }, []);
+  //     return val.toString();
+  //   }
+  //   return fallback;
+  // };
 
   return (
     <Fragment>
       <ProfileContainer>
-        <EditProfile
-          onClose={onClose}
-          isOpen={isOpen}
-          profile={
-            !fetchingProfile && profileObj
-              ? profileObj.profileStuffAndUserTweets.profile
-              : null
-          }
-          refetchProfileStuffAndUserTweets={refetchProfileStuffAndUserTweets}
-        />
+        <EditProfile onClose={onClose} isOpen={isOpen} id={id} />
         <S.LeftMenu>
           <LeftMenu />
         </S.LeftMenu>
         <S.HomeMain>
-          <ProfileNav>
+          <UserProfile />
+          {/* <ProfileNav>
             <Back onClick={() => history.goBack()}>
               <BackSVG />
             </Back>
             <ProfileInfo>
-              {/* {"#696969"} */}
               <Flex flexDir="column">
                 <b>{getProfileValByKey("name", "")}</b>
                 <span>
@@ -133,11 +144,9 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
             <ProfileImgContainer>
               <img src={getProfileValByKey("profile_img", "")} alt="user" />
             </ProfileImgContainer>
-            <EditProfileBtn title="Edit Profile" onClick={onOpen}>
-              <span title="Edit Profile"></span>
-              <span className="mm" title="Edit Profile"></span>
-              <span title="Edit Profile"></span>
-            </EditProfileBtn>
+            <Button variant="edit-profile" onClick={onOpen}>
+              Edit Profile
+            </Button>
           </CoverImageContainer>
           {!fetchingProfile && profileObj ? (
             <MoreInfo>
@@ -168,7 +177,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
             </MoreInfo>
           ) : (
             <LoadingSpinner />
-          )}
+          )} */}
 
           <div
             style={{

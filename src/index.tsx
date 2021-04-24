@@ -19,6 +19,12 @@ const theme = extendTheme({
         dark: {
           backgroundColor: "#464646",
         },
+        "edit-profile": {
+          backgroundColor: "#585858",
+          margin: "10px",
+          color: "white",
+          fontWeight: 400,
+        },
       },
     },
   },
