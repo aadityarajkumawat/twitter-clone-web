@@ -1,7 +1,9 @@
 import React from "react";
-import { OperationContext } from "urql";
+import { OperationContext, UseQueryResponse } from "urql";
 import {
   GetTweetsByUserQuery,
+  GetUserByUsernameQuery,
+  MeQuery,
   ProfileItems,
   ProfileStuffAndUserTweetsQuery,
 } from "../generated/graphql";
@@ -147,3 +149,26 @@ export type HomeContextType = {
   HomeActionFn: HomeActionFn;
   dispatch: React.Dispatch<HomeAction>;
 };
+
+export type MeParam = {
+  fetchingUser: UseQueryResponse<MeQuery, object>[0]["fetching"];
+  user: UseQueryResponse<MeQuery, object>[0]["data"];
+};
+
+export type NUserParam = {
+  fetchingNUser: UseQueryResponse<
+    GetUserByUsernameQuery,
+    object
+  >[0]["fetching"];
+  nUser: UseQueryResponse<GetUserByUsernameQuery, object>[0]["data"];
+};
+
+export type DecideAndReturnCorrectId = (
+  cU: MeParam,
+  nU: NUserParam,
+  username: string
+) => { id: number; isLoggedUser: boolean };
+
+export interface ProfileRouteParams {
+  username: string;
+}

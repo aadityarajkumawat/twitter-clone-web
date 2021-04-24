@@ -5,6 +5,7 @@ import { TransparentBackdrop } from "../edit-profile/editprofile.styles";
 import { SearchItem } from "../search-item/SearchItem";
 import { RightMenuContainer, Search, SearchList } from "./rightmenu.styles";
 import { v4 as uuidv4 } from "uuid";
+import * as S from "../../pages/home.styles";
 
 interface RightMenuProps {}
 export const RightMenu: React.FC<RightMenuProps> = () => {
@@ -17,7 +18,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
   });
 
   return (
-    <Fragment>
+    <S.RightMenu>
       {showSearchResults && (
         <TransparentBackdrop
           onClick={() => toggle(false)}
@@ -53,6 +54,6 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
           </SearchList>
         )}
       </RightMenuContainer>
-    </Fragment>
+    </S.RightMenu>
   );
 };

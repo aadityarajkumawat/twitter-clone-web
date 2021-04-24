@@ -1,9 +1,11 @@
-import { Box } from "@chakra-ui/layout";
-import { Flex, Button } from "@chakra-ui/react";
 import React from "react";
+import { Flex, Button, Box } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import { BackSVG } from "../../assets/BackSVG";
-import { ProfileProperties } from "../../constants/interfaces";
+import {
+  ProfileProperties,
+  ProfileRouteParams,
+} from "../../constants/interfaces";
 import {
   Back,
   CoverImageContainer,
@@ -16,30 +18,52 @@ import {
 } from "../../pages/Profile/profile.styles";
 import { Follow } from "../follow/Follow";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
-import { useProfileStuffAndUserTweetsQuery } from "../../generated/graphql";
+import {
+  useFollowAUserMutation,
+  useGetProfileStuffQuery,
+  useGetUserByUsernameQuery,
+  useMeQuery,
+} from "../../generated/graphql";
+import { decideAndReturnCorrectId } from "../../helpers/decideAndReturnCorrectId";
+import { useParams } from "react-router-dom";
 
-interface UserProfileProps {}
+interface UserProfileProps {
+  onOpen: () => void;
+}
 
-export const UserProfile: React.FC<UserProfileProps> = () => {
+export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
   const history = useHistory();
+  const { username } = useParams<ProfileRouteParams>();
+
+  const [{ data: user, fetching: fetchingUser }] = useMeQuery();
+  const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
+    variables: { username },
+  });
+
+  const { id, isLoggedUser } = decideAndReturnCorrectId(
+    { fetchingUser, user },
+    { fetchingNUser, nUser },
+    username
+  );
+
+  const followContext = useFollowAUserMutation();
 
   const [
-    { data: profileObj, fetching: fetchingProfile },
-    refetchProfileStuffAndUserTweets,
-  ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
+    { data: profile, fetching: fetchingProfile },
+    refetchProfileStuff,
+  ] = useGetProfileStuffQuery({ variables: { id } });
 
   const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
-    if (!fetchingProfile && profileObj) {
-      const profile = profileObj.profileStuffAndUserTweets.profile;
-      const val = profile[key];
-
+    if (!fetchingProfile && profile) {
+      const obj = profile.getProfileStuff.profile;
+      const val = obj[key];
       return val.toString();
     }
     return fallback;
   };
 
   return (
-    <Box>
+    <Box w="100%">
       <ProfileNav>
         <Back onClick={() => history.goBack()}>
           <BackSVG />
@@ -65,7 +89,7 @@ export const UserProfile: React.FC<UserProfileProps> = () => {
           Edit Profile
         </Button>
       </CoverImageContainer>
-      {!fetchingProfile && profileObj ? (
+      {!fetchingProfile && profile ? (
         <MoreInfo>
           <b>{getProfileValByKey("name", "")}</b>
           <p className="username">@{getProfileValByKey("username", "")}</p>
@@ -88,13 +112,14 @@ export const UserProfile: React.FC<UserProfileProps> = () => {
               isLoggedUser={isLoggedUser}
               followContext={followContext}
               id={id}
-              refr={refetchProfileStuffAndUserTweets}
+              refr={refetchProfileStuff}
             />
           </Follows>
         </MoreInfo>
       ) : (
         <LoadingSpinner />
       )}
+      <Box w="100%" h="3px" bg="#424242" mb="8px"></Box>
     </Box>
   );
 };

@@ -24,6 +24,8 @@ const theme = extendTheme({
           margin: "10px",
           color: "white",
           fontWeight: 400,
+          fontSize: 14,
+          _hover: { bg: "#464646" },
         },
       },
     },

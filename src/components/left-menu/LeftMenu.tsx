@@ -18,7 +18,7 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
   const identifier = !fetching && data ? data.me.user.username : "";
 
   return (
-    <Fragment>
+    <S.LeftMenu>
       <S.Head>
         <img src={TwitterIcon} alt="twitter" />
       </S.Head>
@@ -60,6 +60,6 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
           <span>Settings</span>
         </S.ListItem>
       </S.MenuOptions>
-    </Fragment>
+    </S.LeftMenu>
   );
 };
