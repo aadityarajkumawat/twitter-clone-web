@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer } from "react";
+import React, { Fragment, useContext, useReducer } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ProfileContainer } from "./profile.styles";
 import * as S from "../../pages/home.styles";
@@ -23,6 +23,7 @@ import {
   getTweetProps,
   getMoreUserPosts,
 } from "../../helpers";
+import { HomeContextI } from "../../context/HomeContext";
 
 interface ProfileProps {}
 
@@ -35,6 +36,9 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
 
   const { username } = useParams<ProfileRouteParams>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    state: { realTime },
+  } = useContext(HomeContextI);
 
   const context = useReducer(profileReducer, initialState);
   const [state, dispatch] = context;
@@ -66,9 +70,11 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
           {!fetchingProfile && profileObj ? (
             <Fragment>
               <Fragment>
-                {profileObj.getTweetsByUserF.tweets.map((tweet) => (
-                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                ))}
+                {[...realTime, ...profileObj.getTweetsByUserF.tweets].map(
+                  (tweet) => (
+                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                  )
+                )}
               </Fragment>
 
               <InfiniteScroll
