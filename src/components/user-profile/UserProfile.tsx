@@ -9,23 +9,21 @@ import {
 import {
   Back,
   CoverImageContainer,
-  Follows,
   ImgContainer,
   MoreInfo,
   ProfileImgContainer,
   ProfileInfo,
   ProfileNav,
 } from "../../pages/Profile/profile.styles";
-import { Follow } from "../follow/Follow";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import {
-  useFollowAUserMutation,
   useGetProfileStuffQuery,
   useGetUserByUsernameQuery,
   useMeQuery,
 } from "../../generated/graphql";
-import { decideAndReturnCorrectId } from "../../helpers/decideAndReturnCorrectId";
+import { decideAndReturnCorrectId } from "../../helpers";
 import { useParams } from "react-router-dom";
+import { FollowInfo } from "../follow-info/FollowInfo";
 
 interface UserProfileProps {
   onOpen: () => void;
@@ -46,11 +44,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
     username
   );
 
-  const followContext = useFollowAUserMutation();
-
   const [
     { data: profile, fetching: fetchingProfile },
-    refetchProfileStuff,
   ] = useGetProfileStuffQuery({ variables: { id } });
 
   const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
@@ -99,22 +94,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
               {getProfileValByKey("link", "")}
             </a>
           </p>
-          <Follows>
-            <span>
-              {getProfileValByKey("following", "0")}
-              <span className="faded"> Following</span>
-            </span>
-            <span>
-              {getProfileValByKey("followers", "0")}
-              <span className="faded"> Followers</span>
-            </span>
-            <Follow
-              isLoggedUser={isLoggedUser}
-              followContext={followContext}
-              id={id}
-              refr={refetchProfileStuff}
-            />
-          </Follows>
+          <FollowInfo id={id} isLoggedUser={isLoggedUser} />
         </MoreInfo>
       ) : (
         <LoadingSpinner />

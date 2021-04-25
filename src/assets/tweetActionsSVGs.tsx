@@ -1,5 +1,3 @@
-import React from "react";
-
 export const retweetSVG = (
   <svg
     fill="rgb(136, 153, 166)"

@@ -1,37 +1,25 @@
 import React, { Fragment } from "react";
-import { OperationContext, UseMutationResponse } from "urql";
-import { FollowAUserMutation, Exact } from "../../generated/graphql";
+import { useFollowAUserMutation } from "../../generated/graphql";
 import { FollowBtn } from "../../pages/Profile/profile.styles";
 
 interface FollowProps {
   isLoggedUser: boolean;
-  followContext: UseMutationResponse<
-    FollowAUserMutation,
-    Exact<{
-      thatUser: number;
-    }>
-  >;
   id: number;
-  refr: (opts?: Partial<OperationContext> | undefined) => void;
+  refe: (o: any) => void;
 }
 
-export const Follow: React.FC<FollowProps> = ({
-  isLoggedUser,
-  followContext,
-  id,
-  refr,
-}) => {
+export const Follow: React.FC<FollowProps> = ({ isLoggedUser, id, refe }) => {
   const [
     { data: followUser, fetching: followingState },
     follow,
-  ] = followContext;
+  ] = useFollowAUserMutation();
   return (
     <Fragment>
       {!isLoggedUser && (
         <FollowBtn
           onClick={async () => {
             await follow({ thatUser: id });
-            refr({ requestPolicy: "network-only" });
+            refe({ requestPolicy: "network-only" });
           }}
         >
           {!followingState && followUser && followUser.followAUser.followed

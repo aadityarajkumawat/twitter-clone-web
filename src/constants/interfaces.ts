@@ -1,12 +1,11 @@
 import React from "react";
-import { OperationContext, UseQueryResponse } from "urql";
+import { UseQueryResponse } from "urql";
 import {
   GetTweetsByUserFQuery,
   GetTweetsByUserQuery,
   GetUserByUsernameQuery,
   MeQuery,
   ProfileItems,
-  ProfileStuffAndUserTweetsQuery,
 } from "../generated/graphql";
 
 export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;

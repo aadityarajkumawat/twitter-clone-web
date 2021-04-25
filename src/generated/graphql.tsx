@@ -472,6 +472,23 @@ export type SaveImageMutation = (
   & Pick<Mutation, 'saveImage'>
 );
 
+export type GetFollowInfoQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type GetFollowInfoQuery = (
+  { __typename?: 'Query' }
+  & { getProfileStuff: (
+    { __typename?: 'ProfileStuff' }
+    & Pick<ProfileStuff, 'error'>
+    & { profile: (
+      { __typename?: 'ProfileItems' }
+      & Pick<ProfileItems, 'followers' | 'following' | 'isFollowed'>
+    ) }
+  ) }
+);
+
 export type GetPaginatedPostsQueryVariables = Exact<{
   offset: Scalars['Float'];
   limit: Scalars['Float'];
@@ -784,6 +801,22 @@ export const SaveImageDocument = gql`
 
 export function useSaveImageMutation() {
   return Urql.useMutation<SaveImageMutation, SaveImageMutationVariables>(SaveImageDocument);
+};
+export const GetFollowInfoDocument = gql`
+    query GetFollowInfo($id: Float!) {
+  getProfileStuff(id: $id) {
+    profile {
+      followers
+      following
+      isFollowed
+    }
+    error
+  }
+}
+    `;
+
+export function useGetFollowInfoQuery(options: Omit<Urql.UseQueryArgs<GetFollowInfoQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetFollowInfoQuery>({ query: GetFollowInfoDocument, ...options });
 };
 export const GetPaginatedPostsDocument = gql`
     query GetPaginatedPosts($offset: Float!, $limit: Float!) {

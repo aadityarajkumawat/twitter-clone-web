@@ -1,0 +1,10 @@
+query GetFollowInfo($id: Float!) {
+  getProfileStuff(id: $id) {
+    profile {
+      followers
+      following
+      isFollowed
+    }
+    error
+  }
+}

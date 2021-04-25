@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import * as S from "../../pages/home.styles";
 import TwitterIcon from "../../assets/twitter-icon.svg";
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
   return (
     <S.LeftMenu>
       <S.Head>
-        <img src={TwitterIcon} alt="twitter" />
+        <img src={TwitterIcon} alt="twitter99" />
       </S.Head>
       <S.MenuOptions>
         <S.ListItem>

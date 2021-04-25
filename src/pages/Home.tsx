@@ -17,7 +17,6 @@ import { TopLoader } from "../components/top-loader/TopLoader";
 import { Box } from "@chakra-ui/layout";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
 import { HomeContextI } from "../context/HomeContext";
-import { Spinner } from "@chakra-ui/spinner";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 
 interface HomeProps {}

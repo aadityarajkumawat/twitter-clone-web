@@ -12,15 +12,17 @@ import Tweet from "../../components/tweet/Tweet";
 import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
-import { getMoreUserPosts } from "../../helpers/getMore";
 import { profileReducer } from "../../reducers/profileReducer";
 import { Box } from "@chakra-ui/layout";
-import { getTweetProps } from "../../helpers";
 import { useDisclosure } from "@chakra-ui/react";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { useParams } from "react-router";
 import { UserProfile } from "../../components/user-profile/UserProfile";
-import { decideAndReturnCorrectId } from "../../helpers/decideAndReturnCorrectId";
+import {
+  decideAndReturnCorrectId,
+  getTweetProps,
+  getMoreUserPosts,
+} from "../../helpers";
 
 interface ProfileProps {}
 
