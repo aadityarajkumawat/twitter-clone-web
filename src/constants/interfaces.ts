@@ -1,6 +1,7 @@
 import React from "react";
 import { OperationContext, UseQueryResponse } from "urql";
 import {
+  GetTweetsByUserFQuery,
   GetTweetsByUserQuery,
   GetUserByUsernameQuery,
   MeQuery,
@@ -68,7 +69,7 @@ export type PaginationProps = {
 
 export type PaginationPropsProfile = {
   state: ProfileState;
-  profile: ProfileStuffAndUserTweetsQuery | undefined;
+  profile: GetTweetsByUserFQuery | undefined;
   dispatch: React.Dispatch<ProfileAction>;
 };
 

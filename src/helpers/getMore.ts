@@ -71,8 +71,8 @@ export const getMoreUserPosts = async (
 ) => {
   const { scrollProps, offset, more } = state;
   const { dataLength } = scrollProps;
-  if (!profile || !profile.profileStuffAndUserTweets) return;
-  if (offset === profile.profileStuffAndUserTweets.profile.num) {
+  if (!profile || !profile.getTweetsByUserF) return;
+  if (offset === profile.getTweetsByUserF.num) {
     dispatch({
       type: "scroll",
       updatedScroll: { ...scrollProps, hasMore: false },

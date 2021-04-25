@@ -632,7 +632,7 @@ export type GetTweetsByUserFQuery = (
     & Pick<GetUserTweets, 'error' | 'num'>
     & { tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img' | 'created_At'>
     )> }
   ) }
 );
@@ -1003,6 +1003,7 @@ export const GetTweetsByUserFDocument = gql`
       liked
       profile_img
       img
+      created_At
     }
     error
     num

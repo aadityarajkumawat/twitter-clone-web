@@ -4,10 +4,9 @@ import { ProfileContainer } from "./profile.styles";
 import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import {
-  useFollowAUserMutation,
   useMeQuery,
-  useProfileStuffAndUserTweetsQuery,
   useGetUserByUsernameQuery,
+  useGetTweetsByUserFQuery,
 } from "../../generated/graphql";
 import Tweet from "../../components/tweet/Tweet";
 import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
@@ -51,7 +50,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
 
   const [
     { data: profileObj, fetching: fetchingProfile },
-  ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
+  ] = useGetTweetsByUserFQuery({ variables: { id } });
 
   const paginationProps = { profile: profileObj, state, dispatch };
 
@@ -65,7 +64,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
           {!fetchingProfile && profileObj ? (
             <Fragment>
               <Fragment>
-                {profileObj.profileStuffAndUserTweets.tweets.map((tweet) => (
+                {profileObj.getTweetsByUserF.tweets.map((tweet) => (
                   <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                 ))}
               </Fragment>
@@ -73,7 +72,7 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
               <InfiniteScroll
                 dataLength={state.scrollProps.dataLength}
                 hasMore={
-                  profileObj.profileStuffAndUserTweets.profile.num > 5
+                  profileObj.getTweetsByUserF.num > 5
                     ? state.scrollProps.hasMore
                     : false
                 }

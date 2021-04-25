@@ -12,6 +12,7 @@ query GetTweetsByUserF($id: Float!) {
       liked
       profile_img
       img
+      created_At
     }
     error
     num
