@@ -67,6 +67,7 @@ export const getMore = async (
 
 export const getMoreUserPosts = async (
   { profile, state, dispatch }: PaginationPropsProfile,
+  id: number,
   postLimit = 3
 ) => {
   const { scrollProps, offset, more } = state;
@@ -86,7 +87,7 @@ export const getMoreUserPosts = async (
       {
         limit: postLimit,
         offset: 5 + dataLength - postLimit,
-        id: 1,
+        id,
       }
     )
     .toPromise();

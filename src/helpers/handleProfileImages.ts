@@ -6,7 +6,7 @@ async function uploadImage(
   type: "profile" | "cover",
   saveImg: (o: { url: string; type: "profile" | "cover" }) => Promise<any>,
   context: EditProfileContext
-) {
+): Promise<void> {
   const [state, dispatch] = context;
   const images = state.images;
   let canUpload = false;

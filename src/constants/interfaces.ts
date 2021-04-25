@@ -76,12 +76,14 @@ export type ProfileState = {
   more: Array<TweetType>;
   offset: number;
   scrollProps: InfiniteScrolling;
+  realTime: Array<TweetType>;
 };
 
 export type ProfileAction =
   | { type: "more"; moreTweets: Array<TweetType> }
   | { type: "offset"; updatedOffset: number }
-  | { type: "scroll"; updatedScroll: InfiniteScrolling };
+  | { type: "scroll"; updatedScroll: InfiniteScrolling }
+  | { type: "rt"; realTimePosts: Array<TweetType> };
 
 export type ProfileProperties =
   | "username"

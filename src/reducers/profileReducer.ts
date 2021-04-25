@@ -11,6 +11,8 @@ export const profileReducer = (
       return { ...state, offset: action.updatedOffset };
     case "scroll":
       return { ...state, scrollProps: action.updatedScroll };
+    case "rt":
+      return { ...state, realTime: action.realTimePosts };
     default:
       return state;
   }

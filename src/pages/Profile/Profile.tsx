@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useReducer } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { ProfileContainer } from "./profile.styles";
 import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
@@ -21,17 +20,19 @@ import { UserProfile } from "../../components/user-profile/UserProfile";
 import {
   decideAndReturnCorrectId,
   getTweetProps,
-  getMoreUserPosts,
+  removeDuplicatesFromRealTime,
 } from "../../helpers";
 import { HomeContextI } from "../../context/HomeContext";
+import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
 
 interface ProfileProps {}
 
-export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
+export const Profile: React.FC<ProfileProps> = () => {
   const initialState: ProfileState = {
     more: [],
     offset: 0,
     scrollProps: { dataLength: 3, hasMore: true },
+    realTime: [],
   };
 
   const { username } = useParams<ProfileRouteParams>();
@@ -41,7 +42,6 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
   } = useContext(HomeContextI);
 
   const context = useReducer(profileReducer, initialState);
-  const [state, dispatch] = context;
 
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
   const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
@@ -58,8 +58,6 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
     { data: profileObj, fetching: fetchingProfile },
   ] = useGetTweetsByUserFQuery({ variables: { id } });
 
-  const paginationProps = { profile: profileObj, state, dispatch };
-
   return (
     <Fragment>
       <ProfileContainer>
@@ -69,30 +67,26 @@ export const Profile: React.FC<ProfileProps> = (): JSX.Element => {
           <UserProfile onOpen={onOpen} />
           {!fetchingProfile && profileObj ? (
             <Fragment>
+              {!fetchingUser && user && user.me.user.username === username && (
+                <Fragment>
+                  {removeDuplicatesFromRealTime(realTime, profileObj).map(
+                    (tweet) => (
+                      <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                    )
+                  )}
+                </Fragment>
+              )}
               <Fragment>
-                {[...realTime, ...profileObj.getTweetsByUserF.tweets].map(
-                  (tweet) => (
-                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                  )
-                )}
+                {profileObj.getTweetsByUserF.tweets.map((tweet) => (
+                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                ))}
               </Fragment>
 
-              <InfiniteScroll
-                dataLength={state.scrollProps.dataLength}
-                hasMore={
-                  profileObj.getTweetsByUserF.num > 5
-                    ? state.scrollProps.hasMore
-                    : false
-                }
-                next={() => getMoreUserPosts(paginationProps)}
-                loader={<LoadingSpinner />}
-              >
-                <Fragment>
-                  {state.more.map((tweet) => (
-                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                  ))}
-                </Fragment>
-              </InfiniteScroll>
+              <InfiniteTweets
+                profileObj={profileObj}
+                id={id}
+                context={context}
+              />
             </Fragment>
           ) : (
             <LoadingSpinner />
