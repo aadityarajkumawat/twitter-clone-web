@@ -174,3 +174,9 @@ export type DecideAndReturnCorrectId = (
 export interface ProfileRouteParams {
   username: string;
 }
+
+export interface FollowInfoState {
+  followers: number;
+  following: number;
+  isFollowed: boolean;
+}

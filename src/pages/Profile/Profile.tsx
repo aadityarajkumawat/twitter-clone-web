@@ -91,7 +91,6 @@ export const Profile: React.FC<ProfileProps> = () => {
           ) : (
             <LoadingSpinner />
           )}
-
           <Box my="30px"></Box>
         </S.HomeMain>
         <RightMenu />

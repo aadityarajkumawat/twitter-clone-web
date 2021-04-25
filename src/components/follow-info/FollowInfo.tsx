@@ -1,4 +1,6 @@
-import React from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { FollowInfoState } from "../../constants/interfaces";
 import { useGetFollowInfoQuery } from "../../generated/graphql";
 import { Follows } from "../../pages/Profile/profile.styles";
 import { Follow } from "../follow/Follow";
@@ -12,17 +14,42 @@ export const FollowInfo: React.FC<FollowInfoProps> = ({ id, isLoggedUser }) => {
   const [{ data, fetching }, refe] = useGetFollowInfoQuery({
     variables: { id },
   });
+
+  const [followInfo, setFollowInfo] = useState<FollowInfoState>({
+    followers: 0,
+    following: 0,
+    isFollowed: false,
+  });
+
+  useEffect(() => {
+    if (!fetching && data) {
+      const { followers, following, isFollowed } = data.getProfileStuff.profile;
+      setFollowInfo(() => ({
+        followers,
+        following,
+        isFollowed,
+      }));
+    }
+  }, [JSON.stringify(data)]);
+
   return (
     <Follows>
-      <span>
-        {!fetching && data ? data.getProfileStuff.profile.following : 0}
-        <span className="faded"> Following</span>
-      </span>
-      <span>
-        {!fetching && data ? data.getProfileStuff.profile.followers : 0}
-        <span className="faded"> Followers</span>
-      </span>
-      <Follow isLoggedUser={isLoggedUser} id={id} refe={refe} />
+      <Flex>
+        <Box w="100px">
+          {followInfo.following}
+          <span className="faded"> Following</span>
+        </Box>
+        <Box w="100px">
+          {followInfo.followers}
+          <span className="faded"> Followers</span>
+        </Box>
+      </Flex>
+      <Follow
+        isLoggedUser={isLoggedUser}
+        id={id}
+        refe={refe}
+        following={followInfo.isFollowed}
+      />
     </Follows>
   );
 };

@@ -6,13 +6,17 @@ interface FollowProps {
   isLoggedUser: boolean;
   id: number;
   refe: (o: any) => void;
+  following: boolean;
 }
 
-export const Follow: React.FC<FollowProps> = ({ isLoggedUser, id, refe }) => {
-  const [
-    { data: followUser, fetching: followingState },
-    follow,
-  ] = useFollowAUserMutation();
+export const Follow: React.FC<FollowProps> = ({
+  isLoggedUser,
+  id,
+  refe,
+  following,
+}) => {
+  const [, follow] = useFollowAUserMutation();
+
   return (
     <Fragment>
       {!isLoggedUser && (
@@ -22,9 +26,7 @@ export const Follow: React.FC<FollowProps> = ({ isLoggedUser, id, refe }) => {
             refe({ requestPolicy: "network-only" });
           }}
         >
-          {!followingState && followUser && followUser.followAUser.followed
-            ? "Unfollow"
-            : "Follow"}
+          {following ? "Unfollow" : "Follow"}
         </FollowBtn>
       )}
     </Fragment>
