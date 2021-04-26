@@ -22,3 +22,6 @@ export const textInput = (context: EditProfileContext) => ({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
     handleChange(e, context),
 });
+
+export const PAGINATE_USER_PROFILE = 10;
+export const PAGINATE_HOME = 15;

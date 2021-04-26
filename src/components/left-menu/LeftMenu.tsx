@@ -11,6 +11,7 @@ import { ListsImage } from "../../assets/ListsImage";
 import { ProfileImage } from "../../assets/ProfileImage";
 import { MoreImage } from "../../assets/MoreImage";
 import { useMeQuery } from "../../generated/graphql";
+import { Flex } from "@chakra-ui/layout";
 
 interface LeftMenuProps {}
 export const LeftMenu: React.FC<LeftMenuProps> = () => {
@@ -19,47 +20,49 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
 
   return (
     <S.LeftMenu>
-      <S.Head>
-        <img src={TwitterIcon} alt="twitter99" />
-      </S.Head>
-      <S.MenuOptions>
-        <S.ListItem>
-          <Link to="/">
-            <HomeIcon />
-            <span>Home</span>
-          </Link>
-        </S.ListItem>
-        <S.ListItem>
-          <ExploreImage />
-          <span>Explore</span>
-        </S.ListItem>
-        <S.ListItem>
-          <Notifications />
-          <span>Notifications</span>
-        </S.ListItem>
-        <S.ListItem>
-          <MessagesImage />
-          <span>Messages</span>
-        </S.ListItem>
-        <S.ListItem>
-          <BookmarkImage />
-          <span>Bookmarks</span>
-        </S.ListItem>
-        <S.ListItem>
-          <ListsImage />
-          <span>Lists</span>
-        </S.ListItem>
-        <S.ListItem>
-          <Link to={`/profile/${identifier}`}>
-            <ProfileImage />
-            <span>Profile</span>
-          </Link>
-        </S.ListItem>
-        <S.ListItem>
-          <MoreImage />
-          <span>Settings</span>
-        </S.ListItem>
-      </S.MenuOptions>
+      <Flex flexDir="column" alignItems="flex-end">
+        <S.Head>
+          <img src={TwitterIcon} alt="twitter99" />
+        </S.Head>
+        <S.MenuOptions>
+          <S.ListItem>
+            <Link to="/">
+              <HomeIcon />
+              <span>Home</span>
+            </Link>
+          </S.ListItem>
+          <S.ListItem>
+            <ExploreImage />
+            <span>Explore</span>
+          </S.ListItem>
+          <S.ListItem>
+            <Notifications />
+            <span>Notifications</span>
+          </S.ListItem>
+          <S.ListItem>
+            <MessagesImage />
+            <span>Messages</span>
+          </S.ListItem>
+          <S.ListItem>
+            <BookmarkImage />
+            <span>Bookmarks</span>
+          </S.ListItem>
+          <S.ListItem>
+            <ListsImage />
+            <span>Lists</span>
+          </S.ListItem>
+          <S.ListItem>
+            <Link to={`/profile/${identifier}`}>
+              <ProfileImage />
+              <span>Profile</span>
+            </Link>
+          </S.ListItem>
+          <S.ListItem>
+            <MoreImage />
+            <span>Settings</span>
+          </S.ListItem>
+        </S.MenuOptions>
+      </Flex>
     </S.LeftMenu>
   );
 };

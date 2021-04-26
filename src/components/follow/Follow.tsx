@@ -26,7 +26,7 @@ export const Follow: React.FC<FollowProps> = ({
             refe({ requestPolicy: "network-only" });
           }}
         >
-          {following ? "Unfollow" : "Follow"}
+          {following ? "Following" : "Follow"}
         </FollowBtn>
       )}
     </Fragment>

@@ -7,7 +7,11 @@ import {
   ProfileState,
 } from "../../constants/interfaces";
 import { GetTweetsByUserFQuery } from "../../generated/graphql";
-import { getMoreUserPosts, getTweetProps } from "../../helpers";
+import {
+  getMoreUserPosts,
+  getTweetProps,
+  resetProfileState,
+} from "../../helpers";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import Tweet from "../tweet/Tweet";
 
@@ -27,12 +31,7 @@ export const InfiniteTweets: React.FC<InfiniteTweetsProps> = ({
   const { username } = useParams<ProfileRouteParams>();
 
   useEffect(() => {
-    dispatch({ type: "more", moreTweets: [] });
-    dispatch({ type: "offset", updatedOffset: 0 });
-    dispatch({
-      type: "scroll",
-      updatedScroll: { dataLength: 3, hasMore: true },
-    });
+    resetProfileState(dispatch);
   }, [username]);
 
   return (

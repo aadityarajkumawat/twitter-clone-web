@@ -12,7 +12,7 @@ export const BaseComponent = styled.div`
 export const Head = styled.div`
   color: white;
   display: inline-block;
-  width: 220px;
+  width: 250px;
   padding: 10px;
   text-align: left;
 
@@ -22,7 +22,7 @@ export const Head = styled.div`
 `;
 
 export const LeftMenu = styled.div`
-  width: calc(50vw - 325px);
+  width: calc(50vw - 299px);
   height: 100vh;
   position: fixed;
   top: 0;
@@ -31,9 +31,9 @@ export const LeftMenu = styled.div`
   text-align: end;
   background-color: #222;
 
-  @media only screen and (max-width: 1300px) {
+  /* @media only screen and (max-width: 1280px) {
     width: 90px;
-  }
+  } */
 `;
 
 export const MenuOptions = styled.ul`
@@ -41,10 +41,10 @@ export const MenuOptions = styled.ul`
   flex-direction: column;
   list-style: none;
   width: 250px;
-  margin-left: auto;
+  /* margin-left: auto; */
   text-align: left;
-  margin-top: 30px;
-  position: absolute;
+  margin-top: 15px;
+  /* position: absolute; */
   right: 0;
 
   @media only screen and (max-width: 1300px) {

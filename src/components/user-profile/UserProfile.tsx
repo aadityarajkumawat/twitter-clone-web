@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Button, Box } from "@chakra-ui/react";
+import { Flex, Button, Box, Text, Link, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import { BackSVG } from "../../assets/BackSVG";
 import {
@@ -48,13 +48,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
     { data: profile, fetching: fetchingProfile },
   ] = useGetProfileStuffQuery({ variables: { id } });
 
-  const getProfileValByKey = (key: ProfileProperties, fallback: string) => {
+  const getProfileValByKey = (key: ProfileProperties) => {
     if (!fetchingProfile && profile) {
       const obj = profile.getProfileStuff.profile;
       const val = obj[key];
       return val.toString();
     }
-    return fallback;
+    return "";
   };
 
   return (
@@ -65,35 +65,39 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
         </Back>
         <ProfileInfo>
           <Flex flexDir="column">
-            <b>{getProfileValByKey("name", "")}</b>
-            <span>
-              {getProfileValByKey("num", "0")}
+            <Text fontWeight="600" fontSize="sm">
+              {getProfileValByKey("name")}
+            </Text>
+            <Box fontSize="sm">
+              {getProfileValByKey("num")}
               {" Tweets"}
-            </span>
+            </Box>
           </Flex>
         </ProfileInfo>
       </ProfileNav>
       <CoverImageContainer>
         <ImgContainer>
-          <img src={getProfileValByKey("cover_img", "")} alt="user-cover" />
+          <Image src={getProfileValByKey("cover_img")} alt="user-cover" />
         </ImgContainer>
         <ProfileImgContainer>
-          <img src={getProfileValByKey("profile_img", "")} alt="user" />
+          <Image src={getProfileValByKey("profile_img")} alt="user" />
         </ProfileImgContainer>
-        <Button variant="edit-profile" onClick={onOpen}>
-          Edit Profile
-        </Button>
+        {isLoggedUser && (
+          <Button variant="edit-profile" onClick={onOpen}>
+            Edit Profile
+          </Button>
+        )}
       </CoverImageContainer>
       {!fetchingProfile && profile ? (
         <MoreInfo>
-          <b>{getProfileValByKey("name", "")}</b>
-          <p className="username">@{getProfileValByKey("username", "")}</p>
-          <p className="bio">{getProfileValByKey("bio", "")}</p>
-          <p className="link">
-            <a href={getProfileValByKey("link", "")}>
-              {getProfileValByKey("link", "")}
-            </a>
-          </p>
+          <Text fontWeight="600">{getProfileValByKey("name")}</Text>
+          <Text color="#a5a5a5">@{getProfileValByKey("username")}</Text>
+          <Text>{getProfileValByKey("bio")}</Text>
+          <Text className="link">
+            <Link href={getProfileValByKey("link")}>
+              {getProfileValByKey("link")}
+            </Link>
+          </Text>
           <FollowInfo id={id} isLoggedUser={isLoggedUser} />
         </MoreInfo>
       ) : (

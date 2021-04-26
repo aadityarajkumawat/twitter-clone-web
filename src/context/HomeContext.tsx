@@ -15,7 +15,7 @@ const intialStateHome = {
   realTime: [],
   feedProgress: 0,
   files: null,
-  scrollProps: { dataLength: 3, hasMore: true },
+  scrollProps: { dataLength: 10, hasMore: true },
   tweetInput: "",
   subscribed: true,
 };

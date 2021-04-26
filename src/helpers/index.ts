@@ -12,6 +12,7 @@ import { getTweetProps } from "./reshapeTweetType";
 import { tweetAlreadyExist } from "./tweetAlreadyExist";
 import { uploadTweetImage } from "./uploadTweetImage";
 import { removeDuplicatesFromRealTime } from "./removeDuplicatesFromRealTime";
+import { resetProfileState } from "./resetProfileState";
 
 export {
   decideAndReturnCorrectId,
@@ -26,6 +27,7 @@ export {
   notFetchingProfileAndHasProfile,
   refresh,
   removeDuplicatesFromRealTime,
+  resetProfileState,
   getTweetProps,
   tweetAlreadyExist,
   uploadTweetImage,

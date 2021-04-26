@@ -1,4 +1,5 @@
 import { cli } from "..";
+import { PAGINATE_USER_PROFILE } from "../constants/consts";
 import {
   HomeContextType,
   PaginationPropsProfile,
@@ -16,7 +17,7 @@ import {
 export const getMore = async (
   feed: GetTweetsByUserQuery | undefined,
   context: HomeContextType,
-  postLimit = 3
+  postLimit = 10
 ) => {
   const { state, dispatch } = context;
   const { scrollProps, realTime, pag, more } = state;
@@ -68,7 +69,7 @@ export const getMore = async (
 export const getMoreUserPosts = async (
   { profile, state, dispatch }: PaginationPropsProfile,
   id: number,
-  postLimit = 3
+  postLimit = PAGINATE_USER_PROFILE
 ) => {
   const { scrollProps, offset, more } = state;
   const { dataLength } = scrollProps;

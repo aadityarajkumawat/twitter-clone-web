@@ -24,6 +24,7 @@ import {
 } from "../../helpers";
 import { HomeContextI } from "../../context/HomeContext";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
+import { PAGINATE_USER_PROFILE } from "../../constants/consts";
 
 interface ProfileProps {}
 
@@ -31,7 +32,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const initialState: ProfileState = {
     more: [],
     offset: 0,
-    scrollProps: { dataLength: 3, hasMore: true },
+    scrollProps: { dataLength: PAGINATE_USER_PROFILE, hasMore: true },
     realTime: [],
   };
 
