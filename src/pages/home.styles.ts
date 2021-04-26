@@ -31,7 +31,14 @@ export const LeftMenu = styled.div`
   text-align: end;
   background-color: #222;
   position: relative;
-  min-width: 90px;
+  min-width: 70px;
+  @media only screen and (max-width: 800px) {
+    width: 70px;
+  }
+
+  @media only screen and (max-width: 550px) {
+    display: none;
+  }
 
   .left-wrapper {
     position: fixed;
@@ -39,7 +46,7 @@ export const LeftMenu = styled.div`
     right: calc(596px + 50% - 299px);
 
     @media only screen and (max-width: 800px) {
-      width: 85px;
+      width: 70px;
       left: 0;
     }
   }
@@ -61,7 +68,7 @@ export const MenuOptions = styled.ul`
 
 export const ListItem = styled.li`
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   font-size: 18px;
   padding: 10px 10px;
   border-radius: 10px;
@@ -107,6 +114,9 @@ export const RightMenu = styled.div`
   top: 0;
   right: 0;
   background-color: #222;
+  @media only screen and (max-width: 780px) {
+    width: 0px;
+  }
 `;
 
 export const HomeMain = styled.div`

@@ -6,6 +6,7 @@ import { SearchItem } from "../search-item/SearchItem";
 import { RightMenuContainer, Search, SearchList } from "./rightmenu.styles";
 import { v4 as uuidv4 } from "uuid";
 import * as S from "../../pages/home.styles";
+import { Flex } from "@chakra-ui/layout";
 
 interface RightMenuProps {}
 export const RightMenu: React.FC<RightMenuProps> = () => {
@@ -19,41 +20,45 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
 
   return (
     <S.RightMenu>
-      {/* {showSearchResults && (
-        <TransparentBackdrop
-          onClick={() => toggle(false)}
-        ></TransparentBackdrop>
-      )} */}
-      {/* <RightMenuContainer>
-        <Search
-          type="text"
-          placeholder="Search twitter"
-          onClick={() => toggle(true)}
-          onChange={(e) => setSearch(e.target.value)}
-        ></Search>
+      <Flex>
         {showSearchResults && (
-          <SearchList>
-            {search.length === 0 ? (
-              <div
-                style={{ textAlign: search.length === 0 ? "center" : "unset" }}
-              >
-                <span>Search Users</span>
-              </div>
-            ) : (
-              <Fragment>
-                {results?.getSearchResults.profiles.map((profile) => (
-                  <SearchItem
-                    name={profile.name}
-                    username={profile.username}
-                    key={uuidv4()}
-                    user_img={profile.img}
-                  />
-                ))}
-              </Fragment>
-            )}
-          </SearchList>
+          <TransparentBackdrop
+            onClick={() => toggle(false)}
+          ></TransparentBackdrop>
         )}
-      </RightMenuContainer> */}
+        <RightMenuContainer>
+          <Search
+            type="text"
+            placeholder="Search twitter"
+            onClick={() => toggle(true)}
+            onChange={(e) => setSearch(e.target.value)}
+          ></Search>
+          {showSearchResults && (
+            <SearchList>
+              {search.length === 0 ? (
+                <div
+                  style={{
+                    textAlign: search.length === 0 ? "center" : "unset",
+                  }}
+                >
+                  <span>Search Users</span>
+                </div>
+              ) : (
+                <Fragment>
+                  {results?.getSearchResults.profiles.map((profile) => (
+                    <SearchItem
+                      name={profile.name}
+                      username={profile.username}
+                      key={uuidv4()}
+                      user_img={profile.img}
+                    />
+                  ))}
+                </Fragment>
+              )}
+            </SearchList>
+          )}
+        </RightMenuContainer>
+      </Flex>
     </S.RightMenu>
   );
 };

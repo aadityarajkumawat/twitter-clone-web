@@ -1,3 +1,4 @@
+import { Image } from "@chakra-ui/image";
 import React, { Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import {
@@ -22,7 +23,7 @@ export const SearchItem: React.FC<SearchItemProps> = ({
     <Fragment>
       <SearchItemContainer>
         <ImageContainer>
-          <img src={user_img} alt="user" />
+          <Image src={user_img} alt="user" />
         </ImageContainer>
         <UserD
           onClick={() => {

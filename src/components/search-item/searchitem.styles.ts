@@ -3,11 +3,15 @@ import styled from "styled-components";
 export const SearchItemContainer = styled.div`
   width: 100%;
   padding: 0px 0;
-  border-bottom: 1px solid #ffffff80;
+  border-bottom: 1px solid #ffffff30;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow-y: hidden;
+
+  &:hover {
+    background-color: #222;
+  }
 `;
 
 export const ImageContainer = styled.div`
@@ -22,6 +26,7 @@ export const ImageContainer = styled.div`
     height: 45px;
     width: 45px;
     border-radius: 100%;
+    object-fit: cover;
   }
 `;
 

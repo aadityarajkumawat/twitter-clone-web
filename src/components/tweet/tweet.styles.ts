@@ -23,10 +23,11 @@ export const TweetContent = styled(StyledDiv)`
 export const TweetActionBar = styled(StyledDiv)`
   display: flex;
   align-items: center;
+  width: 100%;
 
   span {
     width: 40px;
-    margin-right: 80px;
+    margin-right: calc(25% - 40px);
   }
 `;
 
