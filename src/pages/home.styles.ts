@@ -6,6 +6,10 @@ export const BaseComponent = styled.div`
   background-color: #222;
   display: flex;
   justify-content: center;
+
+  @media only screen and (max-width: 800px) {
+    justify-content: flex-start;
+  }
 `;
 
 export const Head = styled.div`
@@ -32,6 +36,11 @@ export const LeftMenu = styled.div`
   background-color: #222;
   position: relative;
   min-width: 70px;
+
+  /* @media only screen and (max-width: 1300px) {
+    width: 80px;
+  } */
+
   @media only screen and (max-width: 800px) {
     width: 70px;
   }
@@ -44,6 +53,11 @@ export const LeftMenu = styled.div`
     position: fixed;
     top: 0;
     right: calc(596px + 50% - 299px);
+
+    @media only screen and (max-width: 1300px) {
+      /* width: 60px; */
+      right: calc(100% - 596px - 60px + 596px);
+    }
 
     @media only screen and (max-width: 800px) {
       width: 70px;
@@ -111,9 +125,12 @@ export const ListItem = styled.li`
 export const RightMenu = styled.div`
   width: calc(50% - 299px);
   height: 100vh;
-  top: 0;
-  right: 0;
   background-color: #222;
+
+  @media only screen and (max-width: 1300px) {
+    width: calc(100% - 596px - 60px);
+  }
+
   @media only screen and (max-width: 780px) {
     width: 0px;
   }
