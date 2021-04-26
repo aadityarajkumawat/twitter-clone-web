@@ -19,12 +19,12 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
 
   return (
     <S.RightMenu>
-      {showSearchResults && (
+      {/* {showSearchResults && (
         <TransparentBackdrop
           onClick={() => toggle(false)}
         ></TransparentBackdrop>
-      )}
-      <RightMenuContainer>
+      )} */}
+      {/* <RightMenuContainer>
         <Search
           type="text"
           placeholder="Search twitter"
@@ -53,7 +53,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
             )}
           </SearchList>
         )}
-      </RightMenuContainer>
+      </RightMenuContainer> */}
     </S.RightMenu>
   );
 };

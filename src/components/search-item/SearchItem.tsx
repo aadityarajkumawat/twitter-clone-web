@@ -26,7 +26,7 @@ export const SearchItem: React.FC<SearchItemProps> = ({
         </ImageContainer>
         <UserD
           onClick={() => {
-            history.push(`/profile/${username}`);
+            history.push(`/${username}`);
           }}
         >
           <h4>{name}</h4>

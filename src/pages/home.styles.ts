@@ -2,11 +2,10 @@ import styled from "styled-components";
 import { flexCenter } from "../constants/styles";
 
 export const BaseComponent = styled.div`
-  width: 100vw;
+  width: 100%;
   background-color: #222;
   display: flex;
   justify-content: center;
-  position: relative;
 `;
 
 export const Head = styled.div`
@@ -18,22 +17,32 @@ export const Head = styled.div`
 
   @media only screen and (max-width: 1300px) {
     width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 export const LeftMenu = styled.div`
-  width: calc(50vw - 299px);
+  width: calc(50% - 299px);
   height: 100vh;
-  position: fixed;
   top: 0;
   left: 0;
-  padding: 20px;
   text-align: end;
   background-color: #222;
+  position: relative;
+  min-width: 90px;
 
-  /* @media only screen and (max-width: 1280px) {
-    width: 90px;
-  } */
+  .left-wrapper {
+    position: fixed;
+    top: 0;
+    right: calc(596px + 50% - 299px);
+
+    @media only screen and (max-width: 800px) {
+      width: 85px;
+      left: 0;
+    }
+  }
 `;
 
 export const MenuOptions = styled.ul`
@@ -41,10 +50,8 @@ export const MenuOptions = styled.ul`
   flex-direction: column;
   list-style: none;
   width: 250px;
-  /* margin-left: auto; */
   text-align: left;
   margin-top: 15px;
-  /* position: absolute; */
   right: 0;
 
   @media only screen and (max-width: 1300px) {
@@ -56,11 +63,15 @@ export const ListItem = styled.li`
   color: white;
   margin-bottom: 20px;
   font-size: 18px;
-  padding: 10px 15px;
-  border-radius: 15px;
+  padding: 10px 10px;
+  border-radius: 10px;
   font-weight: 700;
   display: flex;
   align-items: center;
+
+  @media only screen and (max-width: 1300px) {
+    justify-content: center;
+  }
 
   &:hover {
     background-color: #000;
@@ -91,9 +102,8 @@ export const ListItem = styled.li`
 `;
 
 export const RightMenu = styled.div`
-  width: calc(50vw - 325px);
+  width: calc(50% - 299px);
   height: 100vh;
-  position: fixed;
   top: 0;
   right: 0;
   background-color: #222;

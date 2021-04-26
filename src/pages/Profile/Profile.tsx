@@ -59,6 +59,8 @@ export const Profile: React.FC<ProfileProps> = () => {
     { data: profileObj, fetching: fetchingProfile },
   ] = useGetTweetsByUserFQuery({ variables: { id } });
 
+  if (username === "home") return <></>;
+
   return (
     <Fragment>
       <ProfileContainer>

@@ -34,7 +34,7 @@ const Login: React.FC<{}> = () => {
 
   useEffect(() => {
     if (!fetching && data && data.me.user.id) {
-      history.push("/");
+      history.push("/home");
     } // eslint-disable-next-line
   }, [JSON.stringify(data)]);
 
@@ -45,7 +45,7 @@ const Login: React.FC<{}> = () => {
     refe({ requestPolicy: "network-only" });
 
     if (!fetching && data && data.me.user.id) {
-      history.push("/");
+      history.push("/home");
     }
   };
 

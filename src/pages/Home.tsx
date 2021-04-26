@@ -57,9 +57,7 @@ const Home: React.FC<HomeProps> = () => {
 
   return (
     <S.BaseComponent className="main">
-      <S.LeftMenu>
-        <LeftMenu />
-      </S.LeftMenu>
+      <LeftMenu />
       <S.HomeMain>
         <S.FeedHeader>
           <TopLoader feedProgress={state.feedProgress} />
@@ -96,9 +94,7 @@ const Home: React.FC<HomeProps> = () => {
           <div style={{ height: "50px" }}></div>
         </S.Tweets>
       </S.HomeMain>
-      <S.RightMenu>
-        <RightMenu />
-      </S.RightMenu>
+      <RightMenu />
     </S.BaseComponent>
   );
 };
