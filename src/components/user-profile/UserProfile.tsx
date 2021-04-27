@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Flex, Button, Box, Text, Link, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import { BackSVG } from "../../assets/BackSVG";
@@ -56,6 +56,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
     }
     return "";
   };
+
+  // useEffect(() => {
+  //   if (
+  //     !fetchingProfile &&
+  //     profile &&
+  //     profile.getProfileStuff.profile.username
+  //   ) {
+  //     document.title = `${profile.getProfileStuff.profile.name}(${username})`;
+  //   }
+  // }, [username]);
 
   return (
     <Box w="100%">

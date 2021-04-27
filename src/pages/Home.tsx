@@ -18,6 +18,7 @@ import { Box } from "@chakra-ui/layout";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
 import { HomeContextI } from "../context/HomeContext";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
+import { useTitle } from "../hooks/useTitle";
 
 interface HomeProps {}
 
@@ -30,6 +31,8 @@ const Home: React.FC<HomeProps> = () => {
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
+
+  useTitle("Home / Twitter");
 
   useEffect(() => {
     refreshUser({ requestPolicy: "network-only" });
