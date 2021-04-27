@@ -22,6 +22,9 @@ export const Search = styled.input`
   font-family: "Oxygen";
   position: relative;
   z-index: 5;
+  @media only screen and (max-width: 1070px) {
+    width: 270px;
+  }
 `;
 
 export const SearchList = styled.div`
@@ -33,6 +36,9 @@ export const SearchList = styled.div`
   position: absolute;
   top: 50px;
   z-index: 5;
+  @media only screen and (max-width: 1070px) {
+    width: 270px;
+  }
 
   div {
     color: white;

@@ -6,10 +6,6 @@ export const BaseComponent = styled.div`
   background-color: #222;
   display: flex;
   justify-content: center;
-
-  @media only screen and (max-width: 800px) {
-    justify-content: flex-start;
-  }
 `;
 
 export const Head = styled.div`
@@ -19,11 +15,31 @@ export const Head = styled.div`
   padding: 10px;
   text-align: left;
 
-  @media only screen and (max-width: 1300px) {
-    width: 50px;
+  @media only screen and (max-width: 1280px) {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+`;
+
+export const RightMenu = styled.div`
+  width: calc(50% - 299px);
+  height: 100vh;
+  background-color: #222;
+
+  @media only screen and (max-width: 1280px) {
+    width: calc(60% - 299px);
+  }
+
+  @media only screen and (max-width: 1000px) {
+    width: calc(50% - 299px);
+  }
+
+  div {
+    @media only screen and (max-width: 1000px) {
+      display: none;
+    }
   }
 `;
 
@@ -35,18 +51,14 @@ export const LeftMenu = styled.div`
   text-align: end;
   background-color: #222;
   position: relative;
-  min-width: 70px;
+  min-width: 68px;
 
-  /* @media only screen and (max-width: 1300px) {
-    width: 80px;
-  } */
-
-  @media only screen and (max-width: 800px) {
-    width: 70px;
+  @media only screen and (max-width: 1280px) {
+    width: calc(40% - 299px);
   }
 
-  @media only screen and (max-width: 550px) {
-    display: none;
+  @media only screen and (max-width: 1000px) {
+    width: calc(50% - 299px);
   }
 
   .left-wrapper {
@@ -54,14 +66,27 @@ export const LeftMenu = styled.div`
     top: 0;
     right: calc(596px + 50% - 299px);
 
-    @media only screen and (max-width: 1300px) {
-      /* width: 60px; */
-      right: calc(100% - 596px - 60px + 596px);
+    @media only screen and (max-width: 1280px) {
+      right: auto;
+      left: calc(40% - 299px - 80px);
+    }
+
+    @media only screen and (max-width: 1000px) {
+      left: calc(50% - 299px - 80px);
     }
 
     @media only screen and (max-width: 800px) {
-      width: 70px;
       left: 0;
+      width: 68px;
+    }
+
+    .in-left {
+      @media only screen and (max-width: 1280px) {
+        width: 80px;
+      }
+      @media only screen and (max-width: 800px) {
+        width: 68px;
+      }
     }
   }
 `;
@@ -75,8 +100,11 @@ export const MenuOptions = styled.ul`
   margin-top: 15px;
   right: 0;
 
-  @media only screen and (max-width: 1300px) {
-    width: 70px;
+  @media only screen and (max-width: 1280px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -89,10 +117,6 @@ export const ListItem = styled.li`
   font-weight: 700;
   display: flex;
   align-items: center;
-
-  @media only screen and (max-width: 1300px) {
-    justify-content: center;
-  }
 
   &:hover {
     background-color: #000;
@@ -108,31 +132,17 @@ export const ListItem = styled.li`
     span {
       margin-left: 10px;
 
-      @media only screen and (max-width: 1300px) {
+      /* @media only screen and (max-width: 1280px) {
         display: none;
-      }
+      } */
     }
   }
 
   span {
     margin-left: 10px;
-    @media only screen and (max-width: 1300px) {
+    @media only screen and (max-width: 1280px) {
       display: none;
     }
-  }
-`;
-
-export const RightMenu = styled.div`
-  width: calc(50% - 299px);
-  height: 100vh;
-  background-color: #222;
-
-  @media only screen and (max-width: 1300px) {
-    width: calc(100% - 596px - 60px);
-  }
-
-  @media only screen and (max-width: 780px) {
-    width: 0px;
   }
 `;
 

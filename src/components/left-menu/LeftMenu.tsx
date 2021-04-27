@@ -20,8 +20,8 @@ export const LeftMenu: React.FC<LeftMenuProps> = () => {
 
   return (
     <S.LeftMenu>
-      <Box className="left-wrapper" px="10px">
-        <Flex flexDir="column" alignItems="center">
+      <Box className="left-wrapper">
+        <Flex className="in-left" flexDir="column" alignItems="center">
           <S.Head>
             <Image src={TwitterIcon} alt="twitter99" />
           </S.Head>
