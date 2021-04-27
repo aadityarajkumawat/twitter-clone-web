@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import { useFollowAUserMutation } from "../../generated/graphql";
 import { FollowBtn } from "../../pages/Profile/profile.styles";
+import { useStore } from "../../zustand/store";
+import { v4 as uuid } from "uuid";
 
 interface FollowProps {
   isLoggedUser: boolean;
@@ -16,6 +18,7 @@ export const Follow: React.FC<FollowProps> = ({
   following,
 }) => {
   const [, follow] = useFollowAUserMutation();
+  const { setFeedRefresh } = useStore((s) => ({ ...s }));
 
   return (
     <Fragment>
@@ -24,6 +27,7 @@ export const Follow: React.FC<FollowProps> = ({
           onClick={async () => {
             await follow({ thatUser: id });
             refe({ requestPolicy: "network-only" });
+            setFeedRefresh(uuid());
           }}
         >
           {following ? "Following" : "Follow"}

@@ -6,6 +6,9 @@ type StateI = {
 
   authenticated: boolean;
   setAuthenticated: (bool: boolean) => void;
+
+  refreshFeed: string;
+  setFeedRefresh: (refreshFeed: string) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -14,4 +17,7 @@ export const useStore = create<StateI>((set) => ({
 
   authenticated: false,
   setAuthenticated: (bool) => set(() => ({ authenticated: bool })),
+
+  refreshFeed: "",
+  setFeedRefresh: (refreshFeed) => set(() => ({ refreshFeed })),
 }));

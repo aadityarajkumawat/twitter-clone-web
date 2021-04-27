@@ -19,6 +19,7 @@ import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
 import { HomeContextI } from "../context/HomeContext";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 import { useTitle } from "../hooks/useTitle";
+import { useStore } from "../zustand/store";
 
 interface HomeProps {}
 
@@ -31,6 +32,7 @@ const Home: React.FC<HomeProps> = () => {
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
+  const { refreshFeed } = useStore((s) => ({ ...s }));
 
   useTitle("Home / Twitter");
 
@@ -57,6 +59,8 @@ const Home: React.FC<HomeProps> = () => {
     }
     // eslint-disable-next-line
   }, [state.feedProgress]);
+
+  useEffect(() => {}, [refreshFeed]);
 
   return (
     <S.BaseComponent className="main">
