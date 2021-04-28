@@ -8,7 +8,8 @@ export const RightMenuContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  position: relative;
+  position: fixed;
+  z-index: 100;
 `;
 
 export const Search = styled.input`

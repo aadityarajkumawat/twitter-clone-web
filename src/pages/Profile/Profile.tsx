@@ -25,7 +25,6 @@ import {
 import { HomeContextI } from "../../context/HomeContext";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
 import { PAGINATE_USER_PROFILE } from "../../constants/consts";
-import { useTitle } from "../../hooks/useTitle";
 
 interface ProfileProps {}
 
@@ -37,7 +36,6 @@ export const Profile: React.FC<ProfileProps> = () => {
     realTime: [],
   };
 
-  useTitle("Profile");
   const { username } = useParams<ProfileRouteParams>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {

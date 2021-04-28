@@ -18,7 +18,6 @@ import { Box } from "@chakra-ui/layout";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
 import { HomeContextI } from "../context/HomeContext";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
-import { useTitle } from "../hooks/useTitle";
 import { useStore } from "../zustand/store";
 
 interface HomeProps {}
@@ -28,15 +27,14 @@ const Home: React.FC<HomeProps> = () => {
   const { state, HomeActionFn } = context;
 
   const [{ data: user, fetching: loadingUser }, refreshUser] = useMeQuery();
-  const [{ data: feed, fetching: fetchingFeed }] = useGetTweetsByUserQuery();
+  const [
+    { data: feed, fetching: fetchingFeed },
+    refe,
+  ] = useGetTweetsByUserQuery();
   const [{ data: rtPosts }] = useListenTweetsSubscription({
     pause: !state.subscribed,
   });
   const { refreshFeed } = useStore((s) => ({ ...s }));
-
-  console.log(feed)
-
-  useTitle("Home / Twitter");
 
   useEffect(() => {
     refreshUser({ requestPolicy: "network-only" });
@@ -62,7 +60,10 @@ const Home: React.FC<HomeProps> = () => {
     // eslint-disable-next-line
   }, [state.feedProgress]);
 
-  useEffect(() => {}, [refreshFeed]);
+  useEffect(() => {
+    refe({ requestPolicy: "network-only" });
+    // eslint-disable-next-line
+  }, [refreshFeed]);
 
   return (
     <S.BaseComponent className="main">
