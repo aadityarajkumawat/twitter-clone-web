@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Flex, Button, Box, Text, Link, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import { BackSVG } from "../../assets/BackSVG";

@@ -32,6 +32,7 @@ export const InfiniteTweets: React.FC<InfiniteTweetsProps> = ({
 
   useEffect(() => {
     resetProfileState(dispatch);
+    // eslint-disable-next-line
   }, [username]);
 
   return (

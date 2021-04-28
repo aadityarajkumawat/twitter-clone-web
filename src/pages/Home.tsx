@@ -34,6 +34,8 @@ const Home: React.FC<HomeProps> = () => {
   });
   const { refreshFeed } = useStore((s) => ({ ...s }));
 
+  console.log(feed)
+
   useTitle("Home / Twitter");
 
   useEffect(() => {

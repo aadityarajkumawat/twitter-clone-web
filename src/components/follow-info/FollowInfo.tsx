@@ -30,6 +30,7 @@ export const FollowInfo: React.FC<FollowInfoProps> = ({ id, isLoggedUser }) => {
         isFollowed,
       }));
     }
+    // eslint-disable-next-line
   }, [JSON.stringify(data)]);
 
   return (

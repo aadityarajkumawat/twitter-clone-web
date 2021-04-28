@@ -5,5 +5,6 @@ export const useTitle = (title: string) => {
   const location = useLocation();
   useEffect(() => {
     document.title = title;
+    // eslint-disable-next-line
   }, [location]);
 };

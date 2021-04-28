@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useReducer } from "react";
+import React, { Fragment, useContext, useReducer } from "react";
 import { ProfileContainer } from "./profile.styles";
 import * as S from "../../pages/home.styles";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
@@ -61,7 +61,8 @@ export const Profile: React.FC<ProfileProps> = () => {
     { data: profileObj, fetching: fetchingProfile },
   ] = useGetTweetsByUserFQuery({ variables: { id } });
 
-  if (username === "home") return <Fragment></Fragment>;
+  if (username === "home" || username === "login" || username === "register")
+    return <Fragment></Fragment>;
 
   return (
     <Fragment>
