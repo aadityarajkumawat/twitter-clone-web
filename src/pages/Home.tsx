@@ -1,24 +1,24 @@
+import { Box } from "@chakra-ui/layout";
 import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
 import { LeftMenu } from "../components/left-menu/LeftMenu";
+import { RightMenu } from "../components/right-menu/RightMenu";
+import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
+import { TopLoader } from "../components/top-loader/TopLoader";
 import Tweet from "../components/tweet/Tweet";
 import { HomeContextType } from "../constants/interfaces";
+import { placeholderImg } from "../constants/urls";
+import { HomeContextI } from "../context/HomeContext";
 import {
   useGetTweetsByUserQuery,
   useListenTweetsSubscription,
   useMeQuery,
 } from "../generated/graphql";
 import { getTweetProps, tweetAlreadyExist } from "../helpers";
-import * as S from "./home.styles";
-import { RightMenu } from "../components/right-menu/RightMenu";
-import { placeholderImg } from "../constants/urls";
-import { ComposeTweet } from "../components/compose-tweet/ComposeTweet";
-import { TopLoader } from "../components/top-loader/TopLoader";
-import { Box } from "@chakra-ui/layout";
 import { getInfiniteScrollProps } from "../helpers/getInfiniteScrollProps";
-import { HomeContextI } from "../context/HomeContext";
-import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 import { useStore } from "../zustand/store";
+import * as S from "./home.styles";
 
 interface HomeProps {}
 
@@ -31,9 +31,7 @@ const Home: React.FC<HomeProps> = () => {
     { data: feed, fetching: fetchingFeed },
     refe,
   ] = useGetTweetsByUserQuery();
-  const [{ data: rtPosts }] = useListenTweetsSubscription({
-    pause: !state.subscribed,
-  });
+  const [{ data: rtPosts }] = useListenTweetsSubscription();
   const { refreshFeed } = useStore((s) => ({ ...s }));
 
   useEffect(() => {
@@ -59,11 +57,6 @@ const Home: React.FC<HomeProps> = () => {
     }
     // eslint-disable-next-line
   }, [state.feedProgress]);
-
-  useEffect(() => {
-    refe({ requestPolicy: "network-only" });
-    // eslint-disable-next-line
-  }, [refreshFeed]);
 
   return (
     <S.BaseComponent className="main">

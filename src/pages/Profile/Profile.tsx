@@ -1,30 +1,30 @@
-import React, { Fragment, useContext, useReducer } from "react";
-import { ProfileContainer } from "./profile.styles";
-import * as S from "../../pages/home.styles";
-import { LeftMenu } from "../../components/left-menu/LeftMenu";
-import {
-  useMeQuery,
-  useGetUserByUsernameQuery,
-  useGetTweetsByUserFQuery,
-} from "../../generated/graphql";
-import Tweet from "../../components/tweet/Tweet";
-import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
-import { RightMenu } from "../../components/right-menu/RightMenu";
-import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
-import { profileReducer } from "../../reducers/profileReducer";
 import { Box } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/react";
-import { EditProfile } from "../../components/edit-profile/EditProfile";
+import React, { Fragment, useContext, useReducer } from "react";
 import { useParams } from "react-router";
+import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
+import { LeftMenu } from "../../components/left-menu/LeftMenu";
+import { RightMenu } from "../../components/right-menu/RightMenu";
+import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
+import Tweet from "../../components/tweet/Tweet";
 import { UserProfile } from "../../components/user-profile/UserProfile";
+import { PAGINATE_USER_PROFILE } from "../../constants/consts";
+import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
+import { HomeContextI } from "../../context/HomeContext";
+import {
+  useGetTweetsByUserFQuery,
+  useGetUserByUsernameQuery,
+  useMeQuery,
+} from "../../generated/graphql";
 import {
   decideAndReturnCorrectId,
   getTweetProps,
   removeDuplicatesFromRealTime,
 } from "../../helpers";
-import { HomeContextI } from "../../context/HomeContext";
-import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
-import { PAGINATE_USER_PROFILE } from "../../constants/consts";
+import * as S from "../../pages/home.styles";
+import { profileReducer } from "../../reducers/profileReducer";
+import { ProfileContainer } from "./profile.styles";
 
 interface ProfileProps {}
 
