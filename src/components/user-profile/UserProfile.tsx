@@ -1,36 +1,32 @@
+import { Box, Button, Image, Link, Text } from "@chakra-ui/react";
 import React from "react";
-import { Flex, Button, Box, Text, Link, Image } from "@chakra-ui/react";
 import { useHistory } from "react-router";
-import { BackSVG } from "../../assets/BackSVG";
+import { useParams } from "react-router-dom";
 import {
   ProfileProperties,
   ProfileRouteParams,
 } from "../../constants/interfaces";
-import {
-  Back,
-  CoverImageContainer,
-  ImgContainer,
-  MoreInfo,
-  ProfileImgContainer,
-  ProfileInfo,
-  ProfileNav,
-} from "../../pages/Profile/profile.styles";
-import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import {
   useGetProfileStuffQuery,
   useGetUserByUsernameQuery,
   useMeQuery,
 } from "../../generated/graphql";
 import { decideAndReturnCorrectId } from "../../helpers";
-import { useParams } from "react-router-dom";
+import {
+  CoverImageContainer,
+  ImgContainer,
+  MoreInfo,
+  ProfileImgContainer,
+} from "../../pages/Profile/profile.styles";
 import { FollowInfo } from "../follow-info/FollowInfo";
+import { ProfileNav } from "../profile-nav/ProfileNav";
+import { LoadingSpinner } from "../spinner/LoadingSpinner";
 
 interface UserProfileProps {
   onOpen: () => void;
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
-  const history = useHistory();
   const { username } = useParams<ProfileRouteParams>();
 
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
@@ -57,34 +53,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
     return "";
   };
 
-  // useEffect(() => {
-  //   if (
-  //     !fetchingProfile &&
-  //     profile &&
-  //     profile.getProfileStuff.profile.username
-  //   ) {
-  //     document.title = `${profile.getProfileStuff.profile.name}(${username})`;
-  //   }
-  // }, [username]);
-
   return (
     <Box w="100%">
-      <ProfileNav>
-        <Back onClick={() => history.goBack()}>
-          <BackSVG />
-        </Back>
-        <ProfileInfo>
-          <Flex flexDir="column">
-            <Text fontWeight="600" fontSize="sm">
-              {getProfileValByKey("name")}
-            </Text>
-            <Box fontSize="sm">
-              {getProfileValByKey("num")}
-              {" Tweets"}
-            </Box>
-          </Flex>
-        </ProfileInfo>
-      </ProfileNav>
+      <ProfileNav id={id} />
       <CoverImageContainer>
         <ImgContainer>
           <Image src={getProfileValByKey("cover_img")} alt="user-cover" />

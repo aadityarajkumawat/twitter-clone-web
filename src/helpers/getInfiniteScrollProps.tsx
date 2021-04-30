@@ -1,4 +1,4 @@
-import { ifHasMore, getMore } from ".";
+import { getMore, ifHasMore } from ".";
 import { LoadingSpinner } from "../components/spinner/LoadingSpinner";
 import { HomeContextType } from "../constants/interfaces";
 import { GetTweetsByUserQuery } from "../generated/graphql";

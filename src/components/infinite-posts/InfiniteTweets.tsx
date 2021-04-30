@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
   ProfileRouteParams,
   ProfileState,
 } from "../../constants/interfaces";
+import { HomeContextI } from "../../context/HomeContext";
 import { GetTweetsByUserFQuery } from "../../generated/graphql";
 import {
   getMoreUserPosts,
@@ -29,6 +30,7 @@ export const InfiniteTweets: React.FC<InfiniteTweetsProps> = ({
   const [state, dispatch] = context;
   const paginationProps = { profile: profileObj, state, dispatch };
   const { username } = useParams<ProfileRouteParams>();
+  const { state: homeState } = useContext(HomeContextI);
 
   useEffect(() => {
     resetProfileState(dispatch);
@@ -39,9 +41,9 @@ export const InfiniteTweets: React.FC<InfiniteTweetsProps> = ({
     <InfiniteScroll
       dataLength={state.scrollProps.dataLength}
       hasMore={
-        profileObj.getTweetsByUserF.num > 5 ? state.scrollProps.hasMore : false
+        profileObj.getTweetsByUserF.num > 15 ? state.scrollProps.hasMore : false
       }
-      next={() => getMoreUserPosts(paginationProps, id)}
+      next={() => getMoreUserPosts(paginationProps, id, homeState)}
       loader={<LoadingSpinner />}
     >
       <Fragment>

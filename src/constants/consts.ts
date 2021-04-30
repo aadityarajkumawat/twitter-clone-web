@@ -1,6 +1,6 @@
-import { EditProfileContext } from "./interfaces";
 import { handleChange } from "../helpers";
 import { handleFileChange } from "../helpers/handleFileChange";
+import { EditProfileContext } from "./interfaces";
 
 export const modalStyles: React.CSSProperties = {
   backgroundColor: "#2e2e2e",
@@ -24,4 +24,4 @@ export const textInput = (context: EditProfileContext) => ({
 });
 
 export const PAGINATE_USER_PROFILE = 10;
-export const PAGINATE_HOME = 15;
+export const PAGINATE_HOME = 10;

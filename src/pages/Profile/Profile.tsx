@@ -9,7 +9,6 @@ import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import Tweet from "../../components/tweet/Tweet";
 import { UserProfile } from "../../components/user-profile/UserProfile";
-import { PAGINATE_USER_PROFILE } from "../../constants/consts";
 import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
 import { HomeContextI } from "../../context/HomeContext";
 import {
@@ -32,7 +31,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const initialState: ProfileState = {
     more: [],
     offset: 0,
-    scrollProps: { dataLength: PAGINATE_USER_PROFILE, hasMore: true },
+    scrollProps: { dataLength: 0, hasMore: true },
     realTime: [],
   };
 
@@ -59,8 +58,9 @@ export const Profile: React.FC<ProfileProps> = () => {
     { data: profileObj, fetching: fetchingProfile },
   ] = useGetTweetsByUserFQuery({ variables: { id } });
 
-  if (username === "home" || username === "login" || username === "register")
+  if (username === "home" || username === "login" || username === "register") {
     return <Fragment></Fragment>;
+  }
 
   return (
     <Fragment>

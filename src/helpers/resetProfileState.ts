@@ -1,5 +1,4 @@
 import React from "react";
-import { PAGINATE_USER_PROFILE } from "../constants/consts";
 import { ProfileAction } from "../constants/interfaces";
 
 export const resetProfileState = (
@@ -9,6 +8,6 @@ export const resetProfileState = (
   dispatch({ type: "offset", updatedOffset: 0 });
   dispatch({
     type: "scroll",
-    updatedScroll: { dataLength: PAGINATE_USER_PROFILE, hasMore: true },
+    updatedScroll: { dataLength: 0, hasMore: true },
   });
 };
