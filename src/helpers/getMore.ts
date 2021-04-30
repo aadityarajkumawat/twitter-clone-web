@@ -76,17 +76,22 @@ export const getMoreUserPosts = async (
   const { scrollProps, offset, more } = state;
   const { dataLength } = scrollProps;
 
-  // console.log("object");
-
   if (!profile || !profile.getTweetsByUserF) return;
-  if (offset === profile.getTweetsByUserF.num + homeState.realTime.length) {
+  console.log(
+    offset,
+    "===",
+    profile.getTweetsByUserF.num,
+    "+",
+    homeState.realTime.length
+  );
+  if (offset === profile.getTweetsByUserF.num) {
     dispatch({
       type: "scroll",
       updatedScroll: { ...scrollProps, hasMore: false },
     });
     return;
   }
-  console.log(dataLength, homeState.realTime.length, postLimit);
+
   const phew = await cli
     .query<GetPaginatedUserTweetsQuery, GetPaginatedUserTweetsQueryVariables>(
       GetPaginatedUserTweetsDocument,
@@ -100,7 +105,7 @@ export const getMoreUserPosts = async (
 
   if (phew && phew.data && phew.data.getPaginatedUserTweets) {
     const paginatedTweets = phew.data.getPaginatedUserTweets.tweets;
-    console.log(paginatedTweets);
+
     if (paginatedTweets) {
       dispatch({
         type: "more",
