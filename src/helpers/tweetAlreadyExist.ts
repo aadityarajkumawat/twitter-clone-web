@@ -1,16 +1,12 @@
-import { HomeState } from "../constants/interfaces";
-import {
-  GetTweetsByUserQuery,
-  ListenTweetsSubscription,
-} from "../generated/graphql";
+import { HomeState, ProfileState, TweetType } from "../constants/interfaces";
+import { ListenTweetsSubscription } from "../generated/graphql";
 
 export const tweetAlreadyExist = (
-  state: HomeState,
-  feed: GetTweetsByUserQuery,
+  state: HomeState | ProfileState,
+  feed: TweetType[],
   rtPosts: ListenTweetsSubscription
 ): boolean => {
   const arr1 = state.more;
-  const arr2 = feed.getTweetsByUser.tweets;
   const arr3 = state.realTime;
   const id = rtPosts.listenTweets.tweet.tweet_id;
 
@@ -21,8 +17,8 @@ export const tweetAlreadyExist = (
       found = true;
     }
   }
-  for (let i = 0; i < arr2.length; i++) {
-    const arr = arr2;
+  for (let i = 0; i < feed.length; i++) {
+    const arr = feed;
     if (arr[i].tweet_id === id) {
       found = true;
     }

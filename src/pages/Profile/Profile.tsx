@@ -1,6 +1,5 @@
-import { Box } from "@chakra-ui/layout";
-import { useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useContext, useReducer } from "react";
+import { Box, useDisclosure } from "@chakra-ui/react";
+import React, { Fragment, useEffect, useReducer } from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
@@ -10,16 +9,16 @@ import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import Tweet from "../../components/tweet/Tweet";
 import { UserProfile } from "../../components/user-profile/UserProfile";
 import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
-import { HomeContextI } from "../../context/HomeContext";
 import {
   useGetTweetsByUserFQuery,
   useGetUserByUsernameQuery,
+  useListenTweetsSubscription,
   useMeQuery,
 } from "../../generated/graphql";
 import {
   decideAndReturnCorrectId,
   getTweetProps,
-  removeDuplicatesFromRealTime,
+  tweetAlreadyExist,
 } from "../../helpers";
 import * as S from "../../pages/home.styles";
 import { profileReducer } from "../../reducers/profileReducer";
@@ -37,16 +36,14 @@ export const Profile: React.FC<ProfileProps> = () => {
 
   const { username } = useParams<ProfileRouteParams>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    state: { realTime },
-  } = useContext(HomeContextI);
-
   const context = useReducer(profileReducer, initialState);
+  const [state, dispatch] = context;
 
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
   const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
     variables: { username },
   });
+  const [{ data: rtPosts }] = useListenTweetsSubscription();
 
   const { id } = decideAndReturnCorrectId(
     { fetchingUser, user },
@@ -57,6 +54,20 @@ export const Profile: React.FC<ProfileProps> = () => {
   const [
     { data: profileObj, fetching: fetchingProfile },
   ] = useGetTweetsByUserFQuery({ variables: { id } });
+
+  useEffect(() => {
+    if (rtPosts && profileObj) {
+      const userFeed = profileObj.getTweetsByUserF.tweets;
+      const alreadyExists = tweetAlreadyExist(state, userFeed, rtPosts);
+      if (alreadyExists) return;
+
+      const tweet = rtPosts.listenTweets.tweet;
+      dispatch({ type: "rt", realTimePosts: [tweet, ...state.realTime] });
+    }
+    // eslint-disable-next-line
+  }, [JSON.stringify(rtPosts)]);
+
+  console.log(profileObj, state.realTime);
 
   if (username === "home" || username === "login" || username === "register") {
     return <Fragment></Fragment>;
@@ -71,15 +82,15 @@ export const Profile: React.FC<ProfileProps> = () => {
           <UserProfile onOpen={onOpen} />
           {!fetchingProfile && profileObj ? (
             <Fragment>
-              {!fetchingUser && user && user.me.user.username === username && (
+              {/* {!fetchingUser && user && user.me.user.username === username && (
                 <Fragment>
-                  {removeDuplicatesFromRealTime(realTime, profileObj).map(
+                  {removeDuplicatesFromRealTime(state.realTime, profileObj).map(
                     (tweet) => (
                       <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                     )
                   )}
                 </Fragment>
-              )}
+              )} */}
               <Fragment>
                 {profileObj.getTweetsByUserF.tweets.map((tweet) => (
                   <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />

@@ -28,12 +28,9 @@ export const FeedTweets: React.FC<FeedTweetsProps> = ({}) => {
   const [{ data: rtPosts }] = useListenTweetsSubscription();
 
   useEffect(() => {
-    if (rtPosts && feedResponse.data) {
-      const alreadyExists = tweetAlreadyExist(
-        state,
-        feedResponse.data,
-        rtPosts
-      );
+    if (rtPosts && feed) {
+      const tweets = feed.getTweetsByUser.tweets;
+      const alreadyExists = tweetAlreadyExist(state, tweets, rtPosts);
       if (alreadyExists) return;
 
       const tweet = rtPosts.listenTweets.tweet;

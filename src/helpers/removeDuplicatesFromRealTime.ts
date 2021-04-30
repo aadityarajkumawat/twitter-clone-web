@@ -10,7 +10,7 @@ export const removeDuplicatesFromRealTime = (
 
   if (tweets.length === 0) {
     for (let i = 0; i < realTime.length; i++) {
-      betterRealTime.push(realTime[i])
+      betterRealTime.push(realTime[i]);
     }
     return betterRealTime;
   }
