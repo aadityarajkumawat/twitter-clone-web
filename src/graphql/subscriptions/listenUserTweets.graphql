@@ -1,0 +1,19 @@
+subscription ListenUserTweets($id: Float!) {
+  listenUserTweets(id: $id) {
+    tweets {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+      username
+      name
+      likes
+      comments
+      liked
+      profile_img
+      img
+    }
+    error
+  }
+}

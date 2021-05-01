@@ -23,7 +23,7 @@ export const getMore = async (
   const { state, dispatch } = context;
   const { scrollProps, realTime, pag, more } = state;
   const { dataLength } = scrollProps;
-  if (feed && feed.getTweetsByUser) {
+  if (feed && feed.getTweetsByUser && feed.getTweetsByUser.num) {
     if (pag.offset === feed.getTweetsByUser.num + realTime.length) {
       dispatch({
         type: "scroll",

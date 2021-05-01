@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
@@ -13,7 +14,6 @@ import {
   TweetWrapper,
   UserProfileImg,
 } from "./tweet.styles";
-import { motion } from "framer-motion";
 
 export interface TweetProps {
   username: string;
@@ -41,8 +41,8 @@ const Tweet: React.FC<TweetProps> = ({
   const [refresh, setRefresh] = useState<string>("");
 
   let liked = false;
-  if (!fetching && data) {
-    liked = data.getTweetById.tweet.liked;
+  if (!fetching && data && data.getTweetById.tweet) {
+    liked = data.getTweetById.tweet.liked
   }
 
   useEffect(() => {

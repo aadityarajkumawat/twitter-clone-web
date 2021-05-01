@@ -1,0 +1,3 @@
+query TriggerUserTweet($id: Float!) {
+  triggerUserTweetsSubscriptions(id: $id)
+}

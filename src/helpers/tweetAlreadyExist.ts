@@ -8,6 +8,7 @@ export const tweetAlreadyExist = (
 ): boolean => {
   const arr1 = state.more;
   const arr3 = state.realTime;
+  if (!rtPosts.listenTweets.tweet) return false;
   const id = rtPosts.listenTweets.tweet.tweet_id;
 
   let found = false;

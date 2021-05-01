@@ -1,8 +1,7 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useContext, useReducer } from "react";
+import React, { Fragment, useContext, useEffect, useReducer } from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
-import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
@@ -11,9 +10,10 @@ import { UserProfile } from "../../components/user-profile/UserProfile";
 import { ProfileRouteParams, ProfileState } from "../../constants/interfaces";
 import { HomeContextI } from "../../context/HomeContext";
 import {
-  useGetTweetsByUserFQuery,
   useGetUserByUsernameQuery,
+  useListenUserTweetsSubscription,
   useMeQuery,
+  useTriggerUserTweetQuery,
 } from "../../generated/graphql";
 import { decideAndReturnCorrectId, getTweetProps } from "../../helpers";
 import * as S from "../../pages/home.styles";
@@ -46,15 +46,20 @@ export const Profile: React.FC<ProfileProps> = () => {
     username
   );
 
+  const [{ data: userFeed }] = useListenUserTweetsSubscription({
+    variables: { id },
+  });
+
   const [
-    { data: profileObj, fetching: fetchingProfile },
-  ] = useGetTweetsByUserFQuery({ variables: { id } });
+    { data: triggered, fetching: triggering },
+    refe,
+  ] = useTriggerUserTweetQuery({
+    variables: { id },
+  });
 
-  console.log({ one: profileObj, two: homeContext.state.realTime });
-
-  // useEffect(() => {
-  //   fetc({ requestPolicy: "network-only" });
-  // }, [homeContext.state.realTime.length]);
+  useEffect(() => {
+    refe({ requestPolicy: "network-only" });
+  }, [JSON.stringify(userFeed)]);
 
   return (
     <Fragment>
@@ -63,7 +68,7 @@ export const Profile: React.FC<ProfileProps> = () => {
         <LeftMenu />
         <S.HomeMain>
           <UserProfile onOpen={onOpen} />
-          {!fetchingProfile && profileObj ? (
+          {!triggering && triggered && userFeed ? (
             <Fragment>
               {/* {!fetchingUser && user && user.me.user.username === username && (
                 <Fragment>
@@ -76,16 +81,17 @@ export const Profile: React.FC<ProfileProps> = () => {
                 </Fragment>
               )} */}
               <Fragment>
-                {profileObj.getTweetsByUserF.tweets.map((tweet) => (
-                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                ))}
+                {userFeed.listenUserTweets.tweets &&
+                  userFeed.listenUserTweets.tweets.map((tweet) => (
+                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                  ))}
               </Fragment>
 
-              <InfiniteTweets
+              {/* <InfiniteTweets
                 profileObj={profileObj}
                 id={id}
                 context={context}
-              />
+              /> */}
             </Fragment>
           ) : (
             <LoadingSpinner />

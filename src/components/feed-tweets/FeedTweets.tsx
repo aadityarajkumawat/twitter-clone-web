@@ -30,6 +30,7 @@ export const FeedTweets: React.FC<FeedTweetsProps> = ({}) => {
   useEffect(() => {
     if (rtPosts && feed) {
       const tweets = feed.getTweetsByUser.tweets;
+      if (!tweets) return;
       const alreadyExists = tweetAlreadyExist(state, tweets, rtPosts);
       if (alreadyExists) return;
 
@@ -41,7 +42,7 @@ export const FeedTweets: React.FC<FeedTweetsProps> = ({}) => {
 
   return (
     <Tweets>
-      {!fetchingFeed && feed ? (
+      {!fetchingFeed && feed && feed.getTweetsByUser.tweets ? (
         <Fragment>
           <Box>
             {[...state.realTime, ...feed.getTweetsByUser.tweets].map(

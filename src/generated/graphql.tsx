@@ -17,19 +17,30 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
+  getProfileImage?: Maybe<Scalars['String']>;
+  getCoverImage?: Maybe<Scalars['String']>;
   me: MeResponse;
   getProfileStuff: ProfileStuff;
   getUserByUsername: NUserResponse;
   getTweetById: GetTweetResponse;
   getTweetsByUser: GetFeedTweets;
   getPaginatedPosts: GetPaginatedFeedTweets;
+  triggerUserTweetsSubscriptions: Scalars['Boolean'];
   getTweetsByUserF: GetUserTweets;
   getPaginatedUserTweets: GetPaginatedUserTweets;
   getUserProfile: GetProfile;
   profileStuffAndUserTweets: ProfileStuffAndUserTweets;
   getSearchResults: DisplayProfiles;
-  getProfileImage?: Maybe<Scalars['String']>;
-  getCoverImage?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetProfileImageArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type QueryGetCoverImageArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -53,6 +64,11 @@ export type QueryGetPaginatedPostsArgs = {
 };
 
 
+export type QueryTriggerUserTweetsSubscriptionsArgs = {
+  id: Scalars['Float'];
+};
+
+
 export type QueryGetTweetsByUserFArgs = {
   id: Scalars['Float'];
 };
@@ -70,16 +86,6 @@ export type QueryProfileStuffAndUserTweetsArgs = {
 
 export type QueryGetSearchResultsArgs = {
   options: Searched;
-};
-
-
-export type QueryGetProfileImageArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type QueryGetCoverImageArgs = {
-  id: Scalars['Float'];
 };
 
 export type MeResponse = {
@@ -136,7 +142,7 @@ export type NUser = {
 
 export type GetTweetResponse = {
   __typename?: 'GetTweetResponse';
-  tweet: GetOneTweet;
+  tweet?: Maybe<GetOneTweet>;
   error?: Maybe<Scalars['String']>;
 };
 
@@ -162,9 +168,9 @@ export type GetTweetById = {
 
 export type GetFeedTweets = {
   __typename?: 'GetFeedTweets';
-  tweets: Array<GetOneTweet>;
-  error: Scalars['String'];
-  num: Scalars['Float'];
+  tweets?: Maybe<Array<GetOneTweet>>;
+  error?: Maybe<Scalars['String']>;
+  num?: Maybe<Scalars['Float']>;
 };
 
 export type GetPaginatedFeedTweets = {
@@ -239,13 +245,23 @@ export type Searched = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  followAUser: FollowedAUser;
+  saveImage: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
   createPost: PostCreatedResponse;
   likeTweet: LikedTweet;
   editProfile: Scalars['Boolean'];
-  followAUser: FollowedAUser;
-  saveImage: Scalars['Boolean'];
+};
+
+
+export type MutationFollowAUserArgs = {
+  options: UserToFollow;
+};
+
+
+export type MutationSaveImageArgs = {
+  options: ImageParams;
 };
 
 
@@ -273,14 +289,19 @@ export type MutationEditProfileArgs = {
   options: EditProfile;
 };
 
-
-export type MutationFollowAUserArgs = {
-  options: UserToFollow;
+export type FollowedAUser = {
+  __typename?: 'FollowedAUser';
+  followed: Scalars['Boolean'];
+  error: Scalars['String'];
 };
 
+export type UserToFollow = {
+  thatUser: Scalars['Float'];
+};
 
-export type MutationSaveImageArgs = {
-  options: ImageParams;
+export type ImageParams = {
+  url: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -346,24 +367,22 @@ export type EditProfile = {
   link: Scalars['String'];
 };
 
-export type FollowedAUser = {
-  __typename?: 'FollowedAUser';
-  followed: Scalars['Boolean'];
-  error: Scalars['String'];
-};
-
-export type UserToFollow = {
-  thatUser: Scalars['Float'];
-};
-
-export type ImageParams = {
-  url: Scalars['String'];
-  type: Scalars['String'];
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
+  listenUserTweets: SubUserTweets;
   listenTweets: GetTweetResponse;
+};
+
+
+export type SubscriptionListenUserTweetsArgs = {
+  id: Scalars['Float'];
+};
+
+export type SubUserTweets = {
+  __typename?: 'SubUserTweets';
+  tweets?: Maybe<Array<GetOneTweet>>;
+  num?: Maybe<Scalars['Float']>;
+  error?: Maybe<Scalars['String']>;
 };
 
 export type CreateTweetMutationVariables = Exact<{
@@ -470,6 +489,16 @@ export type SaveImageMutationVariables = Exact<{
 export type SaveImageMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'saveImage'>
+);
+
+export type TriggerUserTweetQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type TriggerUserTweetQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'triggerUserTweetsSubscriptions'>
 );
 
 export type GetFollowInfoQueryVariables = Exact<{
@@ -615,10 +644,10 @@ export type GetTweetByIdQuery = (
   & { getTweetById: (
     { __typename?: 'GetTweetResponse' }
     & Pick<GetTweetResponse, 'error'>
-    & { tweet: (
+    & { tweet?: Maybe<(
       { __typename?: 'GetOneTweet' }
       & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked'>
-    ) }
+    )> }
   ) }
 );
 
@@ -630,10 +659,10 @@ export type GetTweetsByUserQuery = (
   & { getTweetsByUser: (
     { __typename?: 'GetFeedTweets' }
     & Pick<GetFeedTweets, 'error' | 'num'>
-    & { tweets: Array<(
+    & { tweets?: Maybe<Array<(
       { __typename?: 'GetOneTweet' }
       & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
-    )> }
+    )>> }
   ) }
 );
 
@@ -693,10 +722,27 @@ export type ListenTweetsSubscription = (
   & { listenTweets: (
     { __typename?: 'GetTweetResponse' }
     & Pick<GetTweetResponse, 'error'>
-    & { tweet: (
+    & { tweet?: Maybe<(
       { __typename?: 'GetOneTweet' }
       & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'comments' | 'likes' | 'liked' | 'profile_img' | 'img'>
-    ) }
+    )> }
+  ) }
+);
+
+export type ListenUserTweetsSubscriptionVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type ListenUserTweetsSubscription = (
+  { __typename?: 'Subscription' }
+  & { listenUserTweets: (
+    { __typename?: 'SubUserTweets' }
+    & Pick<SubUserTweets, 'error'>
+    & { tweets?: Maybe<Array<(
+      { __typename?: 'GetOneTweet' }
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+    )>> }
   ) }
 );
 
@@ -801,6 +847,15 @@ export const SaveImageDocument = gql`
 
 export function useSaveImageMutation() {
   return Urql.useMutation<SaveImageMutation, SaveImageMutationVariables>(SaveImageDocument);
+};
+export const TriggerUserTweetDocument = gql`
+    query TriggerUserTweet($id: Float!) {
+  triggerUserTweetsSubscriptions(id: $id)
+}
+    `;
+
+export function useTriggerUserTweetQuery(options: Omit<Urql.UseQueryArgs<TriggerUserTweetQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<TriggerUserTweetQuery>({ query: TriggerUserTweetDocument, ...options });
 };
 export const GetFollowInfoDocument = gql`
     query GetFollowInfo($id: Float!) {
@@ -1108,4 +1163,29 @@ export const ListenTweetsDocument = gql`
 
 export function useListenTweetsSubscription<TData = ListenTweetsSubscription>(options: Omit<Urql.UseSubscriptionArgs<ListenTweetsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenTweetsSubscription, TData>) {
   return Urql.useSubscription<ListenTweetsSubscription, TData, ListenTweetsSubscriptionVariables>({ query: ListenTweetsDocument, ...options }, handler);
+};
+export const ListenUserTweetsDocument = gql`
+    subscription ListenUserTweets($id: Float!) {
+  listenUserTweets(id: $id) {
+    tweets {
+      tweet_id
+      tweet_content
+      created_At
+      _type
+      rel_acc
+      username
+      name
+      likes
+      comments
+      liked
+      profile_img
+      img
+    }
+    error
+  }
+}
+    `;
+
+export function useListenUserTweetsSubscription<TData = ListenUserTweetsSubscription>(options: Omit<Urql.UseSubscriptionArgs<ListenUserTweetsSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<ListenUserTweetsSubscription, TData>) {
+  return Urql.useSubscription<ListenUserTweetsSubscription, TData, ListenUserTweetsSubscriptionVariables>({ query: ListenUserTweetsDocument, ...options }, handler);
 };
