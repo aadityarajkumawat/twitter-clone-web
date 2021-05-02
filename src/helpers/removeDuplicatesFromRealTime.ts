@@ -13,14 +13,22 @@ export const removeDuplicatesFromRealTime = (
       betterRealTime.push(realTime[i]);
     }
 
-    // console.log("1", { betterRealTime });
     return betterRealTime;
   }
 
-  // console.log(tweets);
   for (let i = 0; i < realTime.length; i++) {
-    if (tweets[i] && tweets[i].tweet_id !== realTime[i].tweet_id) {
-      betterRealTime.push(realTime[i]);
+    const currentRealTimeTweet = realTime[i];
+    let isFound = false;
+
+    for (let j = 0; j < tweets.length; j++) {
+      if (tweets[j].tweet_id === currentRealTimeTweet.tweet_id) {
+        isFound = true;
+        break;
+      }
+    }
+
+    if (!isFound) {
+      betterRealTime.push(currentRealTimeTweet);
     }
   }
 

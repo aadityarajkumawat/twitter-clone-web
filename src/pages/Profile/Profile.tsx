@@ -1,7 +1,8 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useContext, useEffect, useReducer } from "react";
+import React, { Fragment, useContext, useReducer } from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
+import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
@@ -14,37 +15,20 @@ import {
 } from "../../constants/interfaces";
 import { HomeContextI } from "../../context/HomeContext";
 import {
+  useGetTweetsByUserFQuery,
   useGetUserByUsernameQuery,
-  useListenUserTweetsSubscription,
   useMeQuery,
 } from "../../generated/graphql";
-import { decideAndReturnCorrectId, getTweetProps } from "../../helpers";
+import {
+  decideAndReturnCorrectId,
+  getTweetProps,
+  removeDuplicatesFromRealTime,
+} from "../../helpers";
 import { HomeMain } from "../../pages/home.styles";
 import { profileReducer } from "../../reducers/profileReducer";
 import { ProfileContainer } from "./profile.styles";
 
 interface ProfileProps {}
-
-const sf = `
-subscription ListenUserTweets($id: Float!) {
-  listenUserTweets(id: $id) {
-    tweets {
-      tweet_id
-      tweet_content
-      created_At
-      _type
-      rel_acc
-      username
-      name
-      likes
-      comments
-      liked
-      profile_img
-      img
-    }
-    error
-  }
-}`;
 
 export const Profile: React.FC<ProfileProps> = () => {
   const initialState: ProfileState = {
@@ -70,25 +54,7 @@ export const Profile: React.FC<ProfileProps> = () => {
     username
   );
 
-  const [ss, s] = useListenUserTweetsSubscription({
-    variables: { id: 7 },
-  });
-
-  // const [ss] = useSubscription({ query: sf, variables: { id } });
-  console.log(ss);
-
-  // console.log(ss.data);
-
-  // const [
-  //   { data: triggered, fetching: triggering },
-  //   refe,
-  // ] = useTriggerUserTweetQuery({
-  //   variables: { id },
-  // });
-
-  useEffect(() => {
-    s({ requestPolicy: "network-only" });
-  }, [JSON.stringify(ss)]);
+  const [{ data, fetching }] = useGetTweetsByUserFQuery({ variables: { id } });
 
   return (
     <Fragment>
@@ -98,30 +64,25 @@ export const Profile: React.FC<ProfileProps> = () => {
         <HomeMain>
           <UserProfile onOpen={onOpen} />
 
-          {ss.data ? (
+          {!fetching && data ? (
             <Fragment>
-              {/* {!fetchingUser && user && user.me.user.username === username && (
+              {!fetchingUser && user && user.me.user.username === username && (
                 <Fragment>
                   {removeDuplicatesFromRealTime(
                     homeContext.state.realTime,
-                    profileObj
+                    data
                   ).map((tweet) => (
                     <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
                   ))}
                 </Fragment>
-              )} */}
+              )}
               <Fragment>
-                {ss.data.listenUserTweets.tweets &&
-                  ss.data.listenUserTweets.tweets.map((tweet: TweetType) => (
-                    <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
-                  ))}
+                {data.getTweetsByUserF.tweets.map((tweet: TweetType) => (
+                  <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                ))}
               </Fragment>
 
-              {/* <InfiniteTweets
-                profileObj={profileObj}
-                id={id}
-                context={context}
-              /> */}
+              <InfiniteTweets profileObj={data} id={id} context={context} />
             </Fragment>
           ) : (
             <LoadingSpinner />
