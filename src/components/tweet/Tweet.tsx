@@ -1,6 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
@@ -39,6 +40,7 @@ const Tweet: React.FC<TweetProps> = ({
   });
 
   const [refresh, setRefresh] = useState<string>("");
+  const history = useHistory();
 
   let liked = false;
   if (!fetching && data && data.getTweetById.tweet) {
@@ -59,16 +61,18 @@ const Tweet: React.FC<TweetProps> = ({
           </div>
         </UserProfileImg>
         <TweetContainer>
-          <TweetUsername>
-            <span>{name}</span>
-            <FadedUsername>@{username}</FadedUsername>
-          </TweetUsername>
-          <TweetContent>{tweet_content}</TweetContent>
-          {captain !== "" && (
-            <TweetImageContainer>
-              <img src={captain} alt="" />
-            </TweetImageContainer>
-          )}
+          <Box onClick={() => history.push(`/status/${username}/${tweet_id}`)}>
+            <TweetUsername>
+              <span>{name}</span>
+              <FadedUsername>@{username}</FadedUsername>
+            </TweetUsername>
+            <TweetContent>{tweet_content}</TweetContent>
+            {captain !== "" && (
+              <TweetImageContainer>
+                <img src={captain} alt="" />
+              </TweetImageContainer>
+            )}
+          </Box>
           <TweetActionBar>
             <span>
               <Flex fontSize="14px">
@@ -93,7 +97,7 @@ const Tweet: React.FC<TweetProps> = ({
                   ml="5px"
                   color={liked ? "rgb(224, 36, 94)" : "rgb(136, 153, 166)"}
                 >
-                  {data ? data!.getTweetById.tweet?.likes : 0}
+                  {data ? data.getTweetById.tweet?.likes : 0}
                 </Box>
               </Flex>
             </span>

@@ -3,6 +3,7 @@ import { Redirect, Route } from "react-router-dom";
 import Login from "../components/auth/login/Login";
 import Register from "../components/auth/register/Register";
 import Home from "../pages/Home";
+import { OpenTweet } from "../pages/OpenTweet/OpenTweet";
 import { ProfileWrapper } from "../pages/ProfileWrapper";
 import { PrivateRoute } from "./PrivateRoute";
 
@@ -18,6 +19,7 @@ const Routes: React.FC<RoutesProps> = (): JSX.Element => {
       <Route path="/:username" exact component={ProfileWrapper} />
       <Route path="/login" exact component={Login} />
       <Route path="/register" exact component={Register} />
+      <Route path="/status/:username/:tweet_id" exact component={OpenTweet} />
     </Fragment>
   );
 };

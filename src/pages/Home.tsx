@@ -8,8 +8,6 @@ import { BaseComponent, HomeMain } from "./home.styles";
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  // const s = useListenUserTweetsSubscription({ variables: { id: 7 } });
-  // console.log(s);
   return (
     <BaseComponent className="main">
       <LeftMenu />

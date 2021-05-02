@@ -11,6 +11,8 @@ query GetTweetById($tweet_id: Float!) {
       likes
       comments
       liked
+      img
+      profile_img
     }
     error
   }

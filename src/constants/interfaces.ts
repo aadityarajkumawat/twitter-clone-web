@@ -9,6 +9,7 @@ import {
 } from "../generated/graphql";
 
 export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
+export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
 export interface PaginationParams {
   offset: number;
@@ -106,7 +107,7 @@ export interface EditProfileProps {
   onClose: () => void;
   isOpen: boolean;
   id: number;
-  setRefreshToken: React.Dispatch<React.SetStateAction<string>>;
+  setRefreshToken: SetState<string>;
 }
 
 export type EditImagesI = {
@@ -180,4 +181,8 @@ export interface FollowInfoState {
   followers: number;
   following: number;
   isFollowed: boolean;
+}
+export interface OpenTweetRouteParams {
+  username: string;
+  tweet_id: string;
 }

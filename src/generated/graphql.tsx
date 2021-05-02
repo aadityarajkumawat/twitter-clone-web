@@ -369,14 +369,8 @@ export type EditProfile = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  test: Scalars['String'];
   listenUserTweets: SubUserTweets;
   listenTweets: GetTweetResponse;
-};
-
-
-export type SubscriptionTestArgs = {
-  str: Scalars['String'];
 };
 
 
@@ -652,7 +646,7 @@ export type GetTweetByIdQuery = (
     & Pick<GetTweetResponse, 'error'>
     & { tweet?: Maybe<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'img' | 'profile_img'>
     )> }
   ) }
 );
@@ -1047,6 +1041,8 @@ export const GetTweetByIdDocument = gql`
       likes
       comments
       liked
+      img
+      profile_img
     }
     error
   }

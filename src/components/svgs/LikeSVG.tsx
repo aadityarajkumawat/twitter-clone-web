@@ -1,14 +1,15 @@
 import React from "react";
-import { useLikeTweetMutation } from "../../generated/graphql";
 import { v4 as uuidv4 } from "uuid";
+import { useLikeTweetMutation } from "../../generated/graphql";
 
 interface LikeSVGProps {
   liked: boolean | undefined;
   tweet_id: number;
   setR: React.Dispatch<React.SetStateAction<string>>;
+  size?: string;
 }
 
-const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
+const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR, size }) => {
   const [, likeTweet] = useLikeTweetMutation();
 
   return (
@@ -18,9 +19,8 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
         setR(uuidv4());
       }}
     >
-      {/* <Heart isClick={liked} /> */}
       {liked ? (
-        <svg width="16px" viewBox="0 0 24 24">
+        <svg width={size ? size : "16px"} viewBox="0 0 24 24">
           <g>
             <path
               style={{ fill: "rgb(224, 36, 94)" }}
@@ -29,7 +29,7 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
           </g>
         </svg>
       ) : (
-        <svg width="16px" viewBox="0 0 24 24">
+        <svg width={size ? size : "16px"} viewBox="0 0 24 24">
           <g>
             <path
               style={{ fill: "rgb(136, 153, 166)" }}
@@ -38,8 +38,6 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR }) => {
           </g>
         </svg>
       )}
-
-      {/* <TwitterLike /> */}
     </div>
   );
 };
