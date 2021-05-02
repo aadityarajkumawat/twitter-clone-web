@@ -1,16 +1,15 @@
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import "dotenv/config";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 import {
   createClient,
-  Provider as UrqlProvider,
   defaultExchanges,
+  Provider as UrqlProvider,
   subscriptionExchange,
 } from "urql";
-import { SubscriptionClient } from "subscriptions-transport-ws";
-import { ChakraProvider } from "@chakra-ui/react";
-import { extendTheme } from "@chakra-ui/react";
-import "dotenv/config";
+import App from "./App";
+import "./index.css";
 
 const theme = extendTheme({
   components: {
@@ -39,7 +38,9 @@ const sub = new SubscriptionClient(
 );
 
 export const cli = createClient({
-  url: process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "",
+  url: process.env.REACT_APP_API_URL
+    ? process.env.REACT_APP_API_URL
+    : "http://localhost:3000",
   fetchOptions: {
     credentials: "include",
   },

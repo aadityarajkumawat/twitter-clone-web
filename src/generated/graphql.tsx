@@ -369,8 +369,14 @@ export type EditProfile = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  test: Scalars['String'];
   listenUserTweets: SubUserTweets;
   listenTweets: GetTweetResponse;
+};
+
+
+export type SubscriptionTestArgs = {
+  str: Scalars['String'];
 };
 
 
