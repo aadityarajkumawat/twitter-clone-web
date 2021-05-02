@@ -14,7 +14,7 @@ import { TopLoader } from "../top-loader/TopLoader";
 
 interface HomeHeaderProps {}
 
-export const HomeHeader: React.FC<HomeHeaderProps> = ({}) => {
+export const HomeHeader: React.FC<HomeHeaderProps> = () => {
   const context = useContext(HomeContextI);
 
   const { state, HomeActionFn } = context;

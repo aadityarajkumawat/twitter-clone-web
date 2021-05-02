@@ -58,6 +58,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
   useEffect(() => {
     repres({ requestPolicy: "network-only" });
+    // eslint-disable-next-line
   }, [refreshToken]);
 
   return (

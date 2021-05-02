@@ -17,7 +17,7 @@ import Tweet from "../tweet/Tweet";
 
 interface FeedTweetsProps {}
 
-export const FeedTweets: React.FC<FeedTweetsProps> = ({}) => {
+export const FeedTweets: React.FC<FeedTweetsProps> = () => {
   const context = useContext(HomeContextI);
   const { state, HomeActionFn } = context;
   const { pushTweetToFeed } = HomeActionFn;

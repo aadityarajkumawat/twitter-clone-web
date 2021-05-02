@@ -23,6 +23,7 @@ export const ProfileNav: React.FC<ProfileNavProps> = ({ id }) => {
 
   useEffect(() => {
     refe({ requestPolicy: "network-only" });
+    // eslint-disable-next-line
   }, [context.state.realTime.length]);
 
   return (

@@ -22,6 +22,7 @@ export const TweetActions: React.FC<TweetActionsProps> = () => {
 
   useEffect(() => {
     refreshDue({ requestPolicy: "network-only" });
+    // eslint-disable-next-line
   }, [refresh]);
 
   return (
