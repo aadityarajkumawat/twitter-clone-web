@@ -106,6 +106,7 @@ export interface EditProfileProps {
   onClose: () => void;
   isOpen: boolean;
   id: number;
+  setRefreshToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type EditImagesI = {

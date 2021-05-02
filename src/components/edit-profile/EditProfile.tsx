@@ -1,41 +1,42 @@
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Progress,
+  Text,
+} from "@chakra-ui/react";
 import React, { Fragment, useEffect, useReducer } from "react";
+import { v4 as uuid } from "uuid";
+import { setForm } from "../../actions/editProfileActions";
+import { fileInput, modalStyles, textInput } from "../../constants/consts";
+import { EditProfileProps, EditProfileState } from "../../constants/interfaces";
 import {
   useEditProfileMutation,
   useProfileStuffAndUserTweetsQuery,
   useSaveImageMutation,
 } from "../../generated/graphql";
-import {
-  Box,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  Flex,
-  Image,
-  Text,
-  Progress,
-} from "@chakra-ui/react";
-import { Form } from "../auth/login/login.styles";
-import { EditProfileState, EditProfileProps } from "../../constants/interfaces";
-import { editProfileReducer } from "../../reducers/editProfileReducer";
-import { setForm } from "../../actions/editProfileActions";
 import { uploadImagesAndSave } from "../../helpers/handleProfileImages";
-import { WrapperBox } from "./editprofile.styles";
-import { fileInput, modalStyles, textInput } from "../../constants/consts";
 import { notFetchingProfileAndHasProfile } from "../../helpers/notFetchingProfileAndHasProfile";
+import { editProfileReducer } from "../../reducers/editProfileReducer";
+import { Form } from "../auth/login/login.styles";
+import { WrapperBox } from "./editprofile.styles";
 
 export const EditProfile: React.FC<EditProfileProps> = ({
   onClose,
   isOpen,
   id,
+  setRefreshToken,
 }) => {
   const [
     { data: profileObj, fetching: fetchingProfile },
-    refetchProfileStuffAndUserTweets,
   ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
   const profile = notFetchingProfileAndHasProfile(fetchingProfile, profileObj)
@@ -56,7 +57,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   const submit = async () => {
     await uploadImagesAndSave(context, saveImg, save);
-    refetchProfileStuffAndUserTweets({ requestPolicy: "network-only" });
+    setRefreshToken(uuid());
     dispatch({ type: "saving", updatedProgress: 0 });
     onClose();
   };

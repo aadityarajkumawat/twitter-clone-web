@@ -42,7 +42,7 @@ const Tweet: React.FC<TweetProps> = ({
 
   let liked = false;
   if (!fetching && data && data.getTweetById.tweet) {
-    liked = data.getTweetById.tweet.liked
+    liked = data.getTweetById.tweet.liked;
   }
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const Tweet: React.FC<TweetProps> = ({
   }, [refresh]);
 
   return (
-    <motion.div layout style={{ width: "100%" }}>
+    <motion.div style={{ width: "100%" }}>
       <TweetWrapper>
         <UserProfileImg>
           <div>

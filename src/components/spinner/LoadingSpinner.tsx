@@ -8,7 +8,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = () => {
     <Flex
       justifyContent="center"
       alignItems="center"
-      my="50px"
+      h="160px"
       overflowY="hidden"
     >
       <Spinner color="white" />

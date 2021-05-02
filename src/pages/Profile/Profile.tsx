@@ -1,5 +1,5 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useContext, useReducer } from "react";
+import React, { Fragment, useContext, useReducer, useState } from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
@@ -31,6 +31,7 @@ import { ProfileContainer } from "./profile.styles";
 interface ProfileProps {}
 
 export const Profile: React.FC<ProfileProps> = () => {
+  const [refreshToken, setRefreshToken] = useState<string>("");
   const initialState: ProfileState = {
     more: [],
     offset: 0,
@@ -59,10 +60,15 @@ export const Profile: React.FC<ProfileProps> = () => {
   return (
     <Fragment>
       <ProfileContainer>
-        <EditProfile onClose={onClose} isOpen={isOpen} id={id} />
+        <EditProfile
+          onClose={onClose}
+          isOpen={isOpen}
+          id={id}
+          setRefreshToken={setRefreshToken}
+        />
         <LeftMenu />
         <HomeMain>
-          <UserProfile onOpen={onOpen} username={username} />
+          <UserProfile onOpen={onOpen} refreshToken={refreshToken} />
 
           {!fetching && data ? (
             <Fragment>

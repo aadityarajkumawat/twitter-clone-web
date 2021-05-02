@@ -1,6 +1,10 @@
 import { Box, Button, Image, Link, Text } from "@chakra-ui/react";
-import React from "react";
-import { ProfileProperties } from "../../constants/interfaces";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
+import {
+  ProfileProperties,
+  ProfileRouteParams,
+} from "../../constants/interfaces";
 import {
   useGetProfileStuffQuery,
   useGetUserByUsernameQuery,
@@ -19,13 +23,14 @@ import { LoadingSpinner } from "../spinner/LoadingSpinner";
 
 interface UserProfileProps {
   onOpen: () => void;
-  username: string;
+  refreshToken: string;
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
   onOpen,
-  username,
+  refreshToken,
 }) => {
+  const { username } = useParams<ProfileRouteParams>();
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
   const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
     variables: { username },
@@ -39,6 +44,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
   const [
     { data: profile, fetching: fetchingProfile },
+    repres,
   ] = useGetProfileStuffQuery({ variables: { id } });
 
   const getProfileValByKey = (key: ProfileProperties) => {
@@ -49,6 +55,10 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     }
     return "";
   };
+
+  useEffect(() => {
+    repres({ requestPolicy: "network-only" });
+  }, [refreshToken]);
 
   return (
     <Box w="100%">
