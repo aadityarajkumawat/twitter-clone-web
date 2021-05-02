@@ -1,11 +1,6 @@
 import { Box, Button, Image, Link, Text } from "@chakra-ui/react";
 import React from "react";
-import { useHistory } from "react-router";
-import { useParams } from "react-router-dom";
-import {
-  ProfileProperties,
-  ProfileRouteParams,
-} from "../../constants/interfaces";
+import { ProfileProperties } from "../../constants/interfaces";
 import {
   useGetProfileStuffQuery,
   useGetUserByUsernameQuery,
@@ -24,11 +19,13 @@ import { LoadingSpinner } from "../spinner/LoadingSpinner";
 
 interface UserProfileProps {
   onOpen: () => void;
+  username: string;
 }
 
-export const UserProfile: React.FC<UserProfileProps> = ({ onOpen }) => {
-  const { username } = useParams<ProfileRouteParams>();
-
+export const UserProfile: React.FC<UserProfileProps> = ({
+  onOpen,
+  username,
+}) => {
   const [{ data: user, fetching: fetchingUser }] = useMeQuery();
   const [{ data: nUser, fetching: fetchingNUser }] = useGetUserByUsernameQuery({
     variables: { username },

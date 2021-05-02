@@ -107,6 +107,7 @@ export const ProfileImgContainer = styled.div`
 
 export const MoreInfo = styled.div`
   width: 100%;
+  height: 160px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -123,6 +124,7 @@ export const MoreInfo = styled.div`
 
   p {
     margin-top: 0;
+    overflow-y: hidden;
   }
 
   .username {

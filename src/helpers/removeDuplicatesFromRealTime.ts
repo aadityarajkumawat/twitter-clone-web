@@ -32,6 +32,5 @@ export const removeDuplicatesFromRealTime = (
     }
   }
 
-  console.log("2", { betterRealTime });
   return betterRealTime;
 };

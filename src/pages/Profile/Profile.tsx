@@ -62,7 +62,7 @@ export const Profile: React.FC<ProfileProps> = () => {
         <EditProfile onClose={onClose} isOpen={isOpen} id={id} />
         <LeftMenu />
         <HomeMain>
-          <UserProfile onOpen={onOpen} />
+          <UserProfile onOpen={onOpen} username={username} />
 
           {!fetching && data ? (
             <Fragment>
