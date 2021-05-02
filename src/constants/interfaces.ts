@@ -186,3 +186,25 @@ export interface OpenTweetRouteParams {
   username: string;
   tweet_id: string;
 }
+
+export type UserProfileType = {
+  cover_img: string;
+  profile_img: string;
+  name: string;
+  username: string;
+  bio: string;
+  link: string;
+};
+
+export interface AppContextState {
+  loggedUserProfile: UserProfileType | undefined;
+}
+
+export interface AppContextI extends AppContextState {
+  setUserProfile: (profile: UserProfileType) => void;
+}
+
+export type AppContextAction = {
+  type: "user-profile";
+  profile: UserProfileType;
+};

@@ -1,10 +1,11 @@
 import { Box, Button, Image, Link, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router";
 import {
   ProfileProperties,
   ProfileRouteParams,
 } from "../../constants/interfaces";
+import { AppContextI } from "../../context/AppContext";
 import {
   useGetProfileStuffQuery,
   useGetUserByUsernameQuery,
@@ -42,6 +43,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     username
   );
 
+  const appContext = useContext(AppContextI);
+  const { setUserProfile, loggedUserProfile } = appContext;
+
   const [
     { data: profile, fetching: fetchingProfile },
     repres,
@@ -55,6 +59,20 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     }
     return "";
   };
+
+  useEffect(() => {
+    if (profile && profile.getProfileStuff.profile) {
+      const {
+        bio,
+        cover_img,
+        link,
+        name,
+        profile_img,
+        username,
+      } = profile.getProfileStuff.profile;
+      setUserProfile({ bio, cover_img, link, name, profile_img, username });
+    }
+  }, [JSON.stringify(profile)]);
 
   useEffect(() => {
     repres({ requestPolicy: "network-only" });
