@@ -1,5 +1,5 @@
-import { Box, Button, Image, Link, Text } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
+import { Box, Button, Image } from "@chakra-ui/react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { useParams } from "react-router";
 import {
   ProfileProperties,
@@ -15,11 +15,11 @@ import { decideAndReturnCorrectId } from "../../helpers";
 import {
   CoverImageContainer,
   ImgContainer,
-  MoreInfo,
   ProfileImgContainer,
 } from "../../pages/Profile/profile.styles";
-import { FollowInfo } from "../follow-info/FollowInfo";
+import { MoreInfoHigh } from "../more-info/MoreInfoHigh";
 import { ProfileNav } from "../profile-nav/ProfileNav";
+import { LoadingSpinner } from "../spinner/LoadingSpinner";
 
 interface UserProfileProps {
   onOpen: () => void;
@@ -108,32 +108,48 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           </Button>
         )}
       </CoverImageContainer>
-      <MoreInfo>
-        <Text fontWeight="600">
-          {loggedUserProfile && isLoggedUser
-            ? loggedUserProfile.name
-            : getProfileValByKey("name")}
-        </Text>
-        <Text color="#a5a5a5">
-          @
-          {loggedUserProfile && isLoggedUser
-            ? loggedUserProfile.username
-            : getProfileValByKey("username")}
-        </Text>
-        <Text>
-          {loggedUserProfile && isLoggedUser
-            ? loggedUserProfile.bio
-            : getProfileValByKey("bio")}
-        </Text>
-        <Text className="link">
-          <Link href={getProfileValByKey("link")}>
-            {loggedUserProfile && isLoggedUser
-              ? loggedUserProfile.link
-              : getProfileValByKey("link")}
-          </Link>
-        </Text>
-        <FollowInfo id={id} isLoggedUser={isLoggedUser} />
-      </MoreInfo>
+
+      {!isLoggedUser ? (
+        <Box>
+          {!fetchingProfile && profile ? (
+            <MoreInfoHigh
+              bio={getProfileValByKey("bio")}
+              link={getProfileValByKey("link")}
+              name={getProfileValByKey("name")}
+              username={getProfileValByKey("username")}
+              id={id}
+              isLoggedUser={isLoggedUser}
+            />
+          ) : (
+            <LoadingSpinner />
+          )}
+        </Box>
+      ) : (
+        <Box>
+          {loggedUserProfile ? (
+            <MoreInfoHigh
+              {...loggedUserProfile}
+              id={id}
+              isLoggedUser={isLoggedUser}
+            />
+          ) : (
+            <Fragment>
+              {!fetchingProfile && profile ? (
+                <MoreInfoHigh
+                  bio={getProfileValByKey("bio")}
+                  link={getProfileValByKey("link")}
+                  name={getProfileValByKey("name")}
+                  username={getProfileValByKey("username")}
+                  id={id}
+                  isLoggedUser={isLoggedUser}
+                />
+              ) : (
+                <LoadingSpinner />
+              )}
+            </Fragment>
+          )}
+        </Box>
+      )}
       <Box w="100%" h="3px" bg="#424242" mb="8px"></Box>
     </Box>
   );
