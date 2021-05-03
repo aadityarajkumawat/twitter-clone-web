@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { OpenTweetHeader } from "../../components/open-tweet-header/OpenTweetHeader";
 import { RightMenu } from "../../components/right-menu/RightMenu";
+import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import { TweetActions } from "../../components/tweet-action-bar/TweetActions";
 import { OpenTweetRouteParams } from "../../constants/interfaces";
 import {
@@ -65,7 +66,9 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
               )}
             </Flex>
           ) : (
-            <Fragment></Fragment>
+            <Flex justifyContent="center" w="100%">
+              <LoadingSpinner h="50px" />
+            </Flex>
           )}
         </Flex>
         <TweetActions />
