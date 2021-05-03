@@ -71,6 +71,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       } = profile.getProfileStuff.profile;
       setUserProfile({ bio, cover_img, link, name, profile_img, username });
     }
+    // eslint-disable-next-line
   }, [JSON.stringify(profile)]);
 
   useEffect(() => {
