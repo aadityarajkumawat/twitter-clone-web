@@ -20,6 +20,7 @@ export const FollowInfo: React.FC<FollowInfoProps> = ({ id, isLoggedUser }) => {
     following: 0,
     isFollowed: false,
   });
+  const followingLoading = useState<boolean>(false);
 
   useEffect(() => {
     if (!fetching && data) {
@@ -29,6 +30,7 @@ export const FollowInfo: React.FC<FollowInfoProps> = ({ id, isLoggedUser }) => {
         following,
         isFollowed,
       }));
+      followingLoading[1](false);
     }
     // eslint-disable-next-line
   }, [JSON.stringify(data)]);
@@ -50,6 +52,7 @@ export const FollowInfo: React.FC<FollowInfoProps> = ({ id, isLoggedUser }) => {
         id={id}
         refe={refe}
         following={followInfo.isFollowed}
+        followingLoading={followingLoading}
       />
     </Follows>
   );

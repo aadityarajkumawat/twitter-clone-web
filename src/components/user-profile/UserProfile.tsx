@@ -20,7 +20,6 @@ import {
 } from "../../pages/Profile/profile.styles";
 import { FollowInfo } from "../follow-info/FollowInfo";
 import { ProfileNav } from "../profile-nav/ProfileNav";
-import { LoadingSpinner } from "../spinner/LoadingSpinner";
 
 interface UserProfileProps {
   onOpen: () => void;
@@ -61,7 +60,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   };
 
   useEffect(() => {
-    if (profile && profile.getProfileStuff.profile) {
+    if (profile && profile.getProfileStuff.profile && isLoggedUser) {
       const {
         bio,
         cover_img,
@@ -84,10 +83,24 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       <ProfileNav id={id} />
       <CoverImageContainer>
         <ImgContainer>
-          <Image src={getProfileValByKey("cover_img")} alt="user-cover" />
+          <Image
+            src={
+              loggedUserProfile && isLoggedUser
+                ? loggedUserProfile.cover_img
+                : getProfileValByKey("cover_img")
+            }
+            alt="user-cover"
+          />
         </ImgContainer>
         <ProfileImgContainer>
-          <Image src={getProfileValByKey("profile_img")} alt="user" />
+          <Image
+            src={
+              loggedUserProfile && isLoggedUser
+                ? loggedUserProfile.profile_img
+                : getProfileValByKey("profile_img")
+            }
+            alt="user"
+          />
         </ProfileImgContainer>
         {isLoggedUser && (
           <Button variant="edit-profile" onClick={onOpen}>
@@ -95,21 +108,32 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           </Button>
         )}
       </CoverImageContainer>
-      {!fetchingProfile && profile ? (
-        <MoreInfo>
-          <Text fontWeight="600">{getProfileValByKey("name")}</Text>
-          <Text color="#a5a5a5">@{getProfileValByKey("username")}</Text>
-          <Text>{getProfileValByKey("bio")}</Text>
-          <Text className="link">
-            <Link href={getProfileValByKey("link")}>
-              {getProfileValByKey("link")}
-            </Link>
-          </Text>
-          <FollowInfo id={id} isLoggedUser={isLoggedUser} />
-        </MoreInfo>
-      ) : (
-        <LoadingSpinner />
-      )}
+      <MoreInfo>
+        <Text fontWeight="600">
+          {loggedUserProfile && isLoggedUser
+            ? loggedUserProfile.name
+            : getProfileValByKey("name")}
+        </Text>
+        <Text color="#a5a5a5">
+          @
+          {loggedUserProfile && isLoggedUser
+            ? loggedUserProfile.username
+            : getProfileValByKey("username")}
+        </Text>
+        <Text>
+          {loggedUserProfile && isLoggedUser
+            ? loggedUserProfile.bio
+            : getProfileValByKey("bio")}
+        </Text>
+        <Text className="link">
+          <Link href={getProfileValByKey("link")}>
+            {loggedUserProfile && isLoggedUser
+              ? loggedUserProfile.link
+              : getProfileValByKey("link")}
+          </Link>
+        </Text>
+        <FollowInfo id={id} isLoggedUser={isLoggedUser} />
+      </MoreInfo>
       <Box w="100%" h="3px" bg="#424242" mb="8px"></Box>
     </Box>
   );

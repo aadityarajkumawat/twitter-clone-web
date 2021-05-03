@@ -10,6 +10,7 @@ import {
 
 export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+export type UseStateReturn<T> = [T, SetState<T>];
 
 export interface PaginationParams {
   offset: number;

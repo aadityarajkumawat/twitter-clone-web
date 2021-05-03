@@ -26,6 +26,16 @@ const theme = extendTheme({
           fontSize: 14,
           _hover: { bg: "#464646" },
         },
+        follow: {
+          bg: "#0066ff",
+          height: "30px",
+        },
+        following: {
+          bg: "#0066ff00",
+          height: "30px",
+          border: "2px solid #0066ff",
+          color: "#0066ff",
+        },
       },
     },
   },

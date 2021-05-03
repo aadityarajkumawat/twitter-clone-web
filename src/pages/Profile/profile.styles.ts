@@ -151,6 +151,7 @@ export const MoreInfo = styled.div`
 export const Follows = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
   height: 35px;
   width: 100%;
