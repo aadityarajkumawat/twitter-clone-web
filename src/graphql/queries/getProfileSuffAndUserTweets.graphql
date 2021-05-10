@@ -16,7 +16,6 @@ query ProfileStuffAndUserTweets($id: Float!) {
       tweet_content
       tweet_id
       created_At
-      rel_acc
       username
       name
       likes

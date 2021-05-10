@@ -4,7 +4,6 @@ query GetTweetsByUserF($id: Float!) {
       tweet_id
       tweet_content
       _type
-      rel_acc
       username
       name
       likes

@@ -2,6 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import { v4 } from "uuid";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
 import LikeSVG from "../svgs/LikeSVG";
@@ -20,7 +21,6 @@ export interface TweetProps {
   username: string;
   tweet_content: string;
   name: string;
-  comments: number;
   tweet_id: number;
   img: string;
   captain: string;
@@ -30,7 +30,6 @@ const Tweet: React.FC<TweetProps> = ({
   username,
   tweet_content,
   name,
-  comments,
   tweet_id,
   img,
   captain,
@@ -39,7 +38,7 @@ const Tweet: React.FC<TweetProps> = ({
     variables: { tweet_id },
   });
 
-  const [refresh, setRefresh] = useState<string>("");
+  const [refresh, setRefresh] = useState<string>(v4());
   const history = useHistory();
 
   let liked = false;
@@ -78,7 +77,9 @@ const Tweet: React.FC<TweetProps> = ({
               <Flex fontSize="14px">
                 {SVG.commentSVG}
                 <Box ml="5px" color="rgb(136, 153, 166)">
-                  {comments}
+                  {!fetching && data && data.getTweetById.tweet
+                    ? data.getTweetById.tweet.comments
+                    : 0}
                 </Box>
               </Flex>
             </span>
@@ -86,7 +87,7 @@ const Tweet: React.FC<TweetProps> = ({
               <Flex fontSize="14px">
                 {SVG.retweetSVG}
                 <Box ml="5px" color="rgb(136, 153, 166)">
-                  1
+                  0
                 </Box>
               </Flex>
             </span>
@@ -105,7 +106,7 @@ const Tweet: React.FC<TweetProps> = ({
               <Flex fontSize="14px">
                 {SVG.shareSVG}
                 <Box ml="5px" color="rgb(136, 153, 166)">
-                  1
+                  0
                 </Box>
               </Flex>
             </span>
@@ -115,4 +116,5 @@ const Tweet: React.FC<TweetProps> = ({
     </motion.div>
   );
 };
+
 export default Tweet;

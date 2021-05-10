@@ -152,7 +152,6 @@ export type GetOneTweet = {
   tweet_content: Scalars['String'];
   created_At: Scalars['String'];
   _type: Scalars['String'];
-  rel_acc: Scalars['Float'];
   username: Scalars['String'];
   name: Scalars['String'];
   likes: Scalars['Float'];
@@ -247,6 +246,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   followAUser: FollowedAUser;
   saveImage: Scalars['Boolean'];
+  commentOnTweet: CommentPostedReponse;
   register: UserResponse;
   login: UserResponse;
   createPost: PostCreatedResponse;
@@ -262,6 +262,11 @@ export type MutationFollowAUserArgs = {
 
 export type MutationSaveImageArgs = {
   options: ImageParams;
+};
+
+
+export type MutationCommentOnTweetArgs = {
+  args: CommentInput;
 };
 
 
@@ -302,6 +307,17 @@ export type UserToFollow = {
 export type ImageParams = {
   url: Scalars['String'];
   type: Scalars['String'];
+};
+
+export type CommentPostedReponse = {
+  __typename?: 'CommentPostedReponse';
+  commented: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+};
+
+export type CommentInput = {
+  commentMsg: Scalars['String'];
+  tweet_id: Scalars['Float'];
 };
 
 export type UserResponse = {
@@ -348,7 +364,6 @@ export type PostCreatedResponse = {
 
 export type PostTweetInput = {
   tweet_content: Scalars['String'];
-  rel_acc?: Maybe<Scalars['Float']>;
   img?: Maybe<Scalars['String']>;
 };
 
@@ -387,7 +402,6 @@ export type SubUserTweets = {
 
 export type CreateTweetMutationVariables = Exact<{
   tweet_content: Scalars['String'];
-  rel_acc?: Maybe<Scalars['Float']>;
   img?: Maybe<Scalars['String']>;
 }>;
 
@@ -531,7 +545,7 @@ export type GetPaginatedPostsQuery = (
     & Pick<GetPaginatedFeedTweets, 'error'>
     & { tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
     )> }
   ) }
 );
@@ -550,7 +564,7 @@ export type GetPaginatedUserTweetsQuery = (
     & Pick<GetPaginatedUserTweets, 'error'>
     & { tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
     )> }
   ) }
 );
@@ -612,7 +626,7 @@ export type ProfileStuffAndUserTweetsQuery = (
       & Pick<ProfileItems, 'username' | 'profile_img' | 'cover_img' | 'name' | 'bio' | 'link' | 'followers' | 'following' | 'num' | 'isFollowed'>
     ), tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_content' | 'tweet_id' | 'created_At' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img' | '_type'>
+      & Pick<GetOneTweet, 'tweet_content' | 'tweet_id' | 'created_At' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img' | '_type'>
     )> }
   ) }
 );
@@ -646,7 +660,7 @@ export type GetTweetByIdQuery = (
     & Pick<GetTweetResponse, 'error'>
     & { tweet?: Maybe<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'img' | 'profile_img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'img' | 'profile_img'>
     )> }
   ) }
 );
@@ -661,7 +675,7 @@ export type GetTweetsByUserQuery = (
     & Pick<GetFeedTweets, 'error' | 'num'>
     & { tweets?: Maybe<Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
     )>> }
   ) }
 );
@@ -678,7 +692,7 @@ export type GetTweetsByUserFQuery = (
     & Pick<GetUserTweets, 'error' | 'num'>
     & { tweets: Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img' | 'created_At'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img' | 'created_At'>
     )> }
   ) }
 );
@@ -724,7 +738,7 @@ export type ListenTweetsSubscription = (
     & Pick<GetTweetResponse, 'error'>
     & { tweet?: Maybe<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'comments' | 'likes' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'comments' | 'likes' | 'liked' | 'profile_img' | 'img'>
     )> }
   ) }
 );
@@ -741,17 +755,15 @@ export type ListenUserTweetsSubscription = (
     & Pick<SubUserTweets, 'error'>
     & { tweets?: Maybe<Array<(
       { __typename?: 'GetOneTweet' }
-      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'rel_acc' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
+      & Pick<GetOneTweet, 'tweet_id' | 'tweet_content' | 'created_At' | '_type' | 'username' | 'name' | 'likes' | 'comments' | 'liked' | 'profile_img' | 'img'>
     )>> }
   ) }
 );
 
 
 export const CreateTweetDocument = gql`
-    mutation CreateTweet($tweet_content: String!, $rel_acc: Float, $img: String) {
-  createPost(
-    options: {tweet_content: $tweet_content, rel_acc: $rel_acc, img: $img}
-  ) {
+    mutation CreateTweet($tweet_content: String!, $img: String) {
+  createPost(options: {tweet_content: $tweet_content, img: $img}) {
     uploaded
     error
   }
@@ -881,7 +893,6 @@ export const GetPaginatedPostsDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes
@@ -906,7 +917,6 @@ export const GetPaginatedUserTweetsDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes
@@ -992,7 +1002,6 @@ export const ProfileStuffAndUserTweetsDocument = gql`
       tweet_content
       tweet_id
       created_At
-      rel_acc
       username
       name
       likes
@@ -1035,7 +1044,6 @@ export const GetTweetByIdDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes
@@ -1060,7 +1068,6 @@ export const GetTweetsByUserDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes
@@ -1085,7 +1092,6 @@ export const GetTweetsByUserFDocument = gql`
       tweet_id
       tweet_content
       _type
-      rel_acc
       username
       name
       likes
@@ -1149,7 +1155,6 @@ export const ListenTweetsDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       comments
@@ -1174,7 +1179,6 @@ export const ListenUserTweetsDocument = gql`
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes

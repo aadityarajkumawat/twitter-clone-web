@@ -1,4 +1,8 @@
 import React, { useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
+import TwitterIcon from "../../../assets/twitter-icon.svg";
+import { useLoginMutation, useMeQuery } from "../../../generated/graphql";
+import { useForm } from "../../../hooks/useForm";
 import {
   Form,
   FormHeader,
@@ -10,10 +14,6 @@ import {
   LoginFormContainer,
   Name,
 } from "./login.styles";
-import TwitterIcon from "../../../assets/twitter-icon.svg";
-import { useForm } from "../../../hooks/useForm";
-import { Link, useHistory } from "react-router-dom";
-import { useLoginMutation, useMeQuery } from "../../../generated/graphql";
 
 interface LoginUserI {
   email: string;

@@ -27,7 +27,6 @@ export interface TweetType {
   liked: boolean;
   likes: number;
   name: string;
-  rel_acc: number;
   tweet_content: string;
   tweet_id: number;
   username: string;

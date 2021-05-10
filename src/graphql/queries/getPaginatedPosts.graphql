@@ -5,7 +5,6 @@ query GetPaginatedPosts($offset: Float!, $limit: Float!) {
       tweet_content
       created_At
       _type
-      rel_acc
       username
       name
       likes
