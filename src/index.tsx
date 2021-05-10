@@ -1,4 +1,4 @@
-import { ChakraProvider, theme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import "dotenv/config";
 import ReactDOM from "react-dom";
 import { SubscriptionClient } from "subscriptions-transport-ws";
@@ -10,6 +10,7 @@ import {
 } from "urql";
 import App from "./App";
 import "./index.css";
+import { theme } from "./theme";
 
 const sub = new SubscriptionClient(
   process.env.REACT_APP_SUB_API_URL
@@ -25,9 +26,6 @@ export const cli = createClient({
     credentials: "include",
   },
   exchanges: [
-    // dedupExchange,
-    // cacheExchange({}),
-    // fetchExchange,
     ...defaultExchanges,
     subscriptionExchange({
       forwardSubscription: (operation) => sub.request(operation),
@@ -36,10 +34,10 @@ export const cli = createClient({
 });
 
 ReactDOM.render(
-  <UrqlProvider value={cli}>
-    <ChakraProvider theme={theme}>
+  <ChakraProvider theme={theme}>
+    <UrqlProvider value={cli}>
       <App />
-    </ChakraProvider>
-  </UrqlProvider>,
+    </UrqlProvider>
+  </ChakraProvider>,
   document.getElementById("root")
 );

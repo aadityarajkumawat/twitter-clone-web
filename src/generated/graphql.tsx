@@ -30,6 +30,7 @@ export type Query = {
   getPaginatedUserTweets: GetPaginatedUserTweets;
   getUserProfile: GetProfile;
   profileStuffAndUserTweets: ProfileStuffAndUserTweets;
+  getComments: GetCommentsResponse;
   getSearchResults: DisplayProfiles;
 };
 
@@ -81,6 +82,11 @@ export type QueryGetPaginatedUserTweetsArgs = {
 
 export type QueryProfileStuffAndUserTweetsArgs = {
   id: Scalars['Float'];
+};
+
+
+export type QueryGetCommentsArgs = {
+  args: GetCommentsInput;
 };
 
 
@@ -224,6 +230,30 @@ export type ProfileStuffAndUserTweets = {
   error: Scalars['String'];
 };
 
+export type GetCommentsResponse = {
+  __typename?: 'GetCommentsResponse';
+  comments: Array<CommentRespose>;
+  error?: Maybe<Scalars['String']>;
+};
+
+export type CommentRespose = {
+  __typename?: 'CommentRespose';
+  comment_id: Scalars['Float'];
+  profileImg: Scalars['String'];
+  name: Scalars['String'];
+  username: Scalars['String'];
+  commentMsg: Scalars['String'];
+  comments: Scalars['Float'];
+  likes: Scalars['Float'];
+  img: Scalars['String'];
+  liked: Scalars['Boolean'];
+};
+
+export type GetCommentsInput = {
+  fetchFrom: Scalars['String'];
+  postId: Scalars['Float'];
+};
+
 export type DisplayProfiles = {
   __typename?: 'DisplayProfiles';
   profiles: Array<DisplayProfile>;
@@ -246,12 +276,12 @@ export type Mutation = {
   __typename?: 'Mutation';
   followAUser: FollowedAUser;
   saveImage: Scalars['Boolean'];
-  commentOnTweet: CommentPostedReponse;
   register: UserResponse;
   login: UserResponse;
   createPost: PostCreatedResponse;
   likeTweet: LikedTweet;
   editProfile: Scalars['Boolean'];
+  postComment: CommentPostedReponse;
 };
 
 
@@ -262,11 +292,6 @@ export type MutationFollowAUserArgs = {
 
 export type MutationSaveImageArgs = {
   options: ImageParams;
-};
-
-
-export type MutationCommentOnTweetArgs = {
-  args: CommentInput;
 };
 
 
@@ -294,6 +319,11 @@ export type MutationEditProfileArgs = {
   options: EditProfile;
 };
 
+
+export type MutationPostCommentArgs = {
+  args: CommentInput;
+};
+
 export type FollowedAUser = {
   __typename?: 'FollowedAUser';
   followed: Scalars['Boolean'];
@@ -307,17 +337,6 @@ export type UserToFollow = {
 export type ImageParams = {
   url: Scalars['String'];
   type: Scalars['String'];
-};
-
-export type CommentPostedReponse = {
-  __typename?: 'CommentPostedReponse';
-  commented: Scalars['Boolean'];
-  error?: Maybe<Scalars['String']>;
-};
-
-export type CommentInput = {
-  commentMsg: Scalars['String'];
-  tweet_id: Scalars['Float'];
 };
 
 export type UserResponse = {
@@ -380,6 +399,19 @@ export type TweetInfo = {
 export type EditProfile = {
   bio: Scalars['String'];
   link: Scalars['String'];
+};
+
+export type CommentPostedReponse = {
+  __typename?: 'CommentPostedReponse';
+  commented: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+};
+
+export type CommentInput = {
+  commentMsg: Scalars['String'];
+  comment_on_id: Scalars['Float'];
+  comment_on: Scalars['String'];
+  img: Scalars['String'];
 };
 
 export type Subscription = {
@@ -471,6 +503,22 @@ export type LoginMutation = (
   ) }
 );
 
+export type PostCommentMutationVariables = Exact<{
+  commentMsg: Scalars['String'];
+  comment_on_id: Scalars['Float'];
+  comment_on: Scalars['String'];
+  img: Scalars['String'];
+}>;
+
+
+export type PostCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { postComment: (
+    { __typename?: 'CommentPostedReponse' }
+    & Pick<CommentPostedReponse, 'commented' | 'error'>
+  ) }
+);
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   email: Scalars['String'];
@@ -513,6 +561,24 @@ export type TriggerUserTweetQueryVariables = Exact<{
 export type TriggerUserTweetQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'triggerUserTweetsSubscriptions'>
+);
+
+export type GetCommentsQueryVariables = Exact<{
+  fetchFrom: Scalars['String'];
+  postId: Scalars['Float'];
+}>;
+
+
+export type GetCommentsQuery = (
+  { __typename?: 'Query' }
+  & { getComments: (
+    { __typename?: 'GetCommentsResponse' }
+    & Pick<GetCommentsResponse, 'error'>
+    & { comments: Array<(
+      { __typename?: 'CommentRespose' }
+      & Pick<CommentRespose, 'comment_id' | 'commentMsg' | 'profileImg' | 'name' | 'username' | 'comments' | 'likes' | 'img' | 'liked'>
+    )> }
+  ) }
 );
 
 export type GetFollowInfoQueryVariables = Exact<{
@@ -827,6 +893,20 @@ export const LoginDocument = gql`
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
 };
+export const PostCommentDocument = gql`
+    mutation PostComment($commentMsg: String!, $comment_on_id: Float!, $comment_on: String!, $img: String!) {
+  postComment(
+    args: {commentMsg: $commentMsg, comment_on_id: $comment_on_id, comment_on: $comment_on, img: $img}
+  ) {
+    commented
+    error
+  }
+}
+    `;
+
+export function usePostCommentMutation() {
+  return Urql.useMutation<PostCommentMutation, PostCommentMutationVariables>(PostCommentDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($username: String!, $email: String!, $password: String!, $phone: String!, $name: String!) {
   register(
@@ -868,6 +948,28 @@ export const TriggerUserTweetDocument = gql`
 
 export function useTriggerUserTweetQuery(options: Omit<Urql.UseQueryArgs<TriggerUserTweetQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TriggerUserTweetQuery>({ query: TriggerUserTweetDocument, ...options });
+};
+export const GetCommentsDocument = gql`
+    query GetComments($fetchFrom: String!, $postId: Float!) {
+  getComments(args: {fetchFrom: $fetchFrom, postId: $postId}) {
+    comments {
+      comment_id
+      commentMsg
+      profileImg
+      name
+      username
+      comments
+      likes
+      img
+      liked
+    }
+    error
+  }
+}
+    `;
+
+export function useGetCommentsQuery(options: Omit<Urql.UseQueryArgs<GetCommentsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetCommentsQuery>({ query: GetCommentsDocument, ...options });
 };
 export const GetFollowInfoDocument = gql`
     query GetFollowInfo($id: Float!) {

@@ -9,6 +9,9 @@ type StateI = {
 
   refreshFeed: string;
   setFeedRefresh: (refreshFeed: string) => void;
+
+  focusedTweet: number;
+  setFocussedTweet: (id: number) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -20,4 +23,7 @@ export const useStore = create<StateI>((set) => ({
 
   refreshFeed: "",
   setFeedRefresh: (refreshFeed) => set(() => ({ refreshFeed })),
+
+  focusedTweet: -1,
+  setFocussedTweet: (id) => set(() => ({ focusedTweet: id })),
 }));

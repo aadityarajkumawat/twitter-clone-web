@@ -6,6 +6,7 @@ import { OpenTweetHeader } from "../../components/open-tweet-header/OpenTweetHea
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import { TweetActions } from "../../components/tweet-action-bar/TweetActions";
+import { TweetComments } from "../../components/tweet-comments/TweetComments";
 import { OpenTweetRouteParams } from "../../constants/interfaces";
 import {
   useGetTweetByIdQuery,
@@ -38,6 +39,7 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
               borderRadius="100%"
               w="45px"
               h="45px"
+              objectFit="cover"
             />
             <Flex flexDir="column" ml="1.5rem" color="white">
               <Text fontWeight="600">{user.getUserByUsername.user.name}</Text>
@@ -72,6 +74,7 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
           )}
         </Flex>
         <TweetActions />
+        <TweetComments tweet_id={intTweetsId} />
       </Flex>
       <RightMenu />
     </BaseComponent>

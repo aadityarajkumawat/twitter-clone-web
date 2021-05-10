@@ -15,9 +15,19 @@ import { Tweets } from "../../pages/home.styles";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import Tweet from "../tweet/Tweet";
 
-interface FeedTweetsProps {}
+interface FeedTweetsProps {
+  disclosure: {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+    onToggle: () => void;
+    isControlled: boolean;
+    getButtonProps: (props?: any) => any;
+    getDisclosureProps: (props?: any) => any;
+  };
+}
 
-export const FeedTweets: React.FC<FeedTweetsProps> = () => {
+export const FeedTweets: React.FC<FeedTweetsProps> = ({ disclosure }) => {
   const context = useContext(HomeContextI);
   const { state, HomeActionFn } = context;
   const { pushTweetToFeed } = HomeActionFn;
@@ -47,13 +57,21 @@ export const FeedTweets: React.FC<FeedTweetsProps> = () => {
           <Box>
             {[...state.realTime, ...feed.getTweetsByUser.tweets].map(
               (tweet) => (
-                <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+                <Tweet
+                  {...getTweetProps(tweet)}
+                  key={tweet.tweet_id}
+                  disclosure={disclosure}
+                />
               )
             )}
           </Box>
           <InfiniteScroll {...getInfiniteScrollProps(feed, context)}>
             {state.more.map((tweet) => (
-              <Tweet {...getTweetProps(tweet)} key={tweet.tweet_id} />
+              <Tweet
+                {...getTweetProps(tweet)}
+                key={tweet.tweet_id}
+                disclosure={disclosure}
+              />
             ))}
           </InfiniteScroll>
         </Fragment>

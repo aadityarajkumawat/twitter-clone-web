@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { v4 } from "uuid";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
+import { useStore } from "../../zustand/store";
 import LikeSVG from "../svgs/LikeSVG";
 import {
   FadedUsername,
@@ -24,6 +25,15 @@ export interface TweetProps {
   tweet_id: number;
   img: string;
   captain: string;
+  disclosure?: {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+    onToggle: () => void;
+    isControlled: boolean;
+    getButtonProps: (props?: any) => any;
+    getDisclosureProps: (props?: any) => any;
+  };
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -33,11 +43,13 @@ const Tweet: React.FC<TweetProps> = ({
   tweet_id,
   img,
   captain,
+  disclosure,
 }) => {
   const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
     variables: { tweet_id },
   });
 
+  const { setFocussedTweet } = useStore((s) => ({ ...s }));
   const [refresh, setRefresh] = useState<string>(v4());
   const history = useHistory();
 
@@ -74,7 +86,15 @@ const Tweet: React.FC<TweetProps> = ({
           </Box>
           <TweetActionBar>
             <span>
-              <Flex fontSize="14px">
+              <Flex
+                fontSize="14px"
+                onClick={() => {
+                  setFocussedTweet(tweet_id);
+                  if (disclosure) {
+                    disclosure.onOpen();
+                  }
+                }}
+              >
                 {SVG.commentSVG}
                 <Box ml="5px" color="rgb(136, 153, 166)">
                   {!fetching && data && data.getTweetById.tweet
