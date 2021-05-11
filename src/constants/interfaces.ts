@@ -208,3 +208,8 @@ export type AppContextAction = {
   type: "user-profile";
   profile: UserProfileType;
 };
+
+export type TweetDataForComment = Omit<
+  TweetType,
+  "comments" | "created_At" | "liked" | "likes"
+>;

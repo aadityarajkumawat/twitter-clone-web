@@ -89,7 +89,17 @@ const Tweet: React.FC<TweetProps> = ({
               <Flex
                 fontSize="14px"
                 onClick={() => {
-                  setFocussedTweet(tweet_id);
+                  if (!fetching && data && data.getTweetById.tweet) {
+                    setFocussedTweet({
+                      _type: data.getTweetById.tweet._type,
+                      img: data.getTweetById.tweet.img,
+                      name: data.getTweetById.tweet.name,
+                      profile_img: data.getTweetById.tweet.profile_img,
+                      tweet_content: data.getTweetById.tweet.tweet_content,
+                      tweet_id: data.getTweetById.tweet.tweet_id,
+                      username: data.getTweetById.tweet.username,
+                    });
+                  }
                   if (disclosure) {
                     disclosure.onOpen();
                   }

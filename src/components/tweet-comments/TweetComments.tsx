@@ -13,7 +13,7 @@ export const TweetComments: React.FC<TweetCommentsProps> = ({ tweet_id }) => {
   });
 
   return (
-    <Flex color="white" flexDir="column">
+    <Flex flexDir="column">
       {!fetching && data ? (
         <Fragment>
           {data.getComments.comments.map((tweet) => (

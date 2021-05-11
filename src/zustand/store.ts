@@ -1,4 +1,5 @@
 import create from "zustand";
+import { TweetDataForComment } from "../constants/interfaces";
 
 type StateI = {
   showSearchResults: boolean;
@@ -10,8 +11,8 @@ type StateI = {
   refreshFeed: string;
   setFeedRefresh: (refreshFeed: string) => void;
 
-  focusedTweet: number;
-  setFocussedTweet: (id: number) => void;
+  focusedTweet: TweetDataForComment;
+  setFocussedTweet: (id: TweetDataForComment) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
@@ -24,6 +25,14 @@ export const useStore = create<StateI>((set) => ({
   refreshFeed: "",
   setFeedRefresh: (refreshFeed) => set(() => ({ refreshFeed })),
 
-  focusedTweet: -1,
-  setFocussedTweet: (id) => set(() => ({ focusedTweet: id })),
+  focusedTweet: {
+    _type: "",
+    img: "",
+    name: "",
+    profile_img: "",
+    tweet_content: "",
+    tweet_id: -1,
+    username: "",
+  },
+  setFocussedTweet: (tweet) => set(() => ({ focusedTweet: tweet })),
 }));
