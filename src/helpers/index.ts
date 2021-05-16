@@ -8,27 +8,27 @@ import { uploadImagesAndSave } from "./handleProfileImages";
 import { ifHasMore } from "./ifHasMore";
 import { notFetchingProfileAndHasProfile } from "./notFetchingProfileAndHasProfile";
 import { refresh } from "./refresh";
+import { removeDuplicatesFromRealTime } from "./removeDuplicatesFromRealTime";
+import { resetProfileState } from "./resetProfileState";
 import { getTweetProps } from "./reshapeTweetType";
 import { tweetAlreadyExist } from "./tweetAlreadyExist";
 import { uploadTweetImage } from "./uploadTweetImage";
-import { removeDuplicatesFromRealTime } from "./removeDuplicatesFromRealTime";
-import { resetProfileState } from "./resetProfileState";
 
 export {
-  decideAndReturnCorrectId,
-  getInfiniteScrollProps,
-  getMore,
-  getMoreUserPosts,
-  handleChange,
-  handleFileAndUpload,
-  handleFileChange,
-  uploadImagesAndSave,
-  ifHasMore,
-  notFetchingProfileAndHasProfile,
-  refresh,
-  removeDuplicatesFromRealTime,
-  resetProfileState,
-  getTweetProps,
-  tweetAlreadyExist,
-  uploadTweetImage,
+    decideAndReturnCorrectId,
+    getInfiniteScrollProps,
+    getMore,
+    getMoreUserPosts,
+    handleChange,
+    handleFileAndUpload,
+    handleFileChange,
+    uploadImagesAndSave,
+    ifHasMore,
+    notFetchingProfileAndHasProfile,
+    refresh,
+    removeDuplicatesFromRealTime,
+    resetProfileState,
+    getTweetProps,
+    tweetAlreadyExist,
+    uploadTweetImage,
 };

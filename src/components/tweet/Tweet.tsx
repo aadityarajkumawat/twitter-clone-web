@@ -8,143 +8,174 @@ import { useGetTweetByIdQuery } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 import LikeSVG from "../svgs/LikeSVG";
 import {
-  FadedUsername,
-  TweetActionBar,
-  TweetContainer,
-  TweetContent,
-  TweetImageContainer,
-  TweetUsername,
-  TweetWrapper,
-  UserProfileImg,
+    FadedUsername,
+    TweetActionBar,
+    TweetContainer,
+    TweetContent,
+    TweetImageContainer,
+    TweetUsername,
+    TweetWrapper,
+    UserProfileImg,
 } from "./tweet.styles";
 
 export interface TweetProps {
-  username: string;
-  tweet_content: string;
-  name: string;
-  tweet_id: number;
-  img: string;
-  captain: string;
-  disclosure?: {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
-    onToggle: () => void;
-    isControlled: boolean;
-    getButtonProps: (props?: any) => any;
-    getDisclosureProps: (props?: any) => any;
-  };
+    username: string;
+    tweet_content: string;
+    name: string;
+    tweet_id: number;
+    img: string;
+    captain: string;
+    disclosure?: {
+        isOpen: boolean;
+        onOpen: () => void;
+        onClose: () => void;
+        onToggle: () => void;
+        isControlled: boolean;
+        getButtonProps: (props?: any) => any;
+        getDisclosureProps: (props?: any) => any;
+    };
 }
 
 const Tweet: React.FC<TweetProps> = ({
-  username,
-  tweet_content,
-  name,
-  tweet_id,
-  img,
-  captain,
-  disclosure,
+    username,
+    tweet_content,
+    name,
+    tweet_id,
+    img,
+    captain,
+    disclosure,
 }) => {
-  const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
-    variables: { tweet_id },
-  });
+    const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
+        variables: { tweet_id },
+    });
 
-  const { setFocussedTweet } = useStore((s) => ({ ...s }));
-  const [refresh, setRefresh] = useState<string>(v4());
-  const history = useHistory();
+    const { setFocussedTweet } = useStore((s) => ({ ...s }));
+    const [refresh, setRefresh] = useState<string>(v4());
+    const history = useHistory();
 
-  let liked = false;
-  if (!fetching && data && data.getTweetById.tweet) {
-    liked = data.getTweetById.tweet.liked;
-  }
+    let liked = false;
+    if (!fetching && data && data.getTweetById.tweet) {
+        liked = data.getTweetById.tweet.liked;
+    }
 
-  useEffect(() => {
-    reloadQuery({ requestPolicy: "network-only" });
-    //eslint-disable-next-line
-  }, [refresh]);
+    useEffect(() => {
+        reloadQuery({ requestPolicy: "network-only" });
+        //eslint-disable-next-line
+    }, [refresh]);
 
-  return (
-    <motion.div style={{ width: "100%" }}>
-      <TweetWrapper>
-        <UserProfileImg>
-          <div>
-            <img src={img} alt="user" />
-          </div>
-        </UserProfileImg>
-        <TweetContainer>
-          <Box onClick={() => history.push(`/status/${username}/${tweet_id}`)}>
-            <TweetUsername>
-              <span>{name}</span>
-              <FadedUsername>@{username}</FadedUsername>
-            </TweetUsername>
-            <TweetContent>{tweet_content}</TweetContent>
-            {captain !== "" && (
-              <TweetImageContainer>
-                <img src={captain} alt="" />
-              </TweetImageContainer>
-            )}
-          </Box>
-          <TweetActionBar>
-            <span>
-              <Flex
-                fontSize="14px"
-                onClick={() => {
-                  if (!fetching && data && data.getTweetById.tweet) {
-                    setFocussedTweet({
-                      _type: data.getTweetById.tweet._type,
-                      img: data.getTweetById.tweet.img,
-                      name: data.getTweetById.tweet.name,
-                      profile_img: data.getTweetById.tweet.profile_img,
-                      tweet_content: data.getTweetById.tweet.tweet_content,
-                      tweet_id: data.getTweetById.tweet.tweet_id,
-                      username: data.getTweetById.tweet.username,
-                    });
-                  }
-                  if (disclosure) {
-                    disclosure.onOpen();
-                  }
-                }}
-              >
-                {SVG.commentSVG}
-                <Box ml="5px" color="rgb(136, 153, 166)">
-                  {!fetching && data && data.getTweetById.tweet
-                    ? data.getTweetById.tweet.comments
-                    : 0}
-                </Box>
-              </Flex>
-            </span>
-            <span>
-              <Flex fontSize="14px">
-                {SVG.retweetSVG}
-                <Box ml="5px" color="rgb(136, 153, 166)">
-                  0
-                </Box>
-              </Flex>
-            </span>
-            <span>
-              <Flex fontSize="14px" alignItems="center" cursor="pointer">
-                <LikeSVG liked={liked} tweet_id={tweet_id} setR={setRefresh} />
-                <Box
-                  ml="5px"
-                  color={liked ? "rgb(224, 36, 94)" : "rgb(136, 153, 166)"}
-                >
-                  {data ? data.getTweetById.tweet?.likes : 0}
-                </Box>
-              </Flex>
-            </span>
-            <span>
-              <Flex fontSize="14px">
-                {SVG.shareSVG}
-                <Box ml="5px" color="rgb(136, 153, 166)">
-                  0
-                </Box>
-              </Flex>
-            </span>
-          </TweetActionBar>
-        </TweetContainer>
-      </TweetWrapper>
-    </motion.div>
-  );
+    return (
+        <motion.div style={{ width: "100%" }}>
+            <TweetWrapper>
+                <UserProfileImg>
+                    <div>
+                        <img src={img} alt="user" />
+                    </div>
+                </UserProfileImg>
+                <TweetContainer>
+                    <Box
+                        onClick={() =>
+                            history.push(`/status/${username}/${tweet_id}`)
+                        }
+                    >
+                        <TweetUsername>
+                            <span>{name}</span>
+                            <FadedUsername>@{username}</FadedUsername>
+                        </TweetUsername>
+                        <TweetContent>{tweet_content}</TweetContent>
+                        {captain !== "" && (
+                            <TweetImageContainer>
+                                <img src={captain} alt="" />
+                            </TweetImageContainer>
+                        )}
+                    </Box>
+                    <TweetActionBar>
+                        <span>
+                            <Flex
+                                fontSize="14px"
+                                onClick={() => {
+                                    if (
+                                        !fetching &&
+                                        data &&
+                                        data.getTweetById.tweet
+                                    ) {
+                                        setFocussedTweet({
+                                            _type: data.getTweetById.tweet
+                                                ._type,
+                                            img: data.getTweetById.tweet.img,
+                                            name: data.getTweetById.tweet.name,
+                                            profile_img:
+                                                data.getTweetById.tweet
+                                                    .profile_img,
+                                            tweet_content:
+                                                data.getTweetById.tweet
+                                                    .tweet_content,
+                                            tweet_id:
+                                                data.getTweetById.tweet
+                                                    .tweet_id,
+                                            username:
+                                                data.getTweetById.tweet
+                                                    .username,
+                                        });
+                                    }
+                                    if (disclosure) {
+                                        disclosure.onOpen();
+                                    }
+                                }}
+                            >
+                                {SVG.commentSVG}
+                                <Box ml="5px" color="rgb(136, 153, 166)">
+                                    {!fetching &&
+                                    data &&
+                                    data.getTweetById.tweet
+                                        ? data.getTweetById.tweet.comments
+                                        : 0}
+                                </Box>
+                            </Flex>
+                        </span>
+                        <span>
+                            <Flex fontSize="14px">
+                                {SVG.retweetSVG}
+                                <Box ml="5px" color="rgb(136, 153, 166)">
+                                    0
+                                </Box>
+                            </Flex>
+                        </span>
+                        <span>
+                            <Flex
+                                fontSize="14px"
+                                alignItems="center"
+                                cursor="pointer"
+                            >
+                                <LikeSVG
+                                    liked={liked}
+                                    tweet_id={tweet_id}
+                                    setR={setRefresh}
+                                />
+                                <Box
+                                    ml="5px"
+                                    color={
+                                        liked
+                                            ? "rgb(224, 36, 94)"
+                                            : "rgb(136, 153, 166)"
+                                    }
+                                >
+                                    {data ? data.getTweetById.tweet?.likes : 0}
+                                </Box>
+                            </Flex>
+                        </span>
+                        <span>
+                            <Flex fontSize="14px">
+                                {SVG.shareSVG}
+                                <Box ml="5px" color="rgb(136, 153, 166)">
+                                    0
+                                </Box>
+                            </Flex>
+                        </span>
+                    </TweetActionBar>
+                </TweetContainer>
+            </TweetWrapper>
+        </motion.div>
+    );
 };
 
 export default Tweet;

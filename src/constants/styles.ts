@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const flexCenter =
-  "display: flex;justify-content: center;align-items: center;";
+    "display: flex;justify-content: center;align-items: center;";
 
 export const StyledDiv = styled.div``;
 export const StyledButton = styled.button``;

@@ -1,17 +1,17 @@
 import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Progress,
-  Text
+    Box,
+    Button,
+    Flex,
+    Image,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Progress,
+    Text,
 } from "@chakra-ui/react";
 import React, { Fragment, useEffect, useReducer } from "react";
 import { v4 as uuid } from "uuid";
@@ -19,9 +19,9 @@ import { setForm } from "../../actions/editProfileActions";
 import { fileInput, modalStyles, textInput } from "../../constants/consts";
 import { EditProfileProps, EditProfileState } from "../../constants/interfaces";
 import {
-  useEditProfileMutation,
-  useProfileStuffAndUserTweetsQuery,
-  useSaveImageMutation
+    useEditProfileMutation,
+    useProfileStuffAndUserTweetsQuery,
+    useSaveImageMutation,
 } from "../../generated/graphql";
 import { uploadImagesAndSave } from "../../helpers/handleProfileImages";
 import { notFetchingProfileAndHasProfile } from "../../helpers/notFetchingProfileAndHasProfile";
@@ -35,9 +35,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     id,
     setRefreshToken,
 }) => {
-    const [
-        { data: profileObj, fetching: fetchingProfile },
-    ] = useProfileStuffAndUserTweetsQuery({ variables: { id } });
+    const [{ data: profileObj, fetching: fetchingProfile }] =
+        useProfileStuffAndUserTweetsQuery({ variables: { id } });
 
     const profile = notFetchingProfileAndHasProfile(fetchingProfile, profileObj)
         ? profileObj!.profileStuffAndUserTweets.profile

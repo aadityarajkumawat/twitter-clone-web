@@ -10,18 +10,22 @@ import { PrivateRoute } from "./PrivateRoute";
 interface RoutesProps {}
 
 const Routes: React.FC<RoutesProps> = (): JSX.Element => {
-  return (
-    <Fragment>
-      <Route exact path="/">
-        <Redirect exact to="/home" />
-      </Route>
-      <PrivateRoute path="/home" component={Home} />
-      <Route path="/:username" exact component={ProfileWrapper} />
-      <Route path="/login" exact component={Login} />
-      <Route path="/register" exact component={Register} />
-      <Route path="/status/:username/:tweet_id" exact component={OpenTweet} />
-    </Fragment>
-  );
+    return (
+        <Fragment>
+            <Route exact path="/">
+                <Redirect exact to="/home" />
+            </Route>
+            <PrivateRoute path="/home" component={Home} />
+            <Route path="/:username" exact component={ProfileWrapper} />
+            <Route path="/login" exact component={Login} />
+            <Route path="/register" exact component={Register} />
+            <Route
+                path="/status/:username/:tweet_id"
+                exact
+                component={OpenTweet}
+            />
+        </Fragment>
+    );
 };
 
 export default Routes;

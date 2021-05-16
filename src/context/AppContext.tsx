@@ -1,32 +1,32 @@
 import { createContext, useReducer } from "react";
 import {
-  AppContextI as AppContextIType,
-  AppContextState,
-  UserProfileType,
+    AppContextI as AppContextIType,
+    AppContextState,
+    UserProfileType,
 } from "../constants/interfaces";
 import { appReducer } from "../reducers/appReducer";
 
 const initialAppState: AppContextState = {
-  loggedUserProfile: undefined,
+    loggedUserProfile: undefined,
 };
 
 export const AppContextI = createContext<AppContextIType>({
-  ...initialAppState,
-  setUserProfile: () => null,
+    ...initialAppState,
+    setUserProfile: () => null,
 });
 
 export const AppContext: React.FC<{}> = ({ children }) => {
-  const intialState: AppContextState = initialAppState;
-  const context = useReducer(appReducer, intialState);
-  const [state, dispatch] = context;
+    const intialState: AppContextState = initialAppState;
+    const context = useReducer(appReducer, intialState);
+    const [state, dispatch] = context;
 
-  const setUserProfile = (profile: UserProfileType) => {
-    dispatch({ type: "user-profile", profile });
-  };
+    const setUserProfile = (profile: UserProfileType) => {
+        dispatch({ type: "user-profile", profile });
+    };
 
-  return (
-    <AppContextI.Provider value={{ ...state, setUserProfile }}>
-      {children}
-    </AppContextI.Provider>
-  );
+    return (
+        <AppContextI.Provider value={{ ...state, setUserProfile }}>
+            {children}
+        </AppContextI.Provider>
+    );
 };

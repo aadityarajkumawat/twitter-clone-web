@@ -1,16 +1,16 @@
 query GetComments($fetchFrom: String!, $postId: Float!) {
-  getComments(args: { fetchFrom: $fetchFrom, postId: $postId }) {
-    comments {
-      comment_id
-      commentMsg
-      profileImg
-      name
-      username
-      comments
-      likes
-      img
-      liked
+    getComments(args: { fetchFrom: $fetchFrom, postId: $postId }) {
+        comments {
+            comment_id
+            commentMsg
+            profileImg
+            name
+            username
+            comments
+            likes
+            img
+            liked
+        }
+        error
     }
-    error
-  }
 }

@@ -1,18 +1,18 @@
 subscription ListenTweets {
-  listenTweets {
-    tweet {
-      tweet_id
-      tweet_content
-      created_At
-      _type
-      username
-      name
-      comments
-      likes
-      liked
-      profile_img
-      img
+    listenTweets {
+        tweet {
+            tweet_id
+            tweet_content
+            created_At
+            _type
+            username
+            name
+            comments
+            likes
+            liked
+            profile_img
+            img
+        }
+        error
     }
-    error
-  }
 }

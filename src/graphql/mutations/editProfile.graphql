@@ -1,3 +1,3 @@
 mutation EditProfile($bio: String!, $link: String!) {
-  editProfile(options: { bio: $bio, link: $link })
+    editProfile(options: { bio: $bio, link: $link })
 }

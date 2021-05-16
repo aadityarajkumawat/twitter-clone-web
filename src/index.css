@@ -3,23 +3,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Helvetica";
-  overflow-x: hidden;
-  /* overflow-y: hidden; */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica";
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
 }
 
 *:focus,
 *:active {
-  outline: none;
+    outline: none;
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .infinite-scroll-component__outerdiv {
-  width: 100%;
+    width: 100%;
 }

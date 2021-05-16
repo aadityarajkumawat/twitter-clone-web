@@ -1,6 +1,6 @@
 mutation CreateTweet($tweet_content: String!, $img: String) {
-  createPost(options: { tweet_content: $tweet_content, img: $img }) {
-    uploaded
-    error
-  }
+    createPost(options: { tweet_content: $tweet_content, img: $img }) {
+        uploaded
+        error
+    }
 }

@@ -10,18 +10,18 @@ import { BaseComponent, HomeMain } from "./home.styles";
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-  const disclosure = useDisclosure();
-  return (
-    <BaseComponent className="main">
-      <LeftMenu />
-      <HomeMain>
-        <PostComment disclosure={disclosure} />
-        <HomeHeader />
-        <FeedTweets disclosure={disclosure} />
-      </HomeMain>
-      <RightMenu />
-    </BaseComponent>
-  );
+    const disclosure = useDisclosure();
+    return (
+        <BaseComponent className="main">
+            <LeftMenu />
+            <HomeMain>
+                <PostComment disclosure={disclosure} />
+                <HomeHeader />
+                <FeedTweets disclosure={disclosure} />
+            </HomeMain>
+            <RightMenu />
+        </BaseComponent>
+    );
 };
 
 export default Home;

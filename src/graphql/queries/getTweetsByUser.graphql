@@ -1,19 +1,19 @@
 query GetTweetsByUser {
-  getTweetsByUser {
-    tweets {
-      tweet_id
-      tweet_content
-      created_At
-      _type
-      username
-      name
-      likes
-      comments
-      liked
-      profile_img
-      img
+    getTweetsByUser {
+        tweets {
+            tweet_id
+            tweet_content
+            created_At
+            _type
+            username
+            name
+            likes
+            comments
+            liked
+            profile_img
+            img
+        }
+        error
+        num
     }
-    error
-    num
-  }
 }

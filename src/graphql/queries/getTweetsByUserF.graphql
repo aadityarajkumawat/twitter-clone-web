@@ -1,19 +1,19 @@
 query GetTweetsByUserF($id: Float!) {
-  getTweetsByUserF(id: $id) {
-    tweets {
-      tweet_id
-      tweet_content
-      _type
-      username
-      name
-      likes
-      comments
-      liked
-      profile_img
-      img
-      created_At
+    getTweetsByUserF(id: $id) {
+        tweets {
+            tweet_id
+            tweet_content
+            _type
+            username
+            name
+            likes
+            comments
+            liked
+            profile_img
+            img
+            created_At
+        }
+        error
+        num
     }
-    error
-    num
-  }
 }

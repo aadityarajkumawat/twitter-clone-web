@@ -5,19 +5,19 @@ import { HomeContext } from "./context/HomeContext";
 import Routes from "./routes/Routes";
 
 function App() {
-  return (
-    <Router>
-      <div>
-        <AppContext>
-          <HomeContext>
-            <Switch>
-              <Routes />
-            </Switch>
-          </HomeContext>
-        </AppContext>
-      </div>
-    </Router>
-  );
+    return (
+        <Router>
+            <div>
+                <AppContext>
+                    <HomeContext>
+                        <Switch>
+                            <Routes />
+                        </Switch>
+                    </HomeContext>
+                </AppContext>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

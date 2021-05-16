@@ -4,16 +4,16 @@ import { HomeContextType } from "../constants/interfaces";
 import { GetTweetsByUserQuery } from "../generated/graphql";
 
 export const getInfiniteScrollProps = (
-  feed: GetTweetsByUserQuery,
-  context: HomeContextType
+    feed: GetTweetsByUserQuery,
+    context: HomeContextType
 ) => {
-  const { state } = context;
-  const infiniteScrollProps = {
-    dataLength: state.scrollProps.dataLength,
-    hasMore: ifHasMore(state.scrollProps.hasMore, feed),
-    next: () => getMore(feed, context),
-    loader: <LoadingSpinner />,
-  };
+    const { state } = context;
+    const infiniteScrollProps = {
+        dataLength: state.scrollProps.dataLength,
+        hasMore: ifHasMore(state.scrollProps.hasMore, feed),
+        next: () => getMore(feed, context),
+        loader: <LoadingSpinner />,
+    };
 
-  return infiniteScrollProps;
+    return infiniteScrollProps;
 };

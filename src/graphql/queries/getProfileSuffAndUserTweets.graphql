@@ -1,30 +1,30 @@
 query ProfileStuffAndUserTweets($id: Float!) {
-  profileStuffAndUserTweets(id: $id) {
-    profile {
-      username
-      profile_img
-      cover_img
-      name
-      bio
-      link
-      followers
-      following
-      num
-      isFollowed
+    profileStuffAndUserTweets(id: $id) {
+        profile {
+            username
+            profile_img
+            cover_img
+            name
+            bio
+            link
+            followers
+            following
+            num
+            isFollowed
+        }
+        tweets {
+            tweet_content
+            tweet_id
+            created_At
+            username
+            name
+            likes
+            comments
+            liked
+            profile_img
+            img
+            _type
+        }
+        error
     }
-    tweets {
-      tweet_content
-      tweet_id
-      created_At
-      username
-      name
-      likes
-      comments
-      liked
-      profile_img
-      img
-      _type
-    }
-    error
-  }
 }

@@ -1,11 +1,11 @@
 query GetSearchResults($search: String!) {
-  getSearchResults(options: { search: $search }) {
-    profiles {
-      id
-      name
-      username
-      img
+    getSearchResults(options: { search: $search }) {
+        profiles {
+            id
+            name
+            username
+            img
+        }
+        error
     }
-    error
-  }
 }

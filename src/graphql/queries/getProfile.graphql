@@ -1,12 +1,12 @@
 query GetProfile {
-  getUserProfile {
-    profile {
-      followers
-      following
-      bio
-      link
-      num
+    getUserProfile {
+        profile {
+            followers
+            following
+            bio
+            link
+            num
+        }
+        error
     }
-    error
-  }
 }

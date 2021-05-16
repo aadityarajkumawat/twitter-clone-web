@@ -1,15 +1,15 @@
 query Me {
-  me {
-    user {
-      id
-      email
-      createdAt
-      updatedAt
-      username
-      phone
-      name
-      img
+    me {
+        user {
+            id
+            email
+            createdAt
+            updatedAt
+            username
+            phone
+            name
+            img
+        }
+        error
     }
-    error
-  }
 }

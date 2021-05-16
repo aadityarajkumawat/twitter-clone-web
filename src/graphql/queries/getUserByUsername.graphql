@@ -1,10 +1,10 @@
 query GetUserByUsername($username: String!) {
-  getUserByUsername(username: $username) {
-    user {
-      id
-      username
-      name
-      img
+    getUserByUsername(username: $username) {
+        user {
+            id
+            username
+            name
+            img
+        }
     }
-  }
 }

@@ -1,8 +1,8 @@
 export const notFetchingProfileAndHasProfile = (
-  fetching: boolean,
-  profileObj: any
+    fetching: boolean,
+    profileObj: any
 ) => {
-  return (
-    !fetching && profileObj && profileObj.profileStuffAndUserTweets.profile
-  );
+    return (
+        !fetching && profileObj && profileObj.profileStuffAndUserTweets.profile
+    );
 };

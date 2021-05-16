@@ -6,8 +6,10 @@ import { Profile } from "./Profile/Profile";
 interface ProfileWrapperProps {}
 
 export const ProfileWrapper: React.FC<ProfileWrapperProps> = () => {
-  const { username } = useParams<ProfileRouteParams>();
-  const isProfile =
-    username !== "home" && username !== "login" && username !== "register";
-  return <Fragment>{isProfile ? <Profile /> : <Fragment></Fragment>}</Fragment>;
+    const { username } = useParams<ProfileRouteParams>();
+    const isProfile =
+        username !== "home" && username !== "login" && username !== "register";
+    return (
+        <Fragment>{isProfile ? <Profile /> : <Fragment></Fragment>}</Fragment>
+    );
 };

@@ -1,18 +1,18 @@
 mutation PostComment(
-  $commentMsg: String!
-  $comment_on_id: Float!
-  $comment_on: String!
-  $img: String!
+    $commentMsg: String!
+    $comment_on_id: Float!
+    $comment_on: String!
+    $img: String!
 ) {
-  postComment(
-    args: {
-      commentMsg: $commentMsg
-      comment_on_id: $comment_on_id
-      comment_on: $comment_on
-      img: $img
+    postComment(
+        args: {
+            commentMsg: $commentMsg
+            comment_on_id: $comment_on_id
+            comment_on: $comment_on
+            img: $img
+        }
+    ) {
+        commented
+        error
     }
-  ) {
-    commented
-    error
-  }
 }

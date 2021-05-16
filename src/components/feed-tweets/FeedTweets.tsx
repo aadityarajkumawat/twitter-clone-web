@@ -3,82 +3,83 @@ import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { HomeContextI } from "../../context/HomeContext";
 import {
-  useGetTweetsByUserQuery,
-  useListenTweetsSubscription,
+    useGetTweetsByUserQuery,
+    useListenTweetsSubscription,
 } from "../../generated/graphql";
 import {
-  getInfiniteScrollProps,
-  getTweetProps,
-  tweetAlreadyExist,
+    getInfiniteScrollProps,
+    getTweetProps,
+    tweetAlreadyExist,
 } from "../../helpers";
 import { Tweets } from "../../pages/home.styles";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import Tweet from "../tweet/Tweet";
 
 interface FeedTweetsProps {
-  disclosure: {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
-    onToggle: () => void;
-    isControlled: boolean;
-    getButtonProps: (props?: any) => any;
-    getDisclosureProps: (props?: any) => any;
-  };
+    disclosure: {
+        isOpen: boolean;
+        onOpen: () => void;
+        onClose: () => void;
+        onToggle: () => void;
+        isControlled: boolean;
+        getButtonProps: (props?: any) => any;
+        getDisclosureProps: (props?: any) => any;
+    };
 }
 
 export const FeedTweets: React.FC<FeedTweetsProps> = ({ disclosure }) => {
-  const context = useContext(HomeContextI);
-  const { state, HomeActionFn } = context;
-  const { pushTweetToFeed } = HomeActionFn;
+    const context = useContext(HomeContextI);
+    const { state, HomeActionFn } = context;
+    const { pushTweetToFeed } = HomeActionFn;
 
-  const [feedResponse] = useGetTweetsByUserQuery();
-  const { data: feed, fetching: fetchingFeed } = feedResponse;
+    const [feedResponse] = useGetTweetsByUserQuery();
+    const { data: feed, fetching: fetchingFeed } = feedResponse;
 
-  const [{ data: rtPosts }] = useListenTweetsSubscription();
+    const [{ data: rtPosts }] = useListenTweetsSubscription();
 
-  useEffect(() => {
-    if (rtPosts && feed) {
-      const tweets = feed.getTweetsByUser.tweets;
-      if (!tweets) return;
-      const alreadyExists = tweetAlreadyExist(state, tweets, rtPosts);
-      if (alreadyExists) return;
+    useEffect(() => {
+        if (rtPosts && feed) {
+            const tweets = feed.getTweetsByUser.tweets;
+            if (!tweets) return;
+            const alreadyExists = tweetAlreadyExist(state, tweets, rtPosts);
+            if (alreadyExists) return;
 
-      const tweet = rtPosts.listenTweets.tweet;
-      pushTweetToFeed(tweet);
-    }
-    // eslint-disable-next-line
-  }, [JSON.stringify(rtPosts)]);
+            const tweet = rtPosts.listenTweets.tweet;
+            pushTweetToFeed(tweet);
+        }
+        // eslint-disable-next-line
+    }, [JSON.stringify(rtPosts)]);
 
-  return (
-    <Tweets>
-      {!fetchingFeed && feed && feed.getTweetsByUser.tweets ? (
-        <Fragment>
-          <Box>
-            {[...state.realTime, ...feed.getTweetsByUser.tweets].map(
-              (tweet) => (
-                <Tweet
-                  {...getTweetProps(tweet)}
-                  key={tweet.tweet_id}
-                  disclosure={disclosure}
-                />
-              )
+    return (
+        <Tweets>
+            {!fetchingFeed && feed && feed.getTweetsByUser.tweets ? (
+                <Fragment>
+                    <Box>
+                        {[
+                            ...state.realTime,
+                            ...feed.getTweetsByUser.tweets,
+                        ].map((tweet) => (
+                            <Tweet
+                                {...getTweetProps(tweet)}
+                                key={tweet.tweet_id}
+                                disclosure={disclosure}
+                            />
+                        ))}
+                    </Box>
+                    <InfiniteScroll {...getInfiniteScrollProps(feed, context)}>
+                        {state.more.map((tweet) => (
+                            <Tweet
+                                {...getTweetProps(tweet)}
+                                key={tweet.tweet_id}
+                                disclosure={disclosure}
+                            />
+                        ))}
+                    </InfiniteScroll>
+                </Fragment>
+            ) : (
+                <LoadingSpinner />
             )}
-          </Box>
-          <InfiniteScroll {...getInfiniteScrollProps(feed, context)}>
-            {state.more.map((tweet) => (
-              <Tweet
-                {...getTweetProps(tweet)}
-                key={tweet.tweet_id}
-                disclosure={disclosure}
-              />
-            ))}
-          </InfiniteScroll>
-        </Fragment>
-      ) : (
-        <LoadingSpinner />
-      )}
-      <div style={{ height: "50px" }}></div>
-    </Tweets>
-  );
+            <div style={{ height: "50px" }}></div>
+        </Tweets>
+    );
 };
