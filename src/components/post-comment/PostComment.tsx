@@ -14,6 +14,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { v4 as uuid } from "uuid";
 import { useMeQuery, usePostCommentMutation } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 
@@ -36,7 +37,9 @@ export const PostComment: React.FC<PostCommentProps> = ({ disclosure }) => {
     const [, postComment] = usePostCommentMutation();
     const [{ data, fetching }] = useMeQuery();
 
-    const { focusedTweet } = useStore((s) => ({ ...s }));
+    const { focusedTweet, setRefreshComments, setRefreshTweet } = useStore(
+        (s) => ({ ...s })
+    );
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -119,6 +122,8 @@ export const PostComment: React.FC<PostCommentProps> = ({ disclosure }) => {
                                     img: "",
                                     comment_on_id: focusedTweet.tweet_id,
                                 });
+                                setRefreshTweet(uuid());
+                                setRefreshComments(uuid());
                                 onClose();
                             }}
                         >

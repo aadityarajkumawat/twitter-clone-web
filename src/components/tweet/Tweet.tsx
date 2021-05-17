@@ -49,7 +49,7 @@ const Tweet: React.FC<TweetProps> = ({
         variables: { tweet_id },
     });
 
-    const { setFocussedTweet } = useStore((s) => ({ ...s }));
+    const { setFocussedTweet, refreshTweet } = useStore((s) => ({ ...s }));
     const [refresh, setRefresh] = useState<string>(v4());
     const history = useHistory();
 
@@ -61,7 +61,7 @@ const Tweet: React.FC<TweetProps> = ({
     useEffect(() => {
         reloadQuery({ requestPolicy: "network-only" });
         //eslint-disable-next-line
-    }, [refresh]);
+    }, [refresh, refreshTweet]);
 
     return (
         <motion.div style={{ width: "100%" }}>

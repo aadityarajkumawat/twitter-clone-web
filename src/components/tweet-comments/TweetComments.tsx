@@ -1,6 +1,7 @@
 import { Flex } from "@chakra-ui/layout";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useGetCommentsQuery } from "../../generated/graphql";
+import { useStore } from "../../zustand/store";
 import Tweet from "../tweet/Tweet";
 
 interface TweetCommentsProps {
@@ -8,9 +9,15 @@ interface TweetCommentsProps {
 }
 
 export const TweetComments: React.FC<TweetCommentsProps> = ({ tweet_id }) => {
-    const [{ data, fetching }] = useGetCommentsQuery({
+    const [{ data, fetching }, reloadComments] = useGetCommentsQuery({
         variables: { fetchFrom: "tweet", postId: tweet_id },
     });
+
+    const { refreshComments } = useStore((s) => ({ ...s }));
+
+    useEffect(() => {
+        reloadComments({ requestPolicy: "network-only" });
+    }, [refreshComments]);
 
     return (
         <Flex flexDir="column">
