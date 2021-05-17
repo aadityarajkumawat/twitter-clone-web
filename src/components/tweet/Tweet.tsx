@@ -1,9 +1,10 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { v4 } from "uuid";
 import * as SVG from "../../assets/tweetActionsSVGs";
+import { AppContextI } from "../../context/AppContext";
 import { useGetTweetByIdQuery } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 import LikeSVG from "../svgs/LikeSVG";
@@ -25,15 +26,6 @@ export interface TweetProps {
     tweet_id: number;
     img: string;
     captain: string;
-    disclosure?: {
-        isOpen: boolean;
-        onOpen: () => void;
-        onClose: () => void;
-        onToggle: () => void;
-        isControlled: boolean;
-        getButtonProps: (props?: any) => any;
-        getDisclosureProps: (props?: any) => any;
-    };
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -43,11 +35,12 @@ const Tweet: React.FC<TweetProps> = ({
     tweet_id,
     img,
     captain,
-    disclosure,
 }) => {
     const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
         variables: { tweet_id },
     });
+
+    const { disclosure } = useContext(AppContextI);
 
     const { setFocussedTweet, refreshTweet } = useStore((s) => ({ ...s }));
     const [refresh, setRefresh] = useState<string>(v4());

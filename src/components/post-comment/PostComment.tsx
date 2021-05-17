@@ -13,24 +13,16 @@ import {
     ModalOverlay,
     Text,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { AppContextI } from "../../context/AppContext";
 import { useMeQuery, usePostCommentMutation } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 
-interface PostCommentProps {
-    disclosure: {
-        isOpen: boolean;
-        onOpen: () => void;
-        onClose: () => void;
-        onToggle: () => void;
-        isControlled: boolean;
-        getButtonProps: (props?: any) => any;
-        getDisclosureProps: (props?: any) => any;
-    };
-}
+interface PostCommentProps {}
 
-export const PostComment: React.FC<PostCommentProps> = ({ disclosure }) => {
+export const PostComment: React.FC<PostCommentProps> = () => {
+    const { disclosure } = useContext(AppContextI);
     const { isOpen, onClose } = disclosure;
     const [comment, setComment] = useState<string>("");
 

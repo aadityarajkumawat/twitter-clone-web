@@ -12,6 +12,16 @@ export type FileEvent = React.ChangeEvent<HTMLInputElement> | null;
 export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 export type UseStateReturn<T> = [T, SetState<T>];
 
+export interface Disclosure {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+    onToggle: () => void;
+    isControlled: boolean;
+    getButtonProps: (props?: any) => any;
+    getDisclosureProps: (props?: any) => any;
+}
+
 export interface PaginationParams {
     offset: number;
 }
@@ -198,16 +208,19 @@ export type UserProfileType = {
 
 export interface AppContextState {
     loggedUserProfile: UserProfileType | undefined;
+    disclosure: Disclosure;
 }
 
 export interface AppContextI extends AppContextState {
     setUserProfile: (profile: UserProfileType) => void;
 }
 
-export type AppContextAction = {
-    type: "user-profile";
-    profile: UserProfileType;
-};
+export type AppContextAction =
+    | {
+          type: "user-profile";
+          profile: UserProfileType;
+      }
+    | { type: "set-disclosure"; disclosure: Disclosure };
 
 export type TweetDataForComment = Omit<
     TweetType,

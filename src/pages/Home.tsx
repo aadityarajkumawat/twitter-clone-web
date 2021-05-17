@@ -1,4 +1,3 @@
-import { useDisclosure } from "@chakra-ui/hooks";
 import React from "react";
 import { FeedTweets } from "../components/feed-tweets/FeedTweets";
 import { HomeHeader } from "../components/home-header/HomeHeader";
@@ -10,14 +9,13 @@ import { BaseComponent, HomeMain } from "./home.styles";
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
-    const disclosure = useDisclosure();
     return (
         <BaseComponent className="main">
             <LeftMenu />
             <HomeMain>
-                <PostComment disclosure={disclosure} />
+                <PostComment />
                 <HomeHeader />
-                <FeedTweets disclosure={disclosure} />
+                <FeedTweets />
             </HomeMain>
             <RightMenu />
         </BaseComponent>

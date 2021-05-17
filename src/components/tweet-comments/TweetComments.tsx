@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/layout";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
+import { AppContextI } from "../../context/AppContext";
 import { useGetCommentsQuery } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 import Tweet from "../tweet/Tweet";
@@ -12,6 +13,8 @@ export const TweetComments: React.FC<TweetCommentsProps> = ({ tweet_id }) => {
     const [{ data, fetching }, reloadComments] = useGetCommentsQuery({
         variables: { fetchFrom: "tweet", postId: tweet_id },
     });
+
+    const { disclosure } = useContext(AppContextI);
 
     const { refreshComments } = useStore((s) => ({ ...s }));
 

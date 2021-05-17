@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
 import { LeftMenu } from "../../components/left-menu/LeftMenu";
+import { PostComment } from "../../components/post-comment/PostComment";
 import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import Tweet from "../../components/tweet/Tweet";
@@ -69,6 +70,7 @@ export const Profile: React.FC<ProfileProps> = () => {
                     id={id}
                     setRefreshToken={setRefreshToken}
                 />
+                <PostComment />
                 <LeftMenu />
                 <HomeMain>
                     <UserProfile onOpen={onOpen} refreshToken={refreshToken} />

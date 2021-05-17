@@ -26,7 +26,9 @@ export const MoreInfoHigh: React.FC<MoreInfoHighProps> = ({
             <Text color="#a5a5a5">@{username}</Text>
             <Text>{bio}</Text>
             <Text className="link">
-                <Link href={link}>{link}</Link>
+                <Link href={link} target="blank">
+                    {link}
+                </Link>
             </Text>
             <FollowInfo id={id} isLoggedUser={isLoggedUser} />
         </MoreInfo>

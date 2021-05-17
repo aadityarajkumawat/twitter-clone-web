@@ -7,6 +7,8 @@ export const appReducer = (
     switch (action.type) {
         case "user-profile":
             return { ...state, loggedUserProfile: action.profile };
+        case "set-disclosure":
+            return { ...state, disclosure: action.disclosure };
         default:
             return state;
     }

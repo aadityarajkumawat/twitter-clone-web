@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { AppContextI } from "../../context/AppContext";
 import { HomeContextI } from "../../context/HomeContext";
 import {
     useGetTweetsByUserQuery,
@@ -15,20 +16,11 @@ import { Tweets } from "../../pages/home.styles";
 import { LoadingSpinner } from "../spinner/LoadingSpinner";
 import Tweet from "../tweet/Tweet";
 
-interface FeedTweetsProps {
-    disclosure: {
-        isOpen: boolean;
-        onOpen: () => void;
-        onClose: () => void;
-        onToggle: () => void;
-        isControlled: boolean;
-        getButtonProps: (props?: any) => any;
-        getDisclosureProps: (props?: any) => any;
-    };
-}
+interface FeedTweetsProps {}
 
-export const FeedTweets: React.FC<FeedTweetsProps> = ({ disclosure }) => {
+export const FeedTweets: React.FC<FeedTweetsProps> = () => {
     const context = useContext(HomeContextI);
+    const { disclosure } = useContext(AppContextI);
     const { state, HomeActionFn } = context;
     const { pushTweetToFeed } = HomeActionFn;
 
@@ -62,7 +54,6 @@ export const FeedTweets: React.FC<FeedTweetsProps> = ({ disclosure }) => {
                             <Tweet
                                 {...getTweetProps(tweet)}
                                 key={tweet.tweet_id}
-                                disclosure={disclosure}
                             />
                         ))}
                     </Box>
@@ -71,7 +62,6 @@ export const FeedTweets: React.FC<FeedTweetsProps> = ({ disclosure }) => {
                             <Tweet
                                 {...getTweetProps(tweet)}
                                 key={tweet.tweet_id}
-                                disclosure={disclosure}
                             />
                         ))}
                     </InfiniteScroll>
