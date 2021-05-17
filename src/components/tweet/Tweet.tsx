@@ -64,7 +64,7 @@ const Tweet: React.FC<TweetProps> = ({
     }, [refresh, refreshTweet]);
 
     return (
-        <motion.div style={{ width: "100%" }}>
+        <motion.div style={{ width: "100%" }} layout>
             <TweetWrapper>
                 <UserProfileImg>
                     <div>

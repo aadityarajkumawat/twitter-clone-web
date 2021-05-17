@@ -13,7 +13,7 @@ import {
     ModalOverlay,
     Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { useMeQuery, usePostCommentMutation } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
@@ -46,9 +46,17 @@ export const PostComment: React.FC<PostCommentProps> = ({ disclosure }) => {
         setComment(value);
     };
 
+    const commentInputRef = useRef<HTMLInputElement | null>(null);
+
     return (
         <Flex>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                initialFocusRef={commentInputRef}
+                closeOnOverlayClick={false}
+                colorScheme="gray"
+            >
                 <ModalOverlay />
                 <ModalContent w="680px" maxW="unset">
                     <ModalHeader p="0" borderBottom="1px solid #a6a6a680">
@@ -106,6 +114,7 @@ export const PostComment: React.FC<PostCommentProps> = ({ disclosure }) => {
                                     border="none"
                                     _focus={{ border: "none" }}
                                     fontSize="20px"
+                                    ref={commentInputRef}
                                 />
                             </Flex>
                         )}
