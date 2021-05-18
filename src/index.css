@@ -23,3 +23,23 @@ button {
 .infinite-scroll-component__outerdiv {
     width: 100%;
 }
+
+@media screen and (max-width: 1280px) {
+    .main-main .left {
+        width: calc(40% - 299px);
+    }
+
+    .main-main .right {
+        width: calc(60% - 299px);
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .main-main .left {
+        width: calc(50% - 299px);
+    }
+
+    .main-main .right {
+        width: calc(50% - 299px);
+    }
+}

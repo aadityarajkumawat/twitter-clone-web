@@ -1,7 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React, { Fragment, useContext, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { AppContextI } from "../../context/AppContext";
 import { HomeContextI } from "../../context/HomeContext";
 import {
     useGetTweetsByUserQuery,
@@ -20,7 +19,6 @@ interface FeedTweetsProps {}
 
 export const FeedTweets: React.FC<FeedTweetsProps> = () => {
     const context = useContext(HomeContextI);
-    const { disclosure } = useContext(AppContextI);
     const { state, HomeActionFn } = context;
     const { pushTweetToFeed } = HomeActionFn;
 

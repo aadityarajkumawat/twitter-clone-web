@@ -1,11 +1,15 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useContext, useReducer, useState } from "react";
+import React, {
+    Fragment,
+    useContext,
+    useEffect,
+    useReducer,
+    useState,
+} from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
-import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { PostComment } from "../../components/post-comment/PostComment";
-import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import Tweet from "../../components/tweet/Tweet";
 import { UserProfile } from "../../components/user-profile/UserProfile";
@@ -61,6 +65,11 @@ export const Profile: React.FC<ProfileProps> = () => {
         variables: { id },
     });
 
+    useEffect(() => {
+        console.log("mounting profile");
+        return () => console.log("unmounting profile");
+    }, []);
+
     return (
         <Fragment>
             <ProfileContainer>
@@ -71,7 +80,6 @@ export const Profile: React.FC<ProfileProps> = () => {
                     setRefreshToken={setRefreshToken}
                 />
                 <PostComment />
-                <LeftMenu />
                 <HomeMain>
                     <UserProfile onOpen={onOpen} refreshToken={refreshToken} />
 
@@ -114,7 +122,6 @@ export const Profile: React.FC<ProfileProps> = () => {
                     )}
                     <Box my="30px"></Box>
                 </HomeMain>
-                <RightMenu />
             </ProfileContainer>
         </Fragment>
     );

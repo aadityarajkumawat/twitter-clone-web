@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { flexCenter } from "../constants/styles";
 
 export const BaseComponent = styled.div`
-    width: 100%;
+    width: 596px;
     background-color: #222;
     display: flex;
     justify-content: center;
@@ -24,7 +24,7 @@ export const Head = styled.div`
 `;
 
 export const RightMenu = styled.div`
-    width: calc(50% - 299px);
+    width: 100%;
     height: 100vh;
     background-color: #222;
 
@@ -43,50 +43,25 @@ export const RightMenu = styled.div`
     }
 `;
 
-export const LeftMenu = styled.div`
-    width: calc(50% - 299px);
-    height: 100vh;
+export const LeftMenuW = styled.div`
+    position: fixed;
     top: 0;
-    left: 0;
-    text-align: end;
-    background-color: #222;
-    position: relative;
-    min-width: 68px;
-
-    @media only screen and (max-width: 1280px) {
-        width: calc(40% - 299px);
-    }
 
     @media only screen and (max-width: 1000px) {
-        width: calc(50% - 299px);
+        left: calc(50% - 299px - 80px);
     }
 
-    .left-wrapper {
-        position: fixed;
-        top: 0;
-        right: calc(596px + 50% - 299px);
+    @media only screen and (max-width: 800px) {
+        left: 0;
+        width: 68px;
+    }
 
+    .in-left {
         @media only screen and (max-width: 1280px) {
-            right: auto;
-            left: calc(40% - 299px - 80px);
+            width: 80px;
         }
-
-        @media only screen and (max-width: 1000px) {
-            left: calc(50% - 299px - 80px);
-        }
-
         @media only screen and (max-width: 800px) {
-            left: 0;
             width: 68px;
-        }
-
-        .in-left {
-            @media only screen and (max-width: 1280px) {
-                width: 80px;
-            }
-            @media only screen and (max-width: 800px) {
-                width: 68px;
-            }
         }
     }
 `;
@@ -131,10 +106,6 @@ export const ListItem = styled.li`
 
         span {
             margin-left: 10px;
-
-            /* @media only screen and (max-width: 1280px) {
-        display: none;
-      } */
         }
     }
 

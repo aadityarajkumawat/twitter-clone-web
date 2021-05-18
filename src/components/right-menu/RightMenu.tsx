@@ -1,12 +1,7 @@
-import { Flex } from "@chakra-ui/layout";
-import React, { Fragment, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState } from "react";
 import { useGetSearchResultsQuery } from "../../generated/graphql";
 import * as S from "../../pages/home.styles";
 import { useStore } from "../../zustand/store";
-import { TransparentBackdrop } from "../edit-profile/editprofile.styles";
-import { SearchItem } from "../search-item/SearchItem";
-import { RightMenuContainer, Search, SearchList } from "./rightmenu.styles";
 
 interface RightMenuProps {}
 export const RightMenu: React.FC<RightMenuProps> = () => {
@@ -20,7 +15,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
 
     return (
         <S.RightMenu>
-            <Flex>
+            {/* <Flex>
                 {showSearchResults && (
                     <TransparentBackdrop
                         onClick={() => toggle(false)}
@@ -63,7 +58,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
                         </SearchList>
                     )}
                 </RightMenuContainer>
-            </Flex>
+            </Flex> */}
         </S.RightMenu>
     );
 };

@@ -18,6 +18,6 @@ export const handleFileAndUpload = async (
         const res = await uploadTweetImage(e.target.files[0], dispatch);
         if (res.img) imgUrl = res.img;
     }
-    await postTweet({ tweet_content: tweetInput, img: imgUrl });
+    const a = await postTweet({ tweet_content: tweetInput, img: imgUrl });
     setTweetInput("");
 };

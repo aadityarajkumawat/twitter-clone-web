@@ -39,6 +39,7 @@ export const AppContext: React.FC<{}> = ({ children }) => {
 
     useEffect(() => {
         dispatch({ type: "set-disclosure", disclosure });
+        // eslint-disable-next-line
     }, [JSON.stringify(disclosure)]);
 
     return (
