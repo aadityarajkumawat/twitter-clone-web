@@ -13,11 +13,15 @@ export const TweetUsername = styled(StyledDiv)`
     justify-content: flex-start;
     color: white;
     font-family: "Oxygen";
+    span {
+        cursor: pointer;
+    }
 `;
 
 export const TweetContent = styled(StyledDiv)`
     margin-bottom: 8px;
     color: white;
+    cursor: pointer;
 `;
 
 export const TweetActionBar = styled(StyledDiv)`
@@ -35,6 +39,7 @@ export const FadedUsername = styled(StyledDiv)`
     color: #ffffff40;
     margin-left: 10px;
     font-family: "Oxygen";
+    cursor: pointer;
 `;
 
 export const UserProfileImg = styled(StyledDiv)`

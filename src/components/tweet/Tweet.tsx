@@ -61,20 +61,33 @@ const Tweet: React.FC<TweetProps> = ({
             <TweetWrapper>
                 <UserProfileImg>
                     <div>
-                        <img src={img} alt="user" />
+                        <img
+                            style={{ cursor: "pointer" }}
+                            onClick={() => history.push(`/${username}`)}
+                            src={img}
+                            alt="user"
+                        />
                     </div>
                 </UserProfileImg>
                 <TweetContainer>
-                    <Box
-                        onClick={() =>
-                            history.push(`/status/${username}/${tweet_id}`)
-                        }
-                    >
+                    <Box>
                         <TweetUsername>
-                            <span>{name}</span>
-                            <FadedUsername>@{username}</FadedUsername>
+                            <span onClick={() => history.push(`/${username}`)}>
+                                {name}
+                            </span>
+                            <FadedUsername
+                                onClick={() => history.push(`/${username}`)}
+                            >
+                                @{username}
+                            </FadedUsername>
                         </TweetUsername>
-                        <TweetContent>{tweet_content}</TweetContent>
+                        <TweetContent
+                            onClick={() =>
+                                history.push(`/status/${username}/${tweet_id}`)
+                            }
+                        >
+                            {tweet_content}
+                        </TweetContent>
                         {captain !== "" && (
                             <TweetImageContainer>
                                 <img src={captain} alt="" />

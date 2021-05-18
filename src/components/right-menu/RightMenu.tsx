@@ -47,7 +47,7 @@ export const RightMenu: React.FC<RightMenuProps> = () => {
                                 This is twitter world!
                             </Text>
                         ) : (
-                            <Flex w="100%">
+                            <Flex w="100%" flexDir="column">
                                 {!fetching && results ? (
                                     <Fragment>
                                         {results.getSearchResults.profiles.map(
