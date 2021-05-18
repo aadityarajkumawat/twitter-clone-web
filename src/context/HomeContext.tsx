@@ -9,7 +9,7 @@ import { reducer } from "../reducers/homeReducer";
 
 interface HomeContextProps {}
 
-const intialStateHome = {
+const intialStateHome: HomeState = {
     more: [],
     pag: { offset: 0 },
     realTime: [],
@@ -18,6 +18,7 @@ const intialStateHome = {
     scrollProps: { dataLength: 0, hasMore: true },
     tweetInput: "",
     subscribed: true,
+    numberOfUserTweets: 0,
 };
 
 const fns = {
@@ -25,6 +26,7 @@ const fns = {
     setFeedProgress: () => null,
     setFile: () => null,
     setTweetInput: () => null,
+    setNumberOfUserTweets: () => null,
 };
 
 export const HomeContextI = createContext<HomeContextType>({
@@ -57,11 +59,16 @@ export const HomeContext: React.FC<HomeContextProps> = ({ children }) => {
         }
     };
 
+    const setNumberOfUserTweets = (numberOfUserTweets: number) => {
+        dispatch({ type: "num", numberOfUserTweets });
+    };
+
     const homeActions = {
         pushTweetToFeed,
         setFeedProgress,
         setFile,
         setTweetInput,
+        setNumberOfUserTweets,
     };
 
     return (

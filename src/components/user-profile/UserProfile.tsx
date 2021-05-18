@@ -6,6 +6,7 @@ import {
     ProfileRouteParams,
 } from "../../constants/interfaces";
 import { AppContextI } from "../../context/AppContext";
+import { HomeContextI } from "../../context/HomeContext";
 import {
     useGetProfileStuffQuery,
     useGetUserByUsernameQuery,
@@ -46,6 +47,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     const appContext = useContext(AppContextI);
     const { setUserProfile, loggedUserProfile } = appContext;
 
+    const homeContext = useContext(HomeContextI);
+    const {
+        HomeActionFn: { setNumberOfUserTweets },
+    } = homeContext;
+
     const [{ data: profile, fetching: fetchingProfile }, repres] =
         useGetProfileStuffQuery({ variables: { id } });
 
@@ -70,7 +76,10 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                 profile_img,
                 username,
             });
+
+            setNumberOfUserTweets(profile.getProfileStuff.profile.num);
         }
+
         // eslint-disable-next-line
     }, [JSON.stringify(profile)]);
 

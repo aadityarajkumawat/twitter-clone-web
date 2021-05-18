@@ -28,18 +28,8 @@ export const RightMenu = styled.div`
     height: 100vh;
     background-color: #222;
 
-    @media only screen and (max-width: 1280px) {
-        width: calc(60% - 299px);
-    }
-
     @media only screen and (max-width: 1000px) {
         width: calc(50% - 299px);
-    }
-
-    div {
-        @media only screen and (max-width: 1000px) {
-            display: none;
-        }
     }
 `;
 

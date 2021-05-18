@@ -2,6 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router";
 import { BackSVG } from "../../assets/BackSVG";
+import { AppContextI } from "../../context/AppContext";
 import { HomeContextI } from "../../context/HomeContext";
 import { useGetProfileStuffQuery } from "../../generated/graphql";
 import {
@@ -20,6 +21,7 @@ export const ProfileNav: React.FC<ProfileNavProps> = ({ id }) => {
         variables: { id },
     });
     const context = useContext(HomeContextI);
+    const { loggedUserProfile } = useContext(AppContextI);
 
     useEffect(() => {
         refe({ requestPolicy: "network-only" });
@@ -34,14 +36,10 @@ export const ProfileNav: React.FC<ProfileNavProps> = ({ id }) => {
             <ProfileInfo>
                 <Flex flexDir="column">
                     <Text fontWeight="600" fontSize="sm">
-                        {!fetching && data
-                            ? data.getProfileStuff.profile.name
-                            : ""}
+                        {loggedUserProfile?.name}
                     </Text>
                     <Box fontSize="sm">
-                        {!fetching && data
-                            ? data.getProfileStuff.profile.num
-                            : 0}
+                        {context.state.numberOfUserTweets}
                         {" Tweets"}
                     </Box>
                 </Flex>

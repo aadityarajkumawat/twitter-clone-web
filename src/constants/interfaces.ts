@@ -59,6 +59,7 @@ export type HomeState = {
     scrollProps: InfiniteScrolling;
     tweetInput: string;
     subscribed: boolean;
+    numberOfUserTweets: number;
 };
 
 export type HomeAction =
@@ -69,7 +70,8 @@ export type HomeAction =
     | { type: "prog"; updatedProg: number }
     | { type: "file"; updatedFile: FileEvent }
     | { type: "tweet"; updatedInp: string }
-    | { type: "sub"; connection: boolean };
+    | { type: "sub"; connection: boolean }
+    | { type: "num"; numberOfUserTweets: number };
 
 export type PaginationProps = {
     state: HomeState;
@@ -156,6 +158,7 @@ export interface HomeActionFn {
     setFile: (e: FileEvent) => void;
     setTweetInput: (input: string) => void;
     pushTweetToFeed: (tweet: TweetType | null | undefined) => void;
+    setNumberOfUserTweets: (numberOfUserTweets: number) => void;
 }
 
 export type HomeContextType = {

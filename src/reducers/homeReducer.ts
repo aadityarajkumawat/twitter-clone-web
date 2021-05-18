@@ -16,6 +16,8 @@ export const reducer = (state: HomeState, action: HomeAction): HomeState => {
             return { ...state, files: action.updatedFile };
         case "tweet":
             return { ...state, tweetInput: action.updatedInp };
+        case "num":
+            return { ...state, numberOfUserTweets: action.numberOfUserTweets };
         default:
             return state;
     }
