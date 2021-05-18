@@ -2,9 +2,7 @@ import { Flex, Image, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { Fragment } from "react";
 import { useParams } from "react-router";
-import { LeftMenu } from "../../components/left-menu/LeftMenu";
 import { OpenTweetHeader } from "../../components/open-tweet-header/OpenTweetHeader";
-import { RightMenu } from "../../components/right-menu/RightMenu";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import { TweetActions } from "../../components/tweet-action-bar/TweetActions";
 import { TweetComments } from "../../components/tweet-comments/TweetComments";
@@ -30,7 +28,6 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
 
     return (
         <BaseComponent>
-            <LeftMenu />
             <Flex
                 w="596px"
                 borderX="1px solid #4b4b4b"
@@ -115,7 +112,6 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
                     <TweetComments tweet_id={intTweetsId} />
                 </motion.div>
             </Flex>
-            <RightMenu />
         </BaseComponent>
     );
 };

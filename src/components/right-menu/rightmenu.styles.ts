@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const RightMenuContainer = styled.div`
-    width: 350px;
+    width: 100%;
     height: 100vh;
     padding: 10px;
     display: flex;

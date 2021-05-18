@@ -10,7 +10,7 @@ export const SearchItemContainer = styled.div`
     overflow-y: hidden;
 
     &:hover {
-        background-color: #222;
+        background-color: #989898;
     }
 `;
 
