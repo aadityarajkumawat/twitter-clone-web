@@ -21,7 +21,21 @@ export const ProfileNav: React.FC<ProfileNavProps> = ({ id }) => {
         variables: { id },
     });
     const context = useContext(HomeContextI);
-    const { loggedUserProfile } = useContext(AppContextI);
+    const { loggedUserProfile, setUserProfile } = useContext(AppContextI);
+
+    useEffect(() => {
+        if (!fetching && data) {
+            const profileData = data.getProfileStuff.profile;
+            setUserProfile({
+                bio: profileData.bio,
+                cover_img: profileData.cover_img,
+                link: profileData.link,
+                name: profileData.name,
+                profile_img: profileData.profile_img,
+                username: profileData.username,
+            });
+        }
+    }, [JSON.stringify(data)]);
 
     useEffect(() => {
         refe({ requestPolicy: "network-only" });

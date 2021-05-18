@@ -1,6 +1,6 @@
 import { Box, Button, Image } from "@chakra-ui/react";
 import React, { Fragment, useContext, useEffect } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import {
     ProfileProperties,
     ProfileRouteParams,
@@ -31,6 +31,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     onOpen,
     refreshToken,
 }) => {
+    const location = useLocation();
     const { username } = useParams<ProfileRouteParams>();
     const [{ data: user, fetching: fetchingUser }] = useMeQuery();
     const [{ data: nUser, fetching: fetchingNUser }] =
@@ -65,18 +66,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     };
 
     useEffect(() => {
-        if (profile && profile.getProfileStuff.profile && isLoggedUser) {
-            const { bio, cover_img, link, name, profile_img, username } =
-                profile.getProfileStuff.profile;
-            setUserProfile({
-                bio,
-                cover_img,
-                link,
-                name,
-                profile_img,
-                username,
-            });
-
+        if (profile && profile.getProfileStuff.profile) {
+            if (isLoggedUser) {
+                const { bio, cover_img, link, name, profile_img, username } =
+                    profile.getProfileStuff.profile;
+                setUserProfile({
+                    bio,
+                    cover_img,
+                    link,
+                    name,
+                    profile_img,
+                    username,
+                });
+            }
             setNumberOfUserTweets(profile.getProfileStuff.profile.num);
         }
 

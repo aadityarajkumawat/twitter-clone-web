@@ -50,7 +50,7 @@ export const PostComment: React.FC<PostCommentProps> = () => {
                 colorScheme="gray"
             >
                 <ModalOverlay />
-                <ModalContent w="680px" maxW="unset">
+                <ModalContent bg="#222" w="680px" maxW="unset">
                     <ModalHeader p="0" borderBottom="1px solid #a6a6a680">
                         <Flex h="48px">
                             <ModalCloseButton />
@@ -114,7 +114,7 @@ export const PostComment: React.FC<PostCommentProps> = () => {
 
                     <ModalFooter mt="2rem">
                         <Button
-                            variant="solid"
+                            bg="#0b688f"
                             rounded="full"
                             onClick={async () => {
                                 await postComment({
