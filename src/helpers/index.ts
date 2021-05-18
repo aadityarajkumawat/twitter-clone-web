@@ -1,3 +1,4 @@
+import { calc } from "./calc";
 import { decideAndReturnCorrectId } from "./decideAndReturnCorrectId";
 import { getInfiniteScrollProps } from "./getInfiniteScrollProps";
 import { getMore, getMoreUserPosts } from "./getMore";
@@ -31,4 +32,5 @@ export {
     getTweetProps,
     tweetAlreadyExist,
     uploadTweetImage,
+    calc,
 };

@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
-import { Route } from "react-router-dom";
-import Login from "../components/auth/login/Login";
+import { Route, useLocation } from "react-router";
+import { Redirect } from "react-router-dom";
 import { useMeQuery } from "../generated/graphql";
 import { SplashLoading } from "./SplashLoading";
 
@@ -19,6 +19,8 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({
 }) => {
     const Component = component;
     const [{ data, fetching }] = useMeQuery();
+    const location = useLocation();
+
     let isAuth = LOADING;
 
     if (!fetching) {
@@ -29,21 +31,25 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({
         }
     }
 
+    if (isAuth === LOADING) {
+        return <SplashLoading />;
+    }
+
     return (
         <Fragment>
-            {
-                <Route
-                    path={path}
-                    exact
-                    component={
-                        isAuth === AUTH
-                            ? Component
-                            : isAuth === LOADING
-                            ? SplashLoading
-                            : Login
-                    }
-                />
-            }
+            {isAuth === AUTH ? (
+                <Route exact>
+                    {location.pathname === "/home" ? (
+                        <Component />
+                    ) : (
+                        <Fragment></Fragment>
+                    )}
+                </Route>
+            ) : (
+                <Route>
+                    <Redirect exact to="/login" />
+                </Route>
+            )}
         </Fragment>
     );
 };

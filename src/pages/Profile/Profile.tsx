@@ -1,11 +1,5 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
-import React, {
-    Fragment,
-    useContext,
-    useEffect,
-    useReducer,
-    useState,
-} from "react";
+import React, { Fragment, useContext, useReducer, useState } from "react";
 import { useParams } from "react-router";
 import { EditProfile } from "../../components/edit-profile/EditProfile";
 import { InfiniteTweets } from "../../components/infinite-posts/InfiniteTweets";
@@ -64,11 +58,6 @@ export const Profile: React.FC<ProfileProps> = () => {
     const [{ data, fetching }] = useGetTweetsByUserFQuery({
         variables: { id },
     });
-
-    useEffect(() => {
-        console.log("mounting profile");
-        return () => console.log("unmounting profile");
-    }, []);
 
     return (
         <Fragment>

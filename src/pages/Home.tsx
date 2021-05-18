@@ -9,13 +9,11 @@ interface HomeProps {}
 const Home: React.FC<HomeProps> = () => {
     return (
         <BaseComponent className="main">
-            {/* <LeftMenu /> */}
             <HomeMain>
                 <PostComment />
                 <HomeHeader />
                 <FeedTweets />
             </HomeMain>
-            {/* <RightMenu /> */}
         </BaseComponent>
     );
 };

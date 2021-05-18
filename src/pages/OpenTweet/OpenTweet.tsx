@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { Fragment } from "react";
 import { useParams } from "react-router";
 import { OpenTweetHeader } from "../../components/open-tweet-header/OpenTweetHeader";
+import { PostComment } from "../../components/post-comment/PostComment";
 import { LoadingSpinner } from "../../components/spinner/LoadingSpinner";
 import { TweetActions } from "../../components/tweet-action-bar/TweetActions";
 import { TweetComments } from "../../components/tweet-comments/TweetComments";
@@ -28,6 +29,7 @@ export const OpenTweet: React.FC<OpenTweetProps> = () => {
 
     return (
         <BaseComponent>
+            <PostComment />
             <Flex
                 w="596px"
                 borderX="1px solid #4b4b4b"

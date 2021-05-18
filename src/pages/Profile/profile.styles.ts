@@ -2,11 +2,9 @@ import styled from "styled-components";
 
 export const ProfileContainer = styled.div`
     width: 596px;
-    /* height: 100vh; */
     background-color: #222 !important;
     display: flex;
     justify-content: center;
-    /* margin-left: 15px; */
 `;
 
 export const CenterItems = styled.div`
@@ -76,6 +74,7 @@ export const ImgContainer = styled.div`
     height: 250px;
     background-color: #000;
     overflow: hidden;
+    background-color: "#222";
 
     img {
         width: 100%;

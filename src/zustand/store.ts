@@ -2,9 +2,6 @@ import create from "zustand";
 import { TweetDataForComment } from "../constants/interfaces";
 
 type StateI = {
-    showSearchResults: boolean;
-    toggleShowSearchResults: (bool: boolean) => void;
-
     authenticated: boolean;
     setAuthenticated: (bool: boolean) => void;
 
@@ -19,12 +16,13 @@ type StateI = {
 
     refreshTweet: string;
     setRefreshTweet: (refreshTweet: string) => void;
+
+    //not being used
+    loadingProfile: boolean;
+    setLoadingProfile: (o: boolean) => void;
 };
 
 export const useStore = create<StateI>((set) => ({
-    showSearchResults: false,
-    toggleShowSearchResults: (bool) => set(() => ({ showSearchResults: bool })),
-
     authenticated: false,
     setAuthenticated: (bool) => set(() => ({ authenticated: bool })),
 
@@ -47,4 +45,7 @@ export const useStore = create<StateI>((set) => ({
 
     refreshTweet: "",
     setRefreshTweet: (refreshTweet) => set(() => ({ refreshTweet })),
+
+    loadingProfile: true,
+    setLoadingProfile: (loadingProfile) => set(() => ({ loadingProfile })),
 }));

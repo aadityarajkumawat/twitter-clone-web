@@ -84,6 +84,7 @@ const Tweet: React.FC<TweetProps> = ({
                     <TweetActionBar>
                         <span>
                             <Flex
+                                cursor="pointer"
                                 fontSize="14px"
                                 onClick={() => {
                                     if (

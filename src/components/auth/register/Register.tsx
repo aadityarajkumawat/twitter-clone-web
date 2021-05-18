@@ -38,8 +38,6 @@ const Register: React.FC<{}> = () => {
     );
     const [{ data, fetching }, refe] = useMeQuery();
 
-    console.log(data);
-
     useEffect(() => {
         if (!fetching && data && data.me.user.id) {
             history.push("/home");
