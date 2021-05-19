@@ -1,0 +1,16 @@
+query GetOneComment($fetchFrom: String!, $comment_id: Float!) {
+    getOneComment(args: { fetchFrom: $fetchFrom, comment_id: $comment_id }) {
+        comment {
+            comment_id
+            commentMsg
+            username
+            profileImg
+            name
+            comments
+            likes
+            img
+            liked
+        }
+        error
+    }
+}

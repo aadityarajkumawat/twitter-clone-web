@@ -1,5 +1,5 @@
-mutation LikeTweet($tweet_id: Float!) {
-    likeTweet(options: { tweet_id: $tweet_id }) {
+mutation LikeTweet($like_on_id: Float!, $like_on: String!) {
+    likeTweet(options: { like_on_id: $like_on_id, like_on: $like_on }) {
         liked
         error
     }

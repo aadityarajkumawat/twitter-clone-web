@@ -6,10 +6,7 @@ query GetComments($fetchFrom: String!, $postId: Float!) {
             profileImg
             name
             username
-            comments
-            likes
             img
-            liked
         }
         error
     }

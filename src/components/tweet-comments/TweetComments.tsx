@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/layout";
 import React, { Fragment, useEffect } from "react";
 import { useGetCommentsQuery } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
-import Tweet from "../tweet/Tweet";
+import { Comment } from "../comment/Comment";
 
 interface TweetCommentsProps {
     tweet_id: number;
@@ -25,12 +25,12 @@ export const TweetComments: React.FC<TweetCommentsProps> = ({ tweet_id }) => {
             {!fetching && data ? (
                 <Fragment>
                     {data.getComments.comments.map((tweet) => (
-                        <Tweet
+                        <Comment
                             name={tweet.name}
-                            tweet_content={tweet.commentMsg}
+                            commentMsg={tweet.commentMsg}
                             captain={tweet.img}
                             img={tweet.profileImg}
-                            tweet_id={tweet.comment_id}
+                            comment_id={tweet.comment_id}
                             username={tweet.username}
                             key={tweet.comment_id}
                         />

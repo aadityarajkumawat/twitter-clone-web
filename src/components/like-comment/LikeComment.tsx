@@ -1,21 +1,26 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useLikeTweetMutation } from "../../generated/graphql";
+import { useLikeCommentMutation } from "../../generated/graphql";
 
 interface LikeSVGProps {
     liked: boolean | undefined;
-    tweet_id: number;
+    comment_id: number;
     setR: React.Dispatch<React.SetStateAction<string>>;
     size?: string;
 }
 
-const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR, size }) => {
-    const [, likeTweet] = useLikeTweetMutation();
+export const LikeComment: React.FC<LikeSVGProps> = ({
+    liked,
+    comment_id,
+    setR,
+    size,
+}) => {
+    const [, likeTweet] = useLikeCommentMutation();
 
     return (
         <div
             onClick={async () => {
-                await likeTweet({ like_on_id: tweet_id, like_on: "tweet" });
+                await likeTweet({ comment_id });
                 setR(uuidv4());
             }}
         >
@@ -41,4 +46,3 @@ const LikeSVG: React.FC<LikeSVGProps> = ({ liked, tweet_id, setR, size }) => {
         </div>
     );
 };
-export default LikeSVG;

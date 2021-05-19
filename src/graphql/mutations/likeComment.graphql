@@ -1,0 +1,6 @@
+mutation LikeComment($comment_id: Float!) {
+    likeComment(args: { comment_id: $comment_id }) {
+        liked
+        error
+    }
+}
