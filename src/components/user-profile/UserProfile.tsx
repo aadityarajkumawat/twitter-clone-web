@@ -1,6 +1,6 @@
 import { Box, Button, Image } from "@chakra-ui/react";
 import React, { Fragment, useContext, useEffect } from "react";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
     ProfileProperties,
     ProfileRouteParams,
@@ -31,7 +31,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     onOpen,
     refreshToken,
 }) => {
-    const location = useLocation();
     const { username } = useParams<ProfileRouteParams>();
     const [{ data: user, fetching: fetchingUser }] = useMeQuery();
     const [{ data: nUser, fetching: fetchingNUser }] =

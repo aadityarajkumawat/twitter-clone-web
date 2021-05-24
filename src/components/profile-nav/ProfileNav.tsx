@@ -35,6 +35,7 @@ export const ProfileNav: React.FC<ProfileNavProps> = ({ id }) => {
                 username: profileData.username,
             });
         }
+        // eslint-disable-next-line
     }, [JSON.stringify(data)]);
 
     useEffect(() => {
