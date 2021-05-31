@@ -5,7 +5,6 @@ import { useHistory } from "react-router";
 import { v4 } from "uuid";
 import * as SVG from "../../assets/tweetActionsSVGs";
 import { AppContextI } from "../../context/AppContext";
-import { useGetTweetByIdQuery } from "../../generated/graphql";
 import { useStore } from "../../zustand/store";
 import LikeSVG from "../svgs/LikeSVG";
 import {
@@ -25,7 +24,11 @@ export interface TweetProps {
     name: string;
     tweet_id: number;
     img: string;
-    captain: string;
+    profile_img: string;
+    likes: number;
+    liked: boolean;
+    comments: number;
+    _type: string;
 }
 
 const Tweet: React.FC<TweetProps> = ({
@@ -34,11 +37,15 @@ const Tweet: React.FC<TweetProps> = ({
     name,
     tweet_id,
     img,
-    captain,
+    profile_img,
+    comments,
+    liked,
+    likes,
+    _type,
 }) => {
-    const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
-        variables: { tweet_id },
-    });
+    // const [{ data, fetching }, reloadQuery] = useGetTweetByIdQuery({
+    //     variables: { tweet_id },
+    // });
 
     const { disclosure } = useContext(AppContextI);
 
@@ -46,13 +53,8 @@ const Tweet: React.FC<TweetProps> = ({
     const [refresh, setRefresh] = useState<string>(v4());
     const history = useHistory();
 
-    let liked = false;
-    if (!fetching && data && data.getTweetById.tweet) {
-        liked = data.getTweetById.tweet.liked;
-    }
-
     useEffect(() => {
-        reloadQuery({ requestPolicy: "network-only" });
+        // reloadQuery({ requestPolicy: "network-only" });
         //eslint-disable-next-line
     }, [refresh, refreshTweet]);
 
@@ -64,7 +66,7 @@ const Tweet: React.FC<TweetProps> = ({
                         <img
                             style={{ cursor: "pointer" }}
                             onClick={() => history.push(`/${username}`)}
-                            src={img}
+                            src={profile_img}
                             alt="user"
                         />
                     </div>
@@ -88,9 +90,9 @@ const Tweet: React.FC<TweetProps> = ({
                         >
                             {tweet_content}
                         </TweetContent>
-                        {captain !== "" && (
+                        {img !== "" && (
                             <TweetImageContainer>
-                                <img src={captain} alt="" />
+                                <img src={img} alt="" />
                             </TweetImageContainer>
                         )}
                     </Box>
@@ -100,30 +102,15 @@ const Tweet: React.FC<TweetProps> = ({
                                 cursor="pointer"
                                 fontSize="14px"
                                 onClick={() => {
-                                    if (
-                                        !fetching &&
-                                        data &&
-                                        data.getTweetById.tweet
-                                    ) {
-                                        setFocussedTweet({
-                                            _type: data.getTweetById.tweet
-                                                ._type,
-                                            img: data.getTweetById.tweet.img,
-                                            name: data.getTweetById.tweet.name,
-                                            profile_img:
-                                                data.getTweetById.tweet
-                                                    .profile_img,
-                                            tweet_content:
-                                                data.getTweetById.tweet
-                                                    .tweet_content,
-                                            tweet_id:
-                                                data.getTweetById.tweet
-                                                    .tweet_id,
-                                            username:
-                                                data.getTweetById.tweet
-                                                    .username,
-                                        });
-                                    }
+                                    setFocussedTweet({
+                                        _type,
+                                        img,
+                                        name,
+                                        profile_img,
+                                        tweet_content,
+                                        tweet_id,
+                                        username,
+                                    });
                                     if (disclosure) {
                                         disclosure.onOpen();
                                     }
@@ -131,11 +118,7 @@ const Tweet: React.FC<TweetProps> = ({
                             >
                                 {SVG.commentSVG}
                                 <Box ml="5px" color="rgb(136, 153, 166)">
-                                    {!fetching &&
-                                    data &&
-                                    data.getTweetById.tweet
-                                        ? data.getTweetById.tweet.comments
-                                        : 0}
+                                    {comments}
                                 </Box>
                             </Flex>
                         </span>
@@ -166,7 +149,7 @@ const Tweet: React.FC<TweetProps> = ({
                                             : "rgb(136, 153, 166)"
                                     }
                                 >
-                                    {data ? data.getTweetById.tweet?.likes : 0}
+                                    {likes}
                                 </Box>
                             </Flex>
                         </span>

@@ -1,4 +1,4 @@
-import { cli } from "..";
+import { client as cli } from "../configs/urqlClient";
 import { PAGINATE_HOME, PAGINATE_USER_PROFILE } from "../constants/consts";
 import {
     HomeContextType,
